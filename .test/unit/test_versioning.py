@@ -3,21 +3,25 @@ Comprehensive tests for versioning system.
 Tests VERSION files, bump_version.sh script, and related configurations.
 """
 
+import os
 import pytest
-import yaml
 import re
+import shutil
 import subprocess
 import tempfile
-import shutil
+import yaml
 from pathlib import Path
 from datetime import datetime
+
+# Compute repository root relative to this test file
+REPO_ROOT = Path(__file__).resolve().parents[3]  # Adjust based on actual test file location
 
 
 class TestVersionFiles:
     """Test VERSION and VERSION_YAML files"""
 
-    VERSION_FILE = Path("/home/jailuser/git/versioning/VERSION")
-    VERSION_YAML_FILE = Path("/home/jailuser/git/versioning/VERSION_YAML")
+    VERSION_FILE = REPO_ROOT / "versioning" / "VERSION"
+    VERSION_YAML_FILE = REPO_ROOT / "versioning" / "VERSION_YAML"
 
     def test_version_file_exists(self):
         """Test VERSION file exists"""
@@ -621,8 +625,8 @@ class TestVersioningIntegration:
 
     def test_version_format_consistency(self):
         """Test VERSION format is consistent across files"""
-        version_file = Path("/home/jailuser/git/versioning/VERSION")
-        version_yaml_file = Path("/home/jailuser/git/versioning/VERSION_YAML")
+        VERSION_FILE = REPO_ROOT / "versioning" / "VERSION"
+        VERSION_YAML_FILE = REPO_ROOT / "versioning" / "VERSION_YAML"
 
         version = version_file.read_text().strip()
 
@@ -659,8 +663,8 @@ class TestVersioningIntegration:
 class TestVersioningEdgeCases:
     """Test edge cases and potential issues"""
 
-    VERSION_FILE = Path("/home/jailuser/git/versioning/VERSION")
-    VERSION_YAML_FILE = Path("/home/jailuser/git/versioning/VERSION_YAML")
+    VERSION_FILE = REPO_ROOT / "versioning" / "VERSION"
+    VERSION_YAML_FILE = REPO_ROOT / "versioning" / "VERSION_YAML"
 
     def test_version_no_trailing_whitespace(self):
         """Test VERSION has no trailing whitespace (except newline)"""
