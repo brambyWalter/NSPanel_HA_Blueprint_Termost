@@ -5,12 +5,12 @@
 [![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
 [![Platform][platform-shield]](https://github.com/esphome)
 [![Discord][discord-shield]](https://discord.gg/XAvac8kQ)
-[![Buy me an ice-cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
+[![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
 Our goal? To make the customization of your NSPanel seamless, intuitive, and free of coding, using an easy user interface from a Home Assistant's blueprint.
 
-*Are you happy with this project? Please consider [buying me an icecream](https://buymeacoffee.com/edwardfirmo).*
+*Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).*
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fedwardtfn%2FNSPanel-Easy%2Fblob%2Fmain%2Fnspanel_blueprint.yaml)
 
@@ -227,7 +227,7 @@ And special thanks for the other projects which inspired us:
 
 ## 💖 Donations
 
-Are you happy with this project? Please consider [buying me an icecream](https://buymeacoffee.com/edwardfirmo).
+Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).
 
 
 [version-shield]: https://img.shields.io/github/v/tag/edwardtfn/NSPanel-Easy?label=version
