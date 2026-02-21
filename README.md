@@ -1,4 +1,4 @@
-# NSPanel Custom with HA Blueprint
+# NSPanel Easy
 
 [![Version][version-shield]](https://github.com/edwardtfn/NSPanel-Easy/tags)
 [![GitHub Activity][commits-shield]][commits]
@@ -6,7 +6,7 @@
 [![Platform][platform-shield]](https://github.com/esphome)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
-Our goal? To make the customization of your NSPanel seamless, intuitive, and completely code-free!
+Our goal? To make the customization of your NSPanel seamless, intuitive, and free of coding, using an easy user interface from a Home Assistant's blueprint.
 
 *Are you happy with this project? Please consider [buying me an icecream](https://buymeacoffee.com/edwardfirmo).*
 
