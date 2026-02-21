@@ -142,8 +142,7 @@ script:
           }
           version_blueprint = version;
           ESP_LOGI("${TAG_VERSIONING}", "Blueprint version: %" PRIu8, version_blueprint);
-          blueprint_status_flags.version = true;
-          check_versions->execute(version != ${min_blueprint_version});
+          versions_publish->execute();
 
   - id: versions_publish
     mode: restart
@@ -152,7 +151,8 @@ script:
           char buf[32];
           snprintf(buf, sizeof(buf), "${version}/%" PRIu8 "/%" PRIu8, version_blueprint, version_tft);
           version_info->publish_state(std::string(buf));
-          check_versions->execute(version_blueprint != ${min_blueprint_version} or version_tft != ${min_tft_version});
+          blueprint_status_flags.version = version_blueprint == ${min_blueprint_version};
+          check_versions->execute(!blueprint_status_flags.version or version_tft != ${min_tft_version});
 
   - id: wait_for_version_blueprint
     mode: single
