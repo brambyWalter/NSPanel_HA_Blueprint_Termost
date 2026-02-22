@@ -1,13 +1,16 @@
-# NSPanel Custom with HA Blueprint
+# NSPanel Easy
 
+[![Version][version-shield]](https://github.com/edwardtfn/NSPanel-Easy/tags)
 [![GitHub Activity][commits-shield]][commits]
-[![Last Commit][last-commit-shield]][commits]
+[![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
 [![Platform][platform-shield]](https://github.com/esphome)
+[![Discord][discord-shield]](https://discord.gg/XAvac8kQ)
+[![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
-Our goal? To make the customization of your NSPanel seamless, intuitive, and completely code-free!
+Our goal? To make the customization of your NSPanel seamless, intuitive, and free of coding, using an easy user interface from a Home Assistant's blueprint.
 
-*Are you happy with this project? Please consider [buying me an icecream](https://buymeacoffee.com/edwardfirmo).*
+*Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).*
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fedwardtfn%2FNSPanel-Easy%2Fblob%2Fmain%2Fnspanel_blueprint.yaml)
 
@@ -224,12 +227,21 @@ And special thanks for the other projects which inspired us:
 
 ## 💖 Donations
 
-Are you happy with this project? Please consider [buying me an icecream](https://buymeacoffee.com/edwardfirmo).
+Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).
 
 
+[version-shield]: https://img.shields.io/github/v/tag/edwardtfn/NSPanel-Easy?label=version
+[version]: https://github.com/edwardtfn/NSPanel-Easy/tags
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/edwardtfn/NSPanel-Easy
 [commits]: https://github.com/edwardtfn/NSPanel-Easy/commits/main
 
 [last-commit-shield]: https://img.shields.io/github/last-commit/edwardtfn/NSPanel-Easy
+
 [platform-shield]: https://img.shields.io/badge/platform-Home%20Assistant%20&%20ESPHome-blue
+
+[discord-shield]: https://img.shields.io/discord/1243652421692031016?logo=discord
+[discord]: https://discord.gg/Db6WJWzWuf
+
+[buymeacoffee-shield]: https://img.shields.io/static/v1?label=Buy%20me%20an%20ice%20cream&message=❄&color=blue
+[buymeacoffee]: https://www.buymeacoffee.com/edwardfirmo

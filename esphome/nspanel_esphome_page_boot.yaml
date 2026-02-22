@@ -67,19 +67,17 @@ script:
             // Parse display parameters
             display_mode = atoi(params[2].c_str());
             display_charset = atoi(params[3].c_str());
-            version_tft->publish_state(params[4]);
+            version_tft = atoi(params[4].c_str());
+            versions_publish->execute();
 
-            const bool tft_ver_valid = (not version_tft->state.empty());
+            const bool tft_ver_valid = (version_tft > 0);
 
             ESP_LOGI("${TAG_PAGE_BOOT}", "Display params:");
             ESP_LOGI("${TAG_PAGE_BOOT}", "  Mode:        %" PRIu8, display_mode);
             ESP_LOGI("${TAG_PAGE_BOOT}", "  Charset:     %" PRIu8, display_charset);
-            ESP_LOGI("${TAG_PAGE_BOOT}", "  TFT version: %s%s", version_tft->state.c_str(),
-                                                                tft_ver_valid ? "" : " (INVALID)");
+            ESP_LOGI("${TAG_PAGE_BOOT}", "  TFT version: %" PRIu8 "%s", version_tft, tft_ver_valid ? "" : " (INVALID)");
 
             system_flags.display_settings_received = tft_ver_valid and display_mode > 0 and display_charset > 0;
-
-            check_versions->execute(!system_flags.display_settings_received);
           }
 
   - id: page_boot
@@ -114,21 +112,20 @@ script:
     mode: single
     then:
       - lambda: |-
-          if (current_page_id == ${PAGE_BOOT_ID} and !version_blueprint->state.empty())
-            disp1->set_component_text_printf("ver_blueprint", "Blueprint: %s", version_blueprint->state.c_str());
+          if (current_page_id == ${PAGE_BOOT_ID} and version_blueprint > 0)
+            disp1->set_component_text_printf("ver_blueprint", "Blueprint: %" PRIu8, version_blueprint);
 
   - id: page_boot_show_ip
     mode: single
     then:
       - lambda: |-
-          if (wifi_component->is_connected() and current_page_id == ${PAGE_BOOT_ID}) {
-            auto ips = network::get_ip_addresses();
-            if (!ips.empty()) {
-              char ip[16];  // sufficient for IPv4: "255.255.255.255" + '\0'
-              ips[0].str_to(ip);
-              disp1->set_component_text_printf("sys_ip", "IP: %s", ip);
-            }
-          }
+          if (!wifi_component->is_connected()) return;
+          if (current_page_id != ${PAGE_BOOT_ID}) return;
+          auto ips = network::get_ip_addresses();
+          if (ips.empty()) return;
+          char ip[16];  // sufficient for IPv4: "255.255.255.255" + '\0'
+          ips[0].str_to(ip);
+          disp1->set_component_text_printf("sys_ip", "IP: %s", ip);
 
   - id: !extend page_change
     then:
@@ -147,6 +144,12 @@ script:
           page_boot_show_blueprint_version->stop();
           page_boot_show_ip->stop();
 
+  - id: !extend version_blueprint_set
+    then:
+      - lambda: |-
+          page_boot_show_blueprint_version->execute();
+          wait_to_be_ready->execute();
+
   - id: wait_for_page_boot_exit
     mode: restart
     then:
@@ -161,16 +164,8 @@ script:
   - id: !extend watchdog_round
     then:
       - lambda: |-
-          if (current_page_id == ${PAGE_BOOT_ID} and !version_tft->state.empty())
+          if (current_page_id == ${PAGE_BOOT_ID} and version_tft > 0)
             wakeup->execute(true);
-
-text_sensor:
-  - id: !extend version_blueprint
-    on_value:
-      then:
-        - lambda: |-
-            page_boot_show_blueprint_version->execute();
-            wait_to_be_ready->execute();
 
 wifi:
   on_connect:
