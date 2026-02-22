@@ -12434,7 +12434,11 @@ action:
                                 The ESPHome firmware is unable to verify the Blueprint version for the NSPanel.
                                   - Panel Details: **{{ device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "Unknown") }}**
 
-                                  - Installed Blueprint version: {{ blueprint_version }}
+                                  - Reported Blueprint version: {{ versions.blueprint if versions.blueprint > 0 else "Unknown" }}
+
+                                  - Current Blueprint version: {{ blueprint_version }}
+
+                                  - Expected Blueprint version: {{ versions.blueprint_min if versions.blueprint_min > 0 else "Unknown" }}
 
 
                                 Troubleshooting steps and more information are available in the online documentation: [Panel startup issues - Blueprint is not detected](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/error_initializing.md#blueprint-is-not-detected).
@@ -12454,6 +12458,8 @@ action:
                                   device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**.
 
                                 - Current firmware version: {{ nspanel_event.esphome if nspanel_event.esphome is string and nspanel_event.esphome | length > 0 else "Unknown" }}
+
+                                - Current Blueprint version: {{ blueprint_version }}
 
                                 ---
 
