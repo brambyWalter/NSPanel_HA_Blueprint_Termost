@@ -4,7 +4,7 @@
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
 [![Platform][platform-shield]](https://github.com/esphome)
-[![Discord][discord-shield]](https://discord.gg/XAvac8kQ)
+[![Discord][discord-shield]](https://discord.gg/KyVPd33znv)
 [![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
@@ -207,7 +207,7 @@ In your automations you use the blueprint's inputs to define what will be shown 
 Join our vibrant community! Whether you're seeking support, wanting to contribute, or just looking to share your NSPanel journey, we're here for you.
 
 - **[Issues & Feature requests](https://github.com/edwardtfn/NSPanel-Easy/issues)**
-- **[Discord](https://discord.gg/s8mKuB8V)**
+- **[Discord](https://discord.gg/KyVPd33znv)**
 
 ## 🎉 Acknowledgements
 
@@ -241,7 +241,7 @@ Are you happy with this project? Please consider [buying me an ice cream](https:
 [platform-shield]: https://img.shields.io/badge/platform-Home%20Assistant%20&%20ESPHome-blue
 
 [discord-shield]: https://img.shields.io/discord/1243652421692031016?logo=discord
-[discord]: https://discord.gg/Db6WJWzWuf
+[discord]: https://discord.gg/KyVPd33znv
 
 [buymeacoffee-shield]: https://img.shields.io/static/v1?label=Buy%20me%20an%20ice%20cream&message=❄&color=blue
 [buymeacoffee]: https://www.buymeacoffee.com/edwardfirmo
