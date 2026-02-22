@@ -279,7 +279,7 @@ script:
             - lambda: |-
                 // Bluetooth proxy - Disable the BT controller
                 #ifdef USE_BLUETOOTH_PROXY
-                ESP_LOGD("${TAG_UPLOAD_TFT}", "Deinitializing BT controller");
+                ESP_LOGD("${TAG_UPLOAD_TFT}", "Disable BT controller");
                 esp_err_t err = esp_bt_controller_disable();
                 if (err != ESP_OK) {
                   ESP_LOGW("${TAG_UPLOAD_TFT}", "BT controller disable failed: %s", esp_err_to_name(err));
