@@ -4,15 +4,22 @@
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
 [![Platform][platform-shield]](https://github.com/esphome)
-[![Discord][discord-shield]](https://discord.gg/XAvac8kQ)
+[![Discord][discord-shield]][discord]
 [![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
 Our goal? To make the customization of your NSPanel seamless, intuitive, and free of coding, using an easy user interface from a Home Assistant's blueprint.
 
-*Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).*
+> [!TIP]
+> **Coming from [Blackymas/NSPanel_HA_Blueprint](https://github.com/Blackymas/NSPanel_HA_Blueprint)?**
+> Migrating takes less than 10 minutes - no serial flashing, no reconfiguration.
+> Follow our [Migration Guide](docs/migration_from_blackymas.md) and you'll be up and running in no time!
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fedwardtfn%2FNSPanel-Easy%2Fblob%2Fmain%2Fnspanel_blueprint.yaml)
+*If this project makes your smart home a little smarter, consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo) - it fuels the late-night coding sessions!* 🍦
+
+<!-- markdownlint-disable MD013 -->
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fedwardtfn%2FNSPanel-Easy%2Fblob%2Fmain%2Fnspanel_easy_blueprint.yaml)
+<!-- markdownlint-enable MD013 -->
 
 ## Table of Contents
 
@@ -35,10 +42,10 @@ Our goal? To make the customization of your NSPanel seamless, intuitive, and fre
 ## 📚 Documentation & Resources
 
 - **Getting Started:** Dive into our comprehensive [Documentation and Setup Guide](docs/README.md) for detailed instructions.
+- **Migrating from Blackymas?** Already using NSPanel_HA_Blueprint? Check our [Migration Guide](docs/migration_from_blackymas.md) - it only takes a few minutes.
 - **Video Tutorial:** Prefer visual learning? Check out our [Step-by-Step Setup Video](docs/README.md).
 - **Troubleshooting:** Encounter an issue? Here's how to report it: [HowTo](docs/README.md).
 - **Feature Requests:** Got ideas? Share them [here](https://github.com/edwardtfn/NSPanel-Easy/labels/new%20feature%20request).
-- **What's Next?:** Discover what's next and what we are working on right now in our [Milestones](https://github.com/edwardtfn/NSPanel-Easy/milestones?direction=asc&sort=due_date)
 
 ## 🚀 Features
 
@@ -207,7 +214,7 @@ In your automations you use the blueprint's inputs to define what will be shown 
 Join our vibrant community! Whether you're seeking support, wanting to contribute, or just looking to share your NSPanel journey, we're here for you.
 
 - **[Issues & Feature requests](https://github.com/edwardtfn/NSPanel-Easy/issues)**
-- **[Discord](https://discord.gg/s8mKuB8V)**
+- **[Discord](https://discord.gg/KyVPd33znv)**
 
 ## 🎉 Acknowledgements
 
@@ -227,7 +234,8 @@ And special thanks for the other projects which inspired us:
 
 ## 💖 Donations
 
-Are you happy with this project? Please consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo).
+This project is built with love and maintained in my spare time.
+If NSPanel Easy has made your life easier, consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo) - every scoop keeps the project going! 🍦
 
 
 [version-shield]: https://img.shields.io/github/v/tag/edwardtfn/NSPanel-Easy?label=version
@@ -240,8 +248,8 @@ Are you happy with this project? Please consider [buying me an ice cream](https:
 
 [platform-shield]: https://img.shields.io/badge/platform-Home%20Assistant%20&%20ESPHome-blue
 
-[discord-shield]: https://img.shields.io/discord/1243652421692031016?logo=discord
-[discord]: https://discord.gg/Db6WJWzWuf
+[discord-shield]: https://img.shields.io/discord/1464682227068698724?logo=discord
+[discord]: https://discord.gg/KyVPd33znv
 
 [buymeacoffee-shield]: https://img.shields.io/static/v1?label=Buy%20me%20an%20ice%20cream&message=❄&color=blue
 [buymeacoffee]: https://www.buymeacoffee.com/edwardfirmo

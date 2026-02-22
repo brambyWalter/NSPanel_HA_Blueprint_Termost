@@ -12389,8 +12389,8 @@ action:
                 sequence:
                   - variables:
                       versions:
-                        blueprint: '{{ blueprint_version | int(0) }}'
-                        esphome: '{{ nspanel_event.esphome | int(0) }}'
+                        blueprint: '{{ nspanel_event.blueprint | int(0) }}'
+                        esphome: '{{ nspanel_event.esphome }}'
                         tft: '{{ nspanel_event.tft | int(0) }}'
                         tft_min: >
                           {{
@@ -12404,24 +12404,88 @@ action:
                             if nspanel_event.min_blueprint_version is defined
                             else 0
                           }}
-                      versions_sorted: '{{ versions | dictsort(by="value") }}'
-                      oldest: '{{ versions_sorted[0] }}'
-                      newest: '{{ versions_sorted[-1] }}'
                   - choose:
                       # yamllint disable rule:line-length
-                      - alias: All versions are the same
+                      - alias: All versions OK
                         conditions:
-                          - '{{ oldest[1] == newest[1] }}'
-                          - '{{ nspanel_event.blueprint | int(0) == blueprint_version }}'
+                          - '{{ versions.blueprint > 0 and versions.blueprint_min > 0 }}'
+                          - '{{ versions.blueprint >= versions.blueprint_min }}'
+                          - '{{ versions.blueprint == blueprint_version }}'
+                          - '{{ versions.tft > 0 and versions.tft_min > 0 }}'
+                          - '{{ versions.tft >= versions.tft_min }}'
                         sequence:
                           - action: persistent_notification.dismiss
                             data:
                               notification_id: 'NSPanel_Easy_version_mismatch_{{ nspanel_name }}'
                             continue_on_error: true
-                      - alias: Blueprint is older
+
+                      - alias: Blueprint version not detected
                         conditions:
-                          - '{{ oldest[1] != newest[1] }}'
-                          - '{{ oldest[0] == "blueprint" }}'
+                          - or:
+                              - '{{ versions.blueprint == 0 }}'
+                              - '{{ versions.blueprint_min == 0 }}'
+                              - '{{ versions.blueprint != blueprint_version }}'
+                        sequence:
+                          - action: persistent_notification.create
+                            data:
+                              notification_id: 'NSPanel_Easy_version_mismatch_{{ nspanel_name }}'
+                              title: NSPanel Easy - Communication Issue
+                              message: >
+                                The ESPHome firmware is unable to verify the Blueprint version for the NSPanel.
+                                  - Panel Details: **{{ device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**
+
+                                  - Reported Blueprint version: {{ versions.blueprint if versions.blueprint > 0 else "Unknown" }}
+
+                                  - Current Blueprint version: {{ blueprint_version }}
+
+                                  - Expected Blueprint version: {{ versions.blueprint_min if versions.blueprint_min > 0 else "Unknown" }}
+
+
+                                Troubleshooting steps and more information are available in the online documentation: [Panel startup issues - Blueprint is not detected](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/error_initializing.md#blueprint-is-not-detected).
+                            continue_on_error: true
+
+                      - alias: Blueprint newer than ESPHome
+                        conditions:
+                          - '{{ versions.blueprint_min > 0 }}'
+                          - '{{ versions.blueprint_min < versions.blueprint }}'
+                        sequence:
+                          - action: persistent_notification.create
+                            data:
+                              notification_id: 'NSPanel_Easy_version_mismatch_{{ nspanel_name }}'
+                              title: "NSPanel Easy - Version mismatch: ESPHome firmware"
+                              message: >
+                                The NSPanel Easy firmware (ESPHome) is outdated for the panel **{{
+                                  device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**.
+
+                                - Current firmware version: {{ versions.esphome if versions.esphome is string and versions.esphome | length > 0 else "Unknown" }}
+
+                                - Current Blueprint version: {{ blueprint_version }}
+
+                                ---
+
+                                **How to Resolve This Issue**
+
+                                1. Go to your ESPHome Dashboard.
+
+                                2. Locate the panel named {{ device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}.
+
+                                3. Click on the corresponding 3-dot menu.
+
+                                4. Choose "**Clean Build Files**".
+
+                                5. In the pop-up dialog, wait for the cleaning to finish, then click "**Install**".
+
+                                6. Select "**Wirelessly**".
+
+
+                                *For more detailed instructions, please refer to the online documentation: [How to Update ESPHome](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/howto.md#update-esphome).*
+                            continue_on_error: true
+
+                      - alias: Blueprint version mismatch
+                        conditions:
+                          - '{{ versions.blueprint > 0 }}'
+                          - '{{ versions.blueprint_min > 0 }}'
+                          - '{{ versions.blueprint_min > versions.blueprint }}'
                         sequence:
                           - action: persistent_notification.create
                             data:
@@ -12432,11 +12496,10 @@ action:
 
                                 - Current Blueprint version: {{ blueprint_version }}
 
-                                - Expected version: {{ nspanel_event.esphome if newest[0] == "esphome" else nspanel_event.tft }}, based on the panel **{{
+                                - Expected version: {{ versions.blueprint_min }}, based on the panel **{{
                                     device_attr(nspanel_deviceid, "name") ~ ((" - " ~ nspanel_name) if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**.
 
                                 ---
-
 
                                 **How to Resolve This Issue**
 
@@ -12457,47 +12520,12 @@ action:
 
                                 *For more detailed instructions, please refer to the online documentation: [How to Update Blueprint](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/howto.md#update-blueprint).*
                             continue_on_error: true
-                      - alias: ESPHome is older
+
+                      - alias: TFT is older than expected
                         conditions:
-                          - '{{ oldest[1] != newest[1] }}'
-                          - '{{ oldest[0] == "esphome" }}'
-                        sequence:
-                          - action: persistent_notification.create
-                            data:
-                              notification_id: 'NSPanel_Easy_version_mismatch_{{ nspanel_name }}'
-                              title: "NSPanel Easy - Version mismatch: ESPHome firmware"
-                              message: >
-                                The NSPanel Easy firmware (ESPHome) is outdated for the panel **{{
-                                  device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**.
-
-                                - Current firmware version: {{ nspanel_event.esphome if nspanel_event.esphome is string and nspanel_event.esphome | length > 0 else oldest[1] }}
-
-                                - Expected version: {{ blueprint_version if newest[0] == "blueprint" else nspanel_event.tft }}
-
-                                ---
-
-
-                                **How to Resolve This Issue**
-
-                                1. Go to your ESPHome Dashboard.
-
-                                2. Locate the panel named {{ device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}.
-
-                                3. Click on the corresponding 3-dot menu.
-
-                                4. Choose "**Clean Build Files**".
-
-                                5. In the pop-up dialog, wait for the cleaning to finish, then click "**Install**".
-
-                                6. Select "**Wirelessly**".
-
-
-                                *For more detailed instructions, please refer to the online documentation: [How to Update ESPHome](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/howto.md#update-esphome).*
-                            continue_on_error: true
-                      - alias: TFT is older
-                        conditions:
-                          - '{{ oldest[1] != newest[1] }}'
-                          - '{{ oldest[0] == "tft" }}'
+                          - '{{ versions.tft > 0 }}'
+                          - '{{ versions.tft_min > 0 }}'
+                          - '{{ versions.tft_min > versions.tft }}'
                         sequence:
                           - action: persistent_notification.create
                             data:
@@ -12507,12 +12535,11 @@ action:
                                 The TFT version on your NSPanel is outdated for the panel **{{
                                   device_attr(nspanel_deviceid, "name") ~ ((" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") else "") }}**.
 
-                                - Current TFT version: {{ nspanel_event.tft if nspanel_event.tft is string and nspanel_event.tft | length > 0 else oldest[1] }}
+                                - Current TFT version: {{ nspanel_event.tft }}
 
-                                - Expected version: {{ blueprint_version if newest[0] == "blueprint" else nspanel_event.esphome }}
+                                - Expected version: {{ versions.tft_min }}
 
                                 ---
-
 
                                 **How to Resolve This Issue**
 
@@ -12526,25 +12553,6 @@ action:
 
 
                                 *For more detailed instructions, please refer to the online documentation: [How to Update TFT](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/howto.md#update-tft).*
-                            continue_on_error: true
-                      - alias: Blueprint not detected
-                        conditions:
-                          - '{{ oldest[1] == newest[1] }}'
-                          - '{{ nspanel_event.blueprint != blueprint_version }}'
-                        sequence:
-                          - action: persistent_notification.create
-                            data:
-                              notification_id: 'NSPanel_Easy_version_mismatch_{{ nspanel_name }}'
-                              title: NSPanel Easy - Communication Issue
-                              message: >
-                                The ESPHome firmware is unable to verify the Blueprint version for the NSPanel.
-
-                                - Panel Details: **{{ device_attr(nspanel_deviceid, "name") ~ (" (" ~ nspanel_name ~ ")") if nspanel_name != device_attr(nspanel_deviceid, "name") }}**
-
-                                - Installed Blueprint Version: {{ blueprint_version }}
-
-
-                                Troubleshooting steps and more information are available in the online documentation: [Panel startup issues - Blueprint is not detected](https://github.com/edwardtfn/NSPanel-Easy/blob/main/docs/error_initializing.md#blueprint-is-not-detected).
                             continue_on_error: true
                       # yamllint disable rule:comments-indentation
                       # yamllint enable rule:line-length
