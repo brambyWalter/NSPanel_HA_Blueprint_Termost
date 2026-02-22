@@ -248,7 +248,7 @@ script:
                 return true;
                 #else
                 return false;
-                #endif  // BLE_TRACKER || BLE_SERVER || BLE_CLIENT || BLUETOOTH_PROXY
+                #endif  // USE_ESP32_BLE_TRACKER || USE_ESP32_BLE_SERVER || USE_BLUETOOTH_PROXY
           then:
             - lambda: |-
                 ESP_LOGI("${TAG_UPLOAD_TFT}", "Stopping Bluetooth stack to free memory for TFT upload");
