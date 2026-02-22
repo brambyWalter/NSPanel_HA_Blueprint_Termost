@@ -10,12 +10,16 @@ so migrating is quick and straightforward - just a few small changes and you're 
 > The whole process typically takes less than 10 minutes per panel.
 > No need to open your panel, no re-flashing via serial, and your automations keep working.
 
+<!-- markdownlint-disable MD028 -->
+
 > [!NOTE]
 > **New to NSPanel customization?**
 > This guide is specifically for users migrating from Blackymas/NSPanel_HA_Blueprint.
 > If you're setting up a panel for the first time, head over to the
 > [Getting Started Guide](install.md) instead - it will walk you through
 > everything from scratch.
+
+<!-- markdownlint-enable MD028 -->
 
 ---
 
@@ -205,8 +209,12 @@ existing settings (entities, buttons, language, weather, etc.) are preserved as-
 > Do **not** change anything in the `input:` section - that's where all your panel settings live.
 > By only changing the `path`, your entire configuration carries over to the new Blueprint.
 
+<!-- markdownlint-disable MD028 -->
+
 > [!TIP]
 > If you have multiple panels, repeat this process for each panel's automation.
+
+<!-- markdownlint-enable MD028 -->
 
 ![Automation YAML with the new Blueprint path](pics/ha_automation_yaml_new_path.png)
 
@@ -261,7 +269,7 @@ and you'll now receive updates from the new repository.
 ### What's next?
 
 - **Check for new features** in the
-  [NSPanel Easy documentation](/README.md).
+  [NSPanel Easy documentation](../README.md).
 - **Review the Blueprint settings** for any new options available with NSPanel Easy.
 - **Join the community** on [Discord](https://discord.gg/KyVPd33znv)
   if you need help or want to share your setup.
