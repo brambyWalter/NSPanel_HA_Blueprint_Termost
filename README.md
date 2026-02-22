@@ -1,21 +1,23 @@
 # NSPanel Easy
 
-[![Version][version-shield]](https://github.com/edwardtfn/NSPanel-Easy/tags)
+[![Version][version-shield]][version]
 [![GitHub Activity][commits-shield]][commits]
-[![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
+[![GitHub Last Commit][last-commit-shield]][commits]
 [![Platform][platform-shield]](https://github.com/esphome)
 [![Discord][discord-shield]][discord]
 [![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
-This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
-Our goal? To make the customization of your NSPanel seamless, intuitive, and free of coding, using an easy user interface from a Home Assistant's blueprint.
+A powerful, code-free customization platform for the Sonoff NSPanel,
+built on [ESPHome](https://esphome.io/) and [Home Assistant](https://www.home-assistant.io/).
+Configure every aspect of your panel through an intuitive Blueprint UI - no programming required.
 
 > [!TIP]
 > **Coming from [Blackymas/NSPanel_HA_Blueprint](https://github.com/Blackymas/NSPanel_HA_Blueprint)?**
 > Migrating takes less than 10 minutes - no serial flashing, no reconfiguration.
-> Follow our [Migration Guide](docs/migration_from_blackymas.md) and you'll be up and running in no time!
+> Follow our [Migration Guide](docs/migration_from_blackymas.md) to get started.
 
-*If this project makes your smart home a little smarter, consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo) - it fuels the late-night coding sessions!* 🍦
+*If this project makes your smart home a little smarter,
+consider [buying me an ice cream][buymeacoffee] - it fuels the late-night coding sessions!* 🍦
 
 <!-- markdownlint-disable MD013 -->
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fedwardtfn%2FNSPanel-Easy%2Fblob%2Fmain%2Fnspanel_easy_blueprint.yaml)
@@ -24,47 +26,110 @@ Our goal? To make the customization of your NSPanel seamless, intuitive, and fre
 ## Table of Contents
 
 1. [Project Highlights](#-project-highlights)
-2. [Documentation & Resources](#-documentation--resources)
-3. [Features](#-features)
-4. [Pages Overview](#-pages-overview)
-5. [Contributing](#-contributing)
-6. [Community & Support](#-community--support)
-7. [Acknowledgements](#-acknowledgements)
-8. [Donations](#-donations)
+2. [Prerequisites](#-prerequisites)
+3. [Architecture](#-architecture)
+4. [Documentation & Resources](#-documentation--resources)
+5. [Features](#-features)
+6. [Pages Overview](#-pages-overview)
+7. [Home Assistant Integration](#-home-assistant-integration)
+8. [Contributing](#-contributing)
+9. [Community & Support](#-community--support)
+10. [Acknowledgements](#-acknowledgements)
+11. [Donations](#-donations)
 
 ## 🌟 Project Highlights
 
-- **No Coding Required:** Customize your NSPanel without touching a single line of code. It's all about intuitive, user-friendly experiences!
-- **Quick Setup:** Get your NSPanel up and running in minutes with our easy-to-follow graphical interface.
-- **Local Control:** Embrace full local control of your NSPanel, steering clear of cloud dependencies.
-- **Community-Driven:** A project for the users, by the users. Your contributions shape the future of this project!
+- **No Coding Required:** Customize your NSPanel entirely through a Home Assistant Blueprint UI.
+- **Quick Setup:** Get your panel up and running in minutes with a guided graphical interface.
+- **Fully Local:** All control stays local - no cloud dependencies, no internet required after setup.
+- **Modular Architecture:** Include only the packages you need, keeping firmware lean and efficient.
+- **Community-Driven:** Built by the community, for the community. Your feedback and contributions shape every release.
+
+## 📋 Prerequisites
+
+- **Home Assistant** - a running instance (see [home-assistant.io](https://www.home-assistant.io/))
+- **ESPHome** - installed as a Home Assistant add-on or standalone (see [esphome.io](https://esphome.io/))
+- **Sonoff NSPanel** - EU or US model (original, not NSPanel Pro)
+
+> [!NOTE]
+> This project uses the **ESP-IDF** framework exclusively.
+> Arduino framework support has been deprecated and is no longer maintained.
+
+## 🏗 Architecture
+
+NSPanel Easy comprises three tightly integrated components that work together:
+
+| Component | Description |
+|-----------|-------------|
+| **ESPHome Firmware** | Runs on the ESP32 inside the NSPanel, handling communication, sensors, relays, and display control. |
+| **Nextion TFT** | The display firmware loaded onto the Nextion screen, defining all UI pages and touch interactions. |
+| **HA Blueprint** | A Home Assistant automation blueprint that orchestrates the panel's behavior and entity bindings. |
+
+> [!NOTE]
+> Each component is versioned independently and designed to be compatible across releases.
+> You do not need to update all three at once - update each at your own pace as new versions become available.
 
 ## 📚 Documentation & Resources
 
-- **Getting Started:** Dive into our comprehensive [Documentation and Setup Guide](docs/README.md) for detailed instructions.
-- **Migrating from Blackymas?** Already using NSPanel_HA_Blueprint? Check our [Migration Guide](docs/migration_from_blackymas.md) - it only takes a few minutes.
-- **Video Tutorial:** Prefer visual learning? Check out our [Step-by-Step Setup Video](docs/README.md).
-- **Troubleshooting:** Encounter an issue? Here's how to report it: [HowTo](docs/README.md).
-- **Feature Requests:** Got ideas? Share them [here](https://github.com/edwardtfn/NSPanel-Easy/labels/new%20feature%20request).
+- **Getting Started:** Comprehensive [Documentation and Setup Guide](docs/README.md) with step-by-step instructions.
+- **Migrating from Blackymas?** Check the [Migration Guide](docs/migration_from_blackymas.md) - it only takes a few minutes.
+- **Customization:** Explore the [Customization Guide](docs/customization.md) for advanced configurations.
+- **API Reference:** Full list of available ESPHome actions in the [API Documentation](docs/api.md).
+- **Troubleshooting:** Running into issues? See some useful docs:
+    - [Installation Guide](docs/install.md)
+    - [Error Compiling Guide](docs/error_compiling.md)
+    - [Error Initializing Guide](docs/error_initializing.md).
+    - [TFT Upload Guide](docs/tft_upload.md)
+- **Feature Requests:** Share your ideas [here](https://github.com/edwardtfn/NSPanel-Easy/labels/new%20feature%20request).
+- **Changelog:** Every merged PR automatically generates a [GitHub Release](https://github.com/edwardtfn/NSPanel-Easy/releases) with detailed notes.
 
 ## 🚀 Features
 
-- Easy to use and simple configuration via Blueprint - no change in the code is necessary
-- 32 buttons on 4 button pages with long press function for settings (more buttons are also possible)
-- Button design is automatically generated based on the selected entity
-- Buttons show current brightness and cover position in the button itself
-- Buttons label can be assigned via blueprint
-- Weather + 5 days weather forecast
-- Thermostat + Touch + [Relay control for floor heating](docs/addon_climate.md)
-- Light control (brightness, color and temperature) - via long Press
-- Cover control (open, close and position) - via long press
-- Settings page (display brightness, display dim brightness, sleep mode, reboot NSPanel)
-- Swipe between pages
-- Top menu with 10 icons for specific states
-- Heating control (hot water)
-- Modern design - design easy to change via Adobe Express (free + design template)
-- 2 physical switches with optional fallback mode
-- and much more ;)
+### Display & Navigation
+
+- Swipe navigation between all pages
+- Quick-access swipe (up/down) to jump to specific pages
+- Top status bar with up to 10 configurable indicator icons
+- Adjustable display brightness and dim brightness
+- Screensaver / sleep mode support
+- Notification overlay with custom messages
+- QR code display for Wi-Fi sharing or custom URLs
+
+### Buttons & Entities
+
+- Up to 32 buttons across 4 button pages with long-press support
+- Up to 32 entities across 4 entity pages with customizable icons, labels, and value alignment
+- Automatic icon and layout generation based on entity type
+- Real-time brightness and cover position displayed directly on buttons
+- Long-press detection for light, cover, fan, media player, alarm, and climate sub-menus
+
+### Climate & Environmental
+
+- Full thermostat control with target temperature slider
+- Support for all standard Home Assistant climate modes (`heat`, `cool`, `auto`, `dry`, `fan`)
+- Optional [local relay control](docs/addon_climate.md) for floor heating - works even without Wi-Fi
+- Weather forecast with up to 5 days of data (rain probability, UV index, wind speed, and more)
+
+### Media & Entertainment
+
+- Media player page with playback controls, volume, and track information
+- Support for play/pause, next/previous track, shuffle, repeat, and source selection
+
+### Security
+
+- Alarm control panel with arm/disarm modes
+- Numeric keypad for PIN-protected arming and disarming
+
+### Utilities
+
+- Energy and utilities dashboard with up to 6 configurable groups
+- Real-time values with directional flow indicators (e.g., grid import/export)
+
+### Hardware
+
+- 2 physical relay switches with optional fallback mode
+- Built-in temperature sensor with calibration support
+- Buzzer for audible feedback and RTTTL melody playback
 
 ## 📖 Pages Overview
 
@@ -74,103 +139,89 @@ Our goal? To make the customization of your NSPanel seamless, intuitive, and fre
 
 ![Home US](docs/pics/us_home.png)
 
-- Current weather with button to Weather Forecast page
-- Hardware buttons can be freely assigned
-- Hardware button label (optional)
-- Blue line indicates the entity's states (`on` or `off`)
-- Outside temperature
-- Status icons at the top
-- Room temperature with button to thermostat page
-- Room humidity
-- Up to 3 user's selectable entities
+- Current weather with quick access to the forecast page
+- Freely assignable hardware button labels and actions
+- Visual state indicator (blue line) for entity on/off status
+- Outside temperature, room temperature, and room humidity
+- Up to 3 user-selectable entities
+- Status icons along the top bar
 
-### Buttons Pages
+### Button Pages
 
-![3 Buttonpage](https://user-images.githubusercontent.com/41958506/203654022-c6d81263-ce56-4a84-917a-9d4911f19f55.png)
-![NEW Domains](https://user-images.githubusercontent.com/41958506/206879659-3aea30c1-b126-4d52-a869-abf6adfc8fa1.png)
+- Up to 8 buttons per page across 4 pages (32 total)
+- Auto-generated button design based on entity type
+- Brightness and cover position shown on the button itself
+- Customizable labels via the Blueprint
+- Long-press opens detailed sub-menus for supported domains
 
-- Up to 8 buttons per page, across 4 different pages, totaling 32 buttons
-- Button design is automatically generated based on the selected entity
-- Buttons display current brightness and cover position directly on the button
-- Button labels can be assigned via blueprint
-- All buttons feature a long-press function
-- Automatic detection of light, cover, fan, media player, alarm or climate entities for submenus through long press
-- Swipe between all pages
-- Swipe up and down for quick access to specific pages
-
-### Entities Pages
+### Entity Pages
 
 ![Entities EU](docs/pics/eu_entities.png)
 
 ![Entities US](docs/pics/us_entities.png)
 
-- Up to 8 entities per page, across 4 different pages, totaling 32 entities
-- Icons and labels can be individually configured via blueprint or automatically detected for each entity
-- Flexible alignment options for values as per user preference
+- Up to 8 entities per page across 4 pages (32 total)
+- Individually configurable icons and labels (or auto-detected)
+- Flexible value alignment options
 
 ### Light Settings
 
-![4 lightsetting 1](https://user-images.githubusercontent.com/41958506/203654055-943d1910-7673-4d9f-ad81-7ef00d155e5a.png)
-![5 Lightsetting 2](https://user-images.githubusercontent.com/41958506/203654076-93e110df-f314-4cf1-8500-ed667f2202fd.png)
-![6 Lightsetting 3](https://user-images.githubusercontent.com/41958506/203654179-f7303b02-c886-4890-b976-cb498940a627.png)
-
-- Light current state
-- Brightness slider
-- RGB color wheel
+- Current light state and brightness slider
+- RGB color wheel for color selection
 - Color temperature slider
-- Jump back to the right button page
+- Quick navigation back to the originating button page
 
 ### Cover Settings
 
-![8 Cover](https://user-images.githubusercontent.com/41958506/203654290-c6ec2f2f-7924-492c-914c-0d96dc3907e0.png)
+- Open and close controls
+- Position slider for precise adjustment
+- Battery value display (when available)
 
-- Open and close cover
-- Cover position via slider
-- Cover battery value (when available)
-- jump back to the right button page
+### Climate / Thermostat
 
-### Thermostat / Climate
+- Target temperature slider
+- Current temperature reading
+- 4 user-selectable value slots (e.g., water temperature, outdoor sensor)
+- Standard Home Assistant climate mode buttons
+- 2 user-selectable action buttons
 
-- Target temperature control slider
-- Current temperature
-- 4 user's selectable values (for water and external temperatures, etc.)
-- All the standard climate controls from Home Assistant (`heat`, `fan`, `cool`, `auto`, `dry`)
-- 2 user's selectable buttons
-- [Can be used for local control (even when Wi-Fi is unavailable) when your panel's relays are used to control your cooler/heater](docs/addon_climate.md)
+### Media Player
 
-### Fan speed
+- Playback state and controls (play, pause, stop, next, previous)
+- Volume slider with mute toggle
+- Current track title and artist
+- Media progress bar
 
-- Turn-on and turn-off fan
-- Set speed via slider or buttons
-- jump back to the right button page
+### Fan Speed
+
+- On/off toggle
+- Speed control via slider or step buttons
 
 ### Alarm
 
-- Arm/disarm an alarm (standard modes supported by Home Assistant)
-- Support to numeric pin for arming or disarming
+- Arm/disarm with all standard Home Assistant alarm modes
+- Numeric keypad for PIN entry
 
 ### Weather Forecast
 
-![9 Weather](https://user-images.githubusercontent.com/41958506/203654307-24000d00-b7e1-47eb-bd64-9e97b508db52.png)
+- 5-day forecast with swipe navigation
+- Min/max temperatures and date display
+- Additional parameters: rain probability, sunshine hours, UV index, thunderstorm probability, wind speed
 
-- 5 days weather forecast via swipe (supports most used weather integrations)
-- Min and max outside temperatures
-- Date
-- Other weather parameters (when provided by your integration):
-  - Rain probability
-  - Sunshine hours
-  - UV index
-  - Thunderstorm probability
-  - Wind speed
+### Utilities Dashboard
 
-### Display Settings
-This page is accessible with a long press in the time area on the Home page.
+- Energy flow dashboard with grid, home consumption, and up to 6 custom groups
+- Real-time value updates with directional indicators
+
+### Settings
 
 ![Settings EU](docs/pics/eu_settings.png)
 
 ![Settings US](docs/pics/us_settings.png)
 
-- Restart NSPanel
+Accessible via long-press on the time area of the Home page:
+
+- Restart the NSPanel
 - Display brightness slider
 - Display dim brightness slider
 
@@ -180,12 +231,11 @@ This page is accessible with a long press in the time area on the Home page.
 
 ![Boot US](docs/pics/us_boot.png)
 
-## Home Assistant interface
+## 🏠 Home Assistant Integration
 
-## Device's page
+### Device Page
 
-On the device's page under "Devices & Services" you can set the global configuration of your device
-and see the value of its sensors and relays:
+On the device page under **Devices & Services**, you can view and configure:
 
 ![Device Setting - Controls](docs/pics/ha_device_controls.png)
 
@@ -195,34 +245,44 @@ and see the value of its sensors and relays:
 
 ![Device Setting - Diagnostic](docs/pics/ha_device_diagnostic.png)
 
-## Automation (Blueprint)
+### Blueprint Configuration
 
-In your automations you use the blueprint's inputs to define what will be shown on your panel and how it should behave:
+The Blueprint provides a visual interface for defining what appears on your panel and how it behaves:
+
 ![Blueprint 01](docs/pics/ha_blueprint_01.png)
 ![Blueprint 02](docs/pics/ha_blueprint_02.png)
 ![Blueprint 03](docs/pics/ha_blueprint_03.png)
 ![Blueprint 04](docs/pics/ha_blueprint_04.png)
 ![Blueprint 05](docs/pics/ha_blueprint_05.png)
 
-## 🚀 Contributing
+## 🤝 Contributing
 
-- **Pull Requests:** Please direct all pull requests to the `DEV` branch, not the `main` branch.
-- **Join Our Team:** We're on the lookout for enthusiasts in programming, documentation, and translation. Interested? Please let us know.
+We welcome contributions of all kinds - code, documentation, translations, and testing.
+
+- **Pull Requests:** Open a PR against `main`. Each PR gets its own branch for development and review.
+- **Testing:** Browse [open Pull Requests](https://github.com/edwardtfn/NSPanel-Easy/pulls) to find features that need testing and feedback.
+- **Issues:** Report bugs or request features via [GitHub Issues](https://github.com/edwardtfn/NSPanel-Easy/issues).
+- **Discussions:** Join the conversation on [Discord][discord].
+
+> [!TIP]
+> Not a developer? You can still help by improving documentation, translating strings, testing open PRs,
+> or [buying me an ice cream][buymeacoffee] 🍦
 
 ## 🌍 Community & Support
 
-Join our vibrant community! Whether you're seeking support, wanting to contribute, or just looking to share your NSPanel journey, we're here for you.
+Whether you need help, want to share your setup, or just want to follow along - we'd love to have you.
 
-- **[Issues & Feature requests](https://github.com/edwardtfn/NSPanel-Easy/issues)**
-- **[Discord](https://discord.gg/KyVPd33znv)**
+- **[GitHub Issues & Feature Requests](https://github.com/edwardtfn/NSPanel-Easy/issues)**
+- **[Discord Server][discord]**
 
 ## 🎉 Acknowledgements
 
-A huge thank you to everyone who has contributed to making this project a reality. Your support, feedback, and contributions have been invaluable.
+A huge thank you to everyone who has contributed to making this project a reality.
+Your feedback, testing, and code contributions have been invaluable.
 
-And special thanks for the other projects which inspired us:
+Special thanks to the projects that inspired and informed this work:
 
-- [Blackymas](https://github.com/Blackymas/NSPanel_HA_Blueprint) - From where this repository is derived.
+- [Blackymas](https://github.com/Blackymas/NSPanel_HA_Blueprint) - the original repository from which this project is derived
 - [Hellis81](https://github.com/Hellis81/NS-panel)
 - [Jimmyboy83](https://github.com/Jimmyboy83/nspanel)
 - [joBr99](https://github.com/joBr99/Generate-HASP-Fonts)
@@ -235,11 +295,12 @@ And special thanks for the other projects which inspired us:
 ## 💖 Donations
 
 This project is built with love and maintained in my spare time.
-If NSPanel Easy has made your life easier, consider [buying me an ice cream](https://buymeacoffee.com/edwardfirmo) - every scoop keeps the project going! 🍦
+If NSPanel Easy has made your life easier,
+consider [buying me an ice cream][buymeacoffee] - every scoop keeps the project going! 🍦
 
-
-[version-shield]: https://img.shields.io/github/v/tag/edwardtfn/NSPanel-Easy?label=version
-[version]: https://github.com/edwardtfn/NSPanel-Easy/tags
+<!-- Link References -->
+[version-shield]: https://img.shields.io/github/v/release/edwardtfn/NSPanel-Easy?label=version
+[version]: https://github.com/edwardtfn/NSPanel-Easy/releases/latest
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/edwardtfn/NSPanel-Easy
 [commits]: https://github.com/edwardtfn/NSPanel-Easy/commits/main
