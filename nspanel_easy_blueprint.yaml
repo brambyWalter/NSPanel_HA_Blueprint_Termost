@@ -12407,10 +12407,10 @@ action:
                   - alias: All versions OK
                     if:
                       - '{{ versions.blueprint > 0 and versions.blueprint_min > 0 }}'
-                      - '{{ versions.blueprint == versions.blueprint_min }}'
+                      - '{{ versions.blueprint >= versions.blueprint_min }}'
                       - '{{ versions.blueprint == blueprint_version }}'
                       - '{{ versions.tft > 0 and versions.tft_min > 0 }}'
-                      - '{{ versions.tft == versions.tft_min }}'
+                      - '{{ versions.tft >= versions.tft_min }}'
                     then:
                       - action: persistent_notification.dismiss
                         data:

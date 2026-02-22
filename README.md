@@ -4,7 +4,7 @@
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Last Commit][last-commit-shield]](https://github.com/edwardtfn/NSPanel-Easy/commits/main)
 [![Platform][platform-shield]](https://github.com/esphome)
-[![Discord][discord-shield]](https://discord.gg/KyVPd33znv)
+[![Discord][discord-shield]][discord]
 [![Buy me an ice cream][buymeacoffee-shield]](https://www.buymeacoffee.com/edwardfirmo)
 
 This innovative solution is designed to revolutionize how you interact with your Sonoff NSPanel.
