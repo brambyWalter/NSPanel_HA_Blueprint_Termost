@@ -4,7 +4,7 @@ Welcome! 👋
 If you're coming from [Blackymas/NSPanel_HA_Blueprint](https://github.com/Blackymas/NSPanel_HA_Blueprint),
 you'll feel right at home here.
 **NSPanel Easy** is derived from that project and keeps the same familiar structure,
-so migrating is quick and straightforward — just a few small changes and you're done.
+so migrating is quick and straightforward - just a few small changes and you're done.
 
 > [!TIP]
 > The whole process typically takes less than 10 minutes per panel.
@@ -14,7 +14,7 @@ so migrating is quick and straightforward — just a few small changes and you'r
 > **New to NSPanel customization?**
 > This guide is specifically for users migrating from Blackymas/NSPanel_HA_Blueprint.
 > If you're setting up a panel for the first time, head over to the
-> [Getting Started Guide](install.md) instead — it will walk you through
+> [Getting Started Guide](install.md) instead - it will walk you through
 > everything from scratch.
 
 ---
@@ -33,7 +33,7 @@ Make sure you have:
 
 ---
 
-## Step 1 — Update Your ESPHome Configuration
+## Step 1 - Update Your ESPHome Configuration
 
 This is the main change. Open your panel's YAML file in the ESPHome Dashboard and update the
 `packages` section to point to the new repository.
@@ -84,7 +84,7 @@ packages:
 | Base package | `nspanel_esphome.yaml` | `nspanel_esphome.yaml` *(no change)* |
 
 > [!IMPORTANT]
-> The **base package** (`nspanel_esphome.yaml`) stays at the root level — no path change needed.
+> The **base package** (`nspanel_esphome.yaml`) stays at the root level - no path change needed.
 > Only the **add-on files** moved into the `esphome/` subfolder.
 
 ### Example: Complete configuration after migration
@@ -122,7 +122,7 @@ packages:
 
 ---
 
-## Step 2 — Flash the Updated Firmware
+## Step 2 - Flash the Updated Firmware
 
 Once you've saved the YAML changes:
 
@@ -130,7 +130,7 @@ Once you've saved the YAML changes:
 2. Select **Install** → **Wirelessly**.
 3. Wait for the compilation and upload to complete.
 
-Your panel will reboot with the new firmware. This is a standard OTA update —
+Your panel will reboot with the new firmware. This is a standard OTA update -
 no need to open the panel or use a serial adapter.
 
 > [!TIP]
@@ -138,10 +138,10 @@ no need to open the panel or use a serial adapter.
 
 ---
 
-## Step 3 — Update the Blueprint
+## Step 3 - Update the Blueprint
 
 Now let's switch your automations to use the new Blueprint.
-The good news is you **don't need to reconfigure anything** —
+The good news is you **don't need to reconfigure anything**,
 we'll just import the new Blueprint and point your existing automations to it.
 
 ### 3a. Import the new Blueprint
@@ -166,13 +166,13 @@ Alternatively, you can import it manually:
 
 4. Click **Preview Blueprint** and then **Import Blueprint**.
 
-At this point you'll have **both** the old and new Blueprints listed — that's perfectly fine.
+At this point you'll have **both** the old and new Blueprints listed - that's perfectly fine.
 
 <!-- TODO: Add screenshot of blueprint import dialog -->
 
 ### 3b. Switch your automations to the new Blueprint
 
-This is where the magic happens — we'll edit the automation's YAML directly so all your
+This is where the magic happens - we'll edit the automation's YAML directly so all your
 existing settings (entities, buttons, language, weather, etc.) are preserved as-is.
 
 1. Go to [**Settings** → **Automations & Scenes**](https://my.home-assistant.io/redirect/automations/).
@@ -202,7 +202,7 @@ existing settings (entities, buttons, language, weather, etc.) are preserved as-
 6. Click **Save**.
 
 > [!IMPORTANT]
-> Do **not** change anything in the `input:` section — that's where all your panel settings live.
+> Do **not** change anything in the `input:` section - that's where all your panel settings live.
 > By only changing the `path`, your entire configuration carries over to the new Blueprint.
 
 > [!TIP]
@@ -227,7 +227,7 @@ Once all your automations are working with the new Blueprint, you can clean up:
 1. Go to
    [**Settings** → **Automations & Scenes** → **Blueprints**](https://my.home-assistant.io/redirect/blueprints/).
 2. Find the **old** Blueprint from Blackymas.
-3. Check the **In use** column — it should show **0**, meaning no automations are still using it.
+3. Check the **In use** column - it should show **0**, meaning no automations are still using it.
    If it shows a number other than 0, go back to Step 3b and migrate those automations first.
 4. Click the three-dot menu next to it and select **Delete blueprint**.
 
@@ -235,7 +235,7 @@ Once all your automations are working with the new Blueprint, you can clean up:
 
 ---
 
-## Step 4 — Update the TFT Display
+## Step 4 - Update the TFT Display
 
 The display file (TFT) needs to be updated to match the new firmware:
 
@@ -246,7 +246,7 @@ The display file (TFT) needs to be updated to match the new firmware:
 4. Wait for the transfer to complete (usually 10–20 minutes).
 
 > [!TIP]
-> If the transfer doesn't start right away, don't worry — ESPHome will retry automatically
+> If the transfer doesn't start right away, don't worry - ESPHome will retry automatically
 > with different parameters. Give it up to a minute to begin.
 
 ![TFT model selection and update button](pics/ha_device_configuration_tft_model_selection_and_update_button.png)
