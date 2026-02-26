@@ -212,7 +212,7 @@ script:
 
               if (idx == 0) {
                 resolved_url = "${nextion_update_url}";
-              } else if (idx >= 1 && idx <= 6) {
+              } else if (idx >= 1 && idx <= 7) {
                 static const char* const FILENAME_PARTS[] = {
                   "blank", "eu", "us", "us_land", "CJK_eu", "CJK_us", "CJK_us_land"
                 };
