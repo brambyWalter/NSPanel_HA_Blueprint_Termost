@@ -29,8 +29,9 @@ select your **Upload TFT display - Model** and then press **Upload TFT display**
 Once you have successfully installed any of the `tft` files from this project,
 the `nspanel_blank.tft` file shouldn't be necessary anymore and you should be able to always install the final `tft` file directly.
 
-Follow the same steps described above: go to your device's page (under **Settings** > **Devices & services** > **ESPHome**),
-select your **Upload TFT display - Model** and then press **Upload TFT display**.
+Follow the same steps described above, but now select the correct **final regional model**
+(**EU**, **US**, or **US_Land**) before pressing **Upload TFT display**.
+Double-check this selection to avoid flashing the wrong region.
 
 ## Additional Tips and Resources
 
@@ -41,7 +42,6 @@ After troubleshooting, if issues persist, consult the [Issues](https://github.co
 and feel free to create a new one asking for more personalized assistance.
 
 Please share as much info as possible, like:
-
 1. A description (or picture) of what is on your screen.
 2. Whether you are updating from a previous version of this same project,
    coming from another NSPanel customization (if so, which one?),
