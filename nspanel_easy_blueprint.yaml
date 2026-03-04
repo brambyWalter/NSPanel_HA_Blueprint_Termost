@@ -8751,11 +8751,12 @@ action:
                               - action: 'esphome.{{ device_name }}_component_val'
                                 data:
                                   page: mem
-                                  component: climate_chip_visibility
+                                  id: climate_chip_visibility
                                   val: >-
                                     {%- if climate_chip_visibility == 'always' %}1
                                     {%- elif climate_chip_visibility == 'never' %}2
                                     {%- else %}0{%- endif %}
+                                continue_on_error: true
                           - *delay_boot
                           - alias: chip_font
                             action: 'esphome.{{ nspanel_name }}_component_val'
