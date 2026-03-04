@@ -691,7 +691,9 @@ Slider tempslider
         Touch Release Event
             covx tempslider.val,va1.txt,0,0
             temp_value.txt=va1.txt
+            temp_value.txt+="K"
             temp_value_2.txt=va1.txt
+            temp_value_2.txt+="K"
             lightsetting.txt="light,color_temp_kelvin,"+va1.txt
             printh 92
             prints "localevent",0
@@ -703,7 +705,9 @@ Slider tempslider
         Touch Move Event
             covx tempslider.val,va1.txt,0,0
             temp_value.txt=va1.txt
+            temp_value.txt+="K"
             temp_value_2.txt=va1.txt
+            temp_value_2.txt+="K"
         
 Button button_back
     Attributes
