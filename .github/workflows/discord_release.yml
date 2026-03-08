@@ -19,9 +19,13 @@ jobs:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          curl -H "Content-Type: application/json" \
-          -d "{
-            \"content\": \"🚀 **New NSPanel Easy release published**\n**${RELEASE_NAME:-$RELEASE_TAG}**\n${RELEASE_URL}\"
-          }" \
-          "$DISCORD_WEBHOOK"
+          MESSAGE="🚀 New NSPanel Easy release published
+          ${RELEASE_NAME:-$RELEASE_TAG}
+          ${RELEASE_URL}"
+
+          jq -n --arg content "$MESSAGE" '{content: $content}' \
+          | curl --fail-with-body \
+            -H "Content-Type: application/json" \
+            -d @- \
+            "$DISCORD_WEBHOOK"
 ...
