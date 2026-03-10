@@ -30,7 +30,7 @@ Page home
             }
             // set background image to all components
             b[0].pic=pic_background_main
-            for(index=0;index<=last_id.val;index++)
+            for(index=0;index<=last_component.id;index++)
             {
                 b[index].picc=pic_background_main
             }
@@ -50,11 +50,11 @@ Variable (string) click_comp
         Text          : 
         Max. Text Size: 14
     
-Variable (int32) last_id
+Variable (int32) last_component
     Attributes
         ID   : 48
         Scope: local
-        Value: 48
+        Value: 0
     
 Text time
     Attributes

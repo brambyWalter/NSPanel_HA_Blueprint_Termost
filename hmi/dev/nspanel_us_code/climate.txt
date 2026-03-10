@@ -49,7 +49,7 @@ Page climate
             button09.font=button_font.val
             // set background image and fg color to all components
             b[0].pic=pic_background_main
-            for(index=0;index<=last_id.val;index++)
+            for(index=0;index<=last_component.id;index++)
             {
                 b[index].picc=b[0].pic
             }
@@ -58,6 +58,7 @@ Page climate
             climateslider.picc1=b[0].pic
             button_back.font=button_back_font
             button_back.pco=color_pco_navigation
+            button_back.picc2=pic_background_main
             page_label.pco=color_pco_main
             current_temp.pco=color_pco_main
             target_icon.pco=color_pco_main
@@ -248,11 +249,11 @@ Variable (int32) button_font
         Scope: global
         Value: 8
     
-Variable (int32) last_id
+Variable (int32) last_component
     Attributes
         ID   : 55
         Scope: local
-        Value: 55
+        Value: 0
     
 Text current_temp
     Attributes

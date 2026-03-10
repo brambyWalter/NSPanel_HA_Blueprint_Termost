@@ -12,25 +12,28 @@ substitutions:
   ## local yaml substitutions ##
   ##############################
   THEME_DARK_LABEL: Dark
-  THEME_DARK_PIC_BACKGROUND_MAIN: 0                         # Background picture to be used on pages by default
-  THEME_DARK_COLOR_PCO_MAIN: ${COLOR_WHITE}                 # Foreground font color for main information
-  THEME_DARK_COLOR_PCO_SECONDARY: ${COLOR_GRAY_LIGHT}       # Foreground font color for secondary information
-  THEME_DARK_COLOR_PCO_NAVIGATION: ${COLOR_GRAY_MOSS}       # Foreground font color for navigation components, like back button or page index
-  THEME_DARK_COLOR_PCO_UNSUPPORTED: ${COLOR_GRAY_DARKEST}   #  Foreground font color for unsupported or unavailable components
+  THEME_DARK_PIC_BACKGROUND_MAIN: 0                        # Background picture to be used on pages by default
+  THEME_DARK_COLOR_PCO_MAIN: ${COLOR_WHITE}                # Foreground font color for main information
+  THEME_DARK_COLOR_PCO_SECONDARY: ${COLOR_GRAY_LIGHT}      # Foreground font color for secondary information
+  THEME_DARK_COLOR_PCO_NAVIGATION: ${COLOR_GRAY_MOSS}      # Foreground font color for navigation components, like back button or page index
+  THEME_DARK_COLOR_PCO_UNSUPPORTED: ${COLOR_GRAY_DARKEST}  #  Foreground font color for unsupported or unavailable components
   THEME_LIGHT_LABEL: Light (Under construction)
-  THEME_LIGHT_PIC_BACKGROUND_MAIN: 48                       # Background picture to be used on pages by default
-  THEME_LIGHT_COLOR_PCO_MAIN: ${COLOR_WHITE}                # Foreground font color for main information
-  THEME_LIGHT_COLOR_PCO_SECONDARY: ${COLOR_GRAY_LIGHT}      # Foreground font color for secondary information
-  THEME_LIGHT_COLOR_PCO_NAVIGATION: ${COLOR_GRAY_MOSS}      # Foreground font color for navigation components, like back button or page index
-  THEME_LIGHT_COLOR_PCO_UNSUPPORTED: ${COLOR_GRAY_DARKEST}  #  Foreground font color for unsupported or unavailable components
+  THEME_LIGHT_PIC_BACKGROUND_MAIN: 48                      # Background picture to be used on pages by default
+  THEME_LIGHT_COLOR_PCO_MAIN: ${COLOR_BLACK}               # BLACK - main text on white bg
+  THEME_LIGHT_COLOR_PCO_SECONDARY: ${COLOR_GRAY_MEDIUM}    # Mid gray for secondary
+  THEME_LIGHT_COLOR_PCO_NAVIGATION: ${COLOR_GRAY_DARK}     # Colors::GRAY_DARK for navigation
+  THEME_LIGHT_COLOR_PCO_UNSUPPORTED: ${COLOR_GRAY_LIGHT}   # Light gray - visually "faded"
   BAUD_RATE: '115200'
   BOOT_STEP_HW_DISPLAY: '5'
   bytes_per_char: "1"
   button_back_font: "8"
+  COLOR_BLACK: '0'              # Colors::BLACK
   COLOR_BLUE_INDIGO: '10597'    # Colors::BLUE_INDIGO
   COLOR_CYAN_BRIGHT: '7519'     # Colors::CYAN_BRIGHT
+  COLOR_GRAY_DARK: '16904'      # Colors::GRAY_DARK
   COLOR_GRAY_DARKEST: '6339'    # Colors::GRAY_DARKEST
   COLOR_GRAY_LIGHT: '52857'     # Colors::GRAY_LIGHT
+  COLOR_GRAY_MEDIUM: '29614'    # Colors::GRAY_MEDIUM — mid gray, secondary text on light backgrounds
   COLOR_GRAY_MOSS: '33808'      # Colors::GRAY_MOSS
   COLOR_RED_PRIMARY: '63488'    # Colors::RED
   COLOR_WHITE: '65535'          # Colors::WHITE
@@ -172,6 +175,11 @@ script:
             disp1->send_command_printf("button_back_font=%i", id(button_back_font));
             return;
           }
+
+  - id: !extend boot_wrap_up
+    then:
+      - script.execute: theme_update
+      - script.wait: theme_update
 
   - id: !extend dump_config
     then:
@@ -361,6 +369,7 @@ script:
           set_brightness->stop();
           set_component_font_color->stop();
           theme_update->stop();
+          theme_update_all->stop();
           theme_update_dark->stop();
           theme_update_light->stop();
           timer_dim->stop();
@@ -378,15 +387,24 @@ script:
     then:
       - lambda: |-
           ESP_LOGI("${TAG_HW_DISPLAY}", "Apply theme: %s", background_type->current_option());
-          if (background_type->current_option() == "${THEME_LIGHT_LABEL}") {
+          current_theme = (background_type->current_option() == "${THEME_LIGHT_LABEL}") ?
+                                                                ThemeMode::LIGHT : ThemeMode::DARK;
+          theme_update_all->execute();
+          if (current_theme == ThemeMode::LIGHT) {
             theme_update_light->execute();
-            return;
+          } else {
+            theme_update_dark->execute();
           }
-          theme_update_dark->execute();
+
+      - script.wait: theme_update_all
       - script.wait: theme_update_dark
       - script.wait: theme_update_light
+
       - lambda: |-
-          goto_page->execute(${PAGE_HOME_ID});  // Go back to home page to render pages again
+          disp1->send_command("page dp");  // Reload current page
+
+  - id: theme_update_all
+    then:
 
   - id: theme_update_dark
     then:

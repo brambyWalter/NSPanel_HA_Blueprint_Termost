@@ -26,13 +26,14 @@ Page cover
             dim=brightness
             // set background image and fg color to all components
             b[0].pic=pic_background_main
-            for(index=0;index<=last_id.val;index++)
+            for(index=0;index<=last_component.id;index++)
             {
                 b[index].picc=pic_background_main
                 b[index].pco=color_pco_main
             }
             button_back.font=button_back_font
             button_back.pco=color_pco_navigation
+            button_back.picc2=pic_background_main
             sendme
         
 Variable (string) va1
@@ -49,11 +50,11 @@ Variable (string) coversetting
         Text          : 
         Max. Text Size: 255
     
-Variable (int32) last_id
+Variable (int32) last_component
     Attributes
         ID   : 13
         Scope: local
-        Value: 13
+        Value: 0
     
 Text battery_value
     Attributes

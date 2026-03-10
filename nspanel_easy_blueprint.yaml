@@ -9828,12 +9828,18 @@ action:
                           ##### Weather Icon Home Page #####
                           - *delay_default
                           - &refresh-page_home-weather_pic
-                            action: 'esphome.{{ nspanel_name }}_command'
+                            action: 'esphome.{{ nspanel_name }}_component_val'
                             data:
-                              cmd: home.weather.pic={{ nextion.pic.weather[
-                                                        states(weather_entity) | default("unavailable")
-                                                        if weather_entity is string and has_value(weather_entity)
-                                                        else "unavailable"] | default(1) }}
+                              page: mem
+                              id: weather_pic
+                              val: >-
+                                {{
+                                  nextion.pic.weather[
+                                    states(weather_entity) | default("unavailable")
+                                    if weather_entity is string and has_value(weather_entity)
+                                    else "unavailable"
+                                  ] | default(1)
+                                }}
                             continue_on_error: true
 
                           ##### NSPanel Outdoor Temp #####
@@ -11959,11 +11965,17 @@ action:
                                   - if: '{{ condition not in ["unknown", None] }}'
                                     then:
                                       - *delay_default
-                                      - action: 'esphome.{{ nspanel_name }}_command'
+                                      - action: 'esphome.{{ nspanel_name }}_component_val'
                                         data:
-                                          cmd: >
-                                            {{ page_name }}.weather_icon.pic={{
-                                              nextion.pic.weather[states(weather_entity) | default("unavailable") if weather_entity is string else "unavailable"] | int(1)
+                                          page: mem
+                                          id: weather_icon
+                                          val: >-
+                                            {{
+                                              nextion.pic.weather[
+                                                states(weather_entity) | default("unavailable")
+                                                if weather_entity is string
+                                                else "unavailable"
+                                              ] | int(1)
                                               if condition == "unknown" and page_name == pages.weatherpages[0]
                                               else nextion.pic.weather[condition] | int(1)
                                             }}

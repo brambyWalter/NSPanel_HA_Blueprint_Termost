@@ -43,7 +43,7 @@ Page light
             vis color_b_pres,0
             vis color_button,0
             // set background image and fg color to all components
-            for(index=0;index<=last_id.val;index++)
+            for(index=0;index<=last_component.id;index++)
             {
                 b[index].picc=b[0].pic
             }
@@ -54,6 +54,7 @@ Page light
             lightslider.pic1=lslider_pic1.val
             button_back.font=button_back_font
             button_back.pco=color_pco_navigation
+            button_back.picc2=pic_background_main
             icon_state.pco=color_pco_main
             page_label.pco=color_pco_main
             light_value.pco=color_pco_main
@@ -102,35 +103,35 @@ Variable (string) lightsetting
         Text          : 
         Max. Text Size: 255
     
-Variable (int32) last_id
-    Attributes
-        ID   : 30
-        Scope: local
-        Value: 33
-    
 Variable (int32) colorwheel_pic
     Attributes
-        ID   : 31
+        ID   : 30
         Scope: global
         Value: 17
     
 Variable (int32) tempslider_pic
     Attributes
-        ID   : 32
+        ID   : 31
         Scope: global
         Value: 21
     
 Variable (int32) lslider_pic
     Attributes
-        ID   : 33
+        ID   : 32
         Scope: global
         Value: 28
     
 Variable (int32) lslider_pic1
     Attributes
-        ID   : 34
+        ID   : 33
         Scope: global
         Value: 29
+    
+Variable (int32) last_component
+    Attributes
+        ID   : 34
+        Scope: local
+        Value: 0
     
 Number ring
     Attributes

@@ -88,6 +88,7 @@ namespace nspanel_easy {
         constexpr uint16_t GRAY_DARK = 16904;      ///< Hidden/disabled buttons
         constexpr uint16_t GRAY_DARKEST = 6339;    ///< Hidden/disabled buttons
         constexpr uint16_t GRAY_LIGHT = 52857;     ///< Gray light/silver (RGB565: 0xCE79)
+        constexpr uint16_t GRAY_MEDIUM = 29614;    ///< Mid gray, secondary text on light bg (RGB565: 0x73AE)
         constexpr uint16_t GRAY_MOSS = 33808;      ///< Moss gray/green (RGB565: 0x8410)
         constexpr uint16_t YELLOW_GREEN = 48631;   ///< Inactive buttons
         constexpr uint16_t ORANGE = 64704;         ///< Drying action (RGB565: 0xFCC0)

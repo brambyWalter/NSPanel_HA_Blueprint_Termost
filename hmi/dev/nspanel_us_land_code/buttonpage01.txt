@@ -77,6 +77,12 @@ Variable (int32) confirm
         Scope: local
         Value: 0
     
+Variable (int32) last_component
+    Attributes
+        ID   : 51
+        Scope: local
+        Value: 0
+    
 Text page_label
     Attributes
         ID                      : 3
