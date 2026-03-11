@@ -214,6 +214,7 @@ script:
           const uint8_t weather_pic_corrected = id(weather_pic) +
                                 ((current_theme == ThemeMode::LIGHT) ? ${THEME_DARK_PIC_PAGE_HOME_WEATHER_OFFSET} : 0);
           ESP_LOGD("${TAG_PAGE_HOME}", "Update weather pic: %" PRIu8, weather_pic_corrected);
+          disp1->set_component_pic(hmi::home::WEATHER.name, weather_pic_corrected);
 
   - id: !extend stop_all
     then:

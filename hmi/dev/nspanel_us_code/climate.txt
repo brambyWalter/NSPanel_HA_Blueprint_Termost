@@ -1,7 +1,7 @@
 Page climate
     Attributes
         ID                 : 0
-        Scope              : local
+        Scope              : global
         Dragging           : 0
         Send Component ID  : on press and release
         Opacity            : 127
