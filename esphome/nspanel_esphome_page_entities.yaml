@@ -89,7 +89,7 @@ script:
           }
           if (component == "is_entitypages") {  // Visibility of entity pages button on page "Home"
             const uint8_t is_entitypages = (val > 0) ? 1 : 0;
-            disp1->send_command_printf("is_entitypages=%d", is_entitypages);
+            disp1->send_command_printf("vis_bt_entities=%d", is_entitypages);
             if (current_page_id == ${PAGE_HOME_ID}) {
               disp1->send_command_printf("vis bt_entities,%d", is_entitypages);
             }

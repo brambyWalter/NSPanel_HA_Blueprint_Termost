@@ -10093,16 +10093,15 @@ action:
                                               )
                                             )
                                           }}
+                                    - condition: '{{ entity.icon is defined and entity.icon is string and entity.icon | length > 0 }}'
                                     - *delay_default
                                     - action: 'esphome.{{ nspanel_name }}_icon'
                                       data:
                                         page: home
                                         id: '{{ repeat.item.component }}'
-                                        icon: '{{ entity.icon if chip_visible and entity.icon is defined else "" }}'
+                                        icon: '{{ entity.icon }}'
                                         icon_color: >
-                                          {% if not chip_visible %}
-                                            [0, 0, 0]
-                                          {% elif repeat.item.inverted and icon_color_rgb_valid %}
+                                          {% if repeat.item.inverted and icon_color_rgb_valid %}
                                             {{ repeat.item.icon_color_rgb }}
                                           {% elif entity.icon_color is defined and entity.icon_color is list and entity.icon_color | count == 3 %}
                                             {{ entity.icon_color }}
@@ -10111,7 +10110,7 @@ action:
                                           {% else %}
                                             [255, 255, 255]
                                           {% endif %}
-                                        visible: true
+                                        visible: '{{ chip_visible }}'
                                       continue_on_error: true
 
                           - repeat:

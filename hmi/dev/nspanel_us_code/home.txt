@@ -19,14 +19,33 @@ Page home
     
     Events
         Preinitialize Event
-            dim=brightness
             back_page_id=home_page_id
-            vis bt_entities,is_entitypages
+            // set component visibility
+            // chips
+            vis chip_relay1,vis_chip_relay1
+            vis chip_relay2,vis_chip_relay2
+            vis chip_climate,vis_chip_climate
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            vis chip01,vis_chip01
+            // buttons
+            vis bt_utilities,vis_bt_utilities
+            vis bt_notific,vis_bt_notific
+            vis bt_qrcode,vis_bt_qrcode
+            vis bt_entities,vis_bt_entities
+            // Bluetooth icon
+            vis bt_icon,vis_bt_icon
+            // HW Button's labels
             if(display_mode==3)
             {
                 vis left_bt_text,0
                 vis right_bt_text,0
             }
+            dim=brightness
             sendme
         
 Variable (string) lastclick
