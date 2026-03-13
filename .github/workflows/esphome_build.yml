@@ -66,9 +66,9 @@ jobs:
       fail-fast: false
       matrix:
         firmware:
-          - name: Core
+          - name: Basic (IDF)
             yaml-file: .test/esphome_idf_basic.yaml
-          - name: Core Arduino
+          - name: Basic (Arduino)
             yaml-file: .test/esphome_ard_basic.yaml
           - name: BLE Tracker
             yaml-file: .test/esphome_idf_ble_tracker.yaml
@@ -86,6 +86,8 @@ jobs:
             yaml-file: .test/esphome_idf_climate_heat_customizations.yaml
           - name: Climate Cool + Bluetooth Proxy
             yaml-file: .test/esphome_idf_climate_cool_bluetooth_proxy.yaml
+          - name: Display as a Light
+            yaml-file: .test/esphome_idf_display_as_light.yaml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -107,9 +109,9 @@ jobs:
       fail-fast: false
       matrix:
         firmware:
-          - name: Core
+          - name: Basic (IDF)
             yaml-file: .test/esphome_idf_basic.yaml
-          - name: Core Arduino
+          - name: Basic (Arduino)
             yaml-file: .test/esphome_ard_basic.yaml
           - name: BLE Tracker
             yaml-file: .test/esphome_idf_ble_tracker.yaml
@@ -127,6 +129,8 @@ jobs:
             yaml-file: .test/esphome_idf_climate_heat_customizations.yaml
           - name: Climate Cool + Bluetooth Proxy
             yaml-file: .test/esphome_idf_climate_cool_bluetooth_proxy.yaml
+          - name: Display as a Light
+            yaml-file: .test/esphome_idf_display_as_light.yaml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
