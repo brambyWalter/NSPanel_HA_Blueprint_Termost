@@ -23,7 +23,6 @@ Page light
             {
                 page home_page_id
             }
-            dim=brightness
             vis light_b_press,1
             vis lightslider,1
             vis light_value,1
@@ -43,6 +42,7 @@ Page light
             vis color_b_pres,0
             vis color_button,0
             // set background image and fg color to all components
+            light.pic=pic_background_main
             for(index=0;index<=last_component.id;index++)
             {
                 b[index].picc=b[0].pic
@@ -61,6 +61,7 @@ Page light
             temp_value.pco=color_pco_main
             temp_value_2.pco=color_pco_main
             power_button.pco=color_pco_secondary
+            dim=brightness
             sendme
         
 Variable (int32) rgb565
