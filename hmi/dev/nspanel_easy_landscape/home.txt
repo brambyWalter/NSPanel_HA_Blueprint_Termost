@@ -19,6 +19,7 @@ Page home
     
     Events
         Preinitialize Event
+            vis weather,home_weather_pic
             sendme
         
         Postinitialize Event
@@ -30,27 +31,59 @@ Page home
             cirs 422,53,18,color_containers
             cirs 28,161,18,color_containers
             cirs 422,161,18,color_containers
+            if(home_weather_pic>0)
+            {
+                weather.pic=home_weather_pic
+                ref weather
+            }
+            ref room_temp
+            ref time
+            ref date
             // Pill bar
             fill 28,189,394,37,color_containers
             cirs 28,207,18,color_containers
             cirs 422,207,18,color_containers
             // Circles
-            cirs 32,257,22,color_containers
-            ref button1
-            cirs 86,257,22,color_containers
-            ref button2
-            cirs 140,257,22,color_containers
-            ref button3
-            cirs 194,257,22,color_containers
-            ref button4
-            cirs 248,257,22,color_containers
-            ref button5
-            cirs 302,257,22,color_containers
-            ref button6
-            cirs 356,257,22,color_containers
-            ref button7
-            cirs 410,257,22,color_containers
-            ref button8
+            if(button01.txt!="")
+            {
+                cirs 32,257,22,color_containers
+                ref button01
+            }
+            if(button02.txt!="")
+            {
+                cirs 86,257,22,color_containers
+                ref button02
+            }
+            if(button03.txt!="")
+            {
+                cirs 140,257,22,color_containers
+                ref button03
+            }
+            if(button04.txt!="")
+            {
+                cirs 194,257,22,color_containers
+                ref button04
+            }
+            if(button05.txt!="")
+            {
+                cirs 248,257,22,color_containers
+                ref button05
+            }
+            if(button06.txt!="")
+            {
+                cirs 302,257,22,color_containers
+                ref button06
+            }
+            if(button07.txt!="")
+            {
+                cirs 356,257,22,color_containers
+                ref button07
+            }
+            if(button08.txt!="")
+            {
+                cirs 410,257,22,color_containers
+                ref button08
+            }
             // Button left
             fill 25,290,180,31,color_button_pressed
             cirs 25,305,15,color_button_pressed
@@ -64,10 +97,6 @@ Page home
             // Mask non-visible area
             fill 450,0,480,320,BLACK
             // Refresh components
-            ref weather
-            ref room_temp
-            ref time
-            ref date
             ref bt_left_label
             ref bt_right_label
             ref entity1_icon
@@ -84,7 +113,7 @@ Page home
 Text room_temp
     Attributes
         ID                  : 2
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -98,13 +127,13 @@ Text room_temp
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 2
+        Font ID             : 3
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
-        Text                : 23,7\xc2\xb0C
+        Text                : 
         Max. Text Size      : 10
         Word wrap           : disabled
         Horizontal Spacing  : 0
@@ -113,7 +142,7 @@ Text room_temp
 Text time
     Attributes
         ID                  : 3
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -127,14 +156,14 @@ Text time
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 3
+        Font ID             : 4
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : 20:45
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 8
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -142,7 +171,7 @@ Text time
 Text date
     Attributes
         ID                  : 4
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -158,12 +187,12 @@ Text date
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : Monday 11.3
-        Max. Text Size      : 50
+        Text                : 
+        Max. Text Size      : 40
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -171,7 +200,7 @@ Text date
 Text bt_left_label
     Attributes
         ID                  : 5
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -185,7 +214,7 @@ Text bt_left_label
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 1
+        Font ID             : 2
         Back. Color         : 1276
         Font Color          : 65535
         Horizontal Alignment: center
@@ -200,7 +229,7 @@ Text bt_left_label
 Text bt_right_label
     Attributes
         ID                  : 6
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -214,7 +243,7 @@ Text bt_right_label
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 1
+        Font ID             : 2
         Back. Color         : 38066
         Font Color          : 61277
         Horizontal Alignment: center
@@ -229,7 +258,7 @@ Text bt_right_label
 Text entity1_icon
     Attributes
         ID                  : 7
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -243,14 +272,14 @@ Text entity1_icon
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 7
+        Font ID             : 8
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\x96\x8d
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -258,7 +287,7 @@ Text entity1_icon
 Text entity1
     Attributes
         ID                  : 8
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -274,11 +303,11 @@ Text entity1
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
-        Text                : 48,7%
+        Text                : 
         Max. Text Size      : 10
         Word wrap           : disabled
         Horizontal Spacing  : 0
@@ -287,7 +316,7 @@ Text entity1
 Text entity2
     Attributes
         ID                  : 9
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -303,7 +332,7 @@ Text entity2
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
@@ -316,7 +345,7 @@ Text entity2
 Text entity2_icon
     Attributes
         ID                  : 10
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -330,14 +359,14 @@ Text entity2_icon
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 7
+        Font ID             : 8
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
         Text                : \xef\x83\x82
-        Max. Text Size      : 10
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -345,7 +374,7 @@ Text entity2_icon
 Text entity3_icon
     Attributes
         ID                  : 11
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -359,14 +388,14 @@ Text entity3_icon
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 7
+        Font ID             : 8
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\x9f\xb3
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -374,7 +403,7 @@ Text entity3_icon
 Text entity3
     Attributes
         ID                  : 12
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -390,11 +419,11 @@ Text entity3
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
-        Text                : not detected
+        Text                : 
         Max. Text Size      : 40
         Word wrap           : disabled
         Horizontal Spacing  : 0
@@ -403,7 +432,7 @@ Text entity3
 Text entity4_icon
     Attributes
         ID                  : 13
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -417,14 +446,14 @@ Text entity4_icon
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 7
+        Font ID             : 8
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\x83\x82
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -432,7 +461,7 @@ Text entity4_icon
 Text entity4
     Attributes
         ID                  : 14
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -448,11 +477,11 @@ Text entity4
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
-        Text                : Garage temp. 15\xc2\xb0C
+        Text                : 
         Max. Text Size      : 40
         Word wrap           : disabled
         Horizontal Spacing  : 0
@@ -461,7 +490,7 @@ Text entity4
 Text entity5_icon
     Attributes
         ID                  : 15
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -475,14 +504,14 @@ Text entity5_icon
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 7
+        Font ID             : 8
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: center
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\x89\x80
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -490,7 +519,7 @@ Text entity5_icon
 Text entity5
     Attributes
         ID                  : 16
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -506,20 +535,20 @@ Text entity5
         Associated Keyboard : none
         Font ID             : 0
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: left
         Vertical Alignment  : center
         Input Type          : character
-        Text                : 715 W
+        Text                : 
         Max. Text Size      : 40
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button1
+Text button01
     Attributes
         ID                  : 17
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -533,22 +562,22 @@ Text button1
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\x9f\x90
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button2
+Text button02
     Attributes
         ID                  : 18
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -562,22 +591,22 @@ Text button2
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\x88\x8f
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button3
+Text button03
     Attributes
         ID                  : 19
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -591,22 +620,22 @@ Text button3
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\x8a\xb9
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button4
+Text button04
     Attributes
         ID                  : 20
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -620,22 +649,22 @@ Text button4
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\x90\xb2
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button5
+Text button05
     Attributes
         ID                  : 21
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -649,22 +678,22 @@ Text button5
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\x80\x9f
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button6
+Text button06
     Attributes
         ID                  : 22
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -678,22 +707,22 @@ Text button6
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\x89\xb8
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button7
+Text button07
     Attributes
         ID                  : 23
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -707,22 +736,22 @@ Text button7
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 0
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xee\xbf\x8e
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
-Text button8
+Text button08
     Attributes
         ID                  : 24
-        Scope               : local
+        Scope               : global
         Dragging            : 0
         Send Component ID   : disabled
         Opacity             : 127
@@ -736,14 +765,362 @@ Text button8
         Fill                : solid color
         Style               : flat
         Associated Keyboard : none
-        Font ID             : 8
+        Font ID             : 9
         Back. Color         : 65535
-        Font Color          : 15756
+        Font Color          : 21130
         Horizontal Alignment: right
         Vertical Alignment  : center
         Input Type          : character
-        Text                : \xef\xa0\xa8
-        Max. Text Size      : 10
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip01
+    Attributes
+        ID                  : 25
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 13
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip02
+    Attributes
+        ID                  : 26
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 42
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip03
+    Attributes
+        ID                  : 27
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 71
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip04
+    Attributes
+        ID                  : 28
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 100
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip05
+    Attributes
+        ID                  : 29
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 129
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip06
+    Attributes
+        ID                  : 30
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 158
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip07
+    Attributes
+        ID                  : 31
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 187
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip08
+    Attributes
+        ID                  : 32
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 216
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip09
+    Attributes
+        ID                  : 33
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 245
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text chip10
+    Attributes
+        ID                  : 34
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 274
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text wifi
+    Attributes
+        ID                  : 35
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 407
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text bluetooth
+    Attributes
+        ID                  : 36
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 378
+        y coordinate        : 2
+        Width               : 30
+        Height              : 30
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 9
+        Back. Color         : 61277
+        Font Color          : 21130
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 3
         Word wrap           : disabled
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
@@ -762,5 +1139,5 @@ Picture weather
         Effect           : load
         Effect Priority  : 0
         Effect Time      : 300
-        Picture ID       : 7
+        Picture ID       : 65535
     

@@ -70,16 +70,25 @@ script:
   - id: !extend action_component_color
     then:
       - lambda: |-
-          if (page == "mem") {
-            if (component == "date_color") {
-              id(home_date_color) = color;
-              disp1->set_component_font_color(hmi::home::DATE.name, color);
-              return;
-            } else if (component == "time_color") {
-              id(home_time_color) = color;
-              disp1->set_component_font_color(hmi::home::TIME.name, color);
-              return;
-            }
+          if (page != "mem") return;
+          if (component == "date_color") {
+            id(home_date_color) = color;
+            disp1->set_component_font_color(hmi::home::DATE.name, color);
+            return;
+          }
+          if (component == "time_color") {
+            id(home_time_color) = color;
+            disp1->set_component_font_color(hmi::home::TIME.name, color);
+            return;
+          }
+
+  - id: !extend action_component_string
+    then:
+      - lambda: |-
+          if (page != "mem") return;
+          if (component == "weather_state") {
+            id(weather_state) = txt.c_str();
+            return;
           }
 
   - id: !extend action_component_val
