@@ -42,4 +42,6 @@ The US Landscape model is fully supported.
 Simply select **NSPanel US Landscape** from the **Update TFT display - Model** selector on your device's page in Home Assistant and upload the TFT file as usual.
 This variant is purpose-built for the US panel mounted horizontally, with the physical buttons on the right side of the screen.
 
+![NSPanel US and EU side-by-side](pics/nspanel_eu_and_us_side_by_side.png)
+
 No manual TFT customisation is required.
