@@ -17,6 +17,7 @@ esphome:
   platformio_options:
     build_flags:
       - -D NSPANEL_EASY_PAGE_HOME
+      - -D NSPANEL_EASY_USE_WEATHER
 
 globals:
   - id: is_climate
@@ -87,7 +88,7 @@ script:
       - lambda: |-
           if (page != "mem") return;
           if (component == "weather_state") {
-            nspanel_easy::weather_condition_index = nspanel_easy::get_weather_index(txt.c_str());
+            weather_condition_index = get_weather_index(txt.c_str());
             page_home_weather_update->execute();
             return;
           }
