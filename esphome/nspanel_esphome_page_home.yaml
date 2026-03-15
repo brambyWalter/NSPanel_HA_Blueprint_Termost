@@ -17,6 +17,7 @@ esphome:
   platformio_options:
     build_flags:
       - -D NSPANEL_EASY_PAGE_HOME
+      - -D NSPANEL_EASY_USE_WEATHER
 
 globals:
   - id: is_climate
@@ -70,16 +71,26 @@ script:
   - id: !extend action_component_color
     then:
       - lambda: |-
-          if (page == "mem") {
-            if (component == "date_color") {
-              id(home_date_color) = color;
-              disp1->set_component_font_color(hmi::home::DATE.name, color);
-              return;
-            } else if (component == "time_color") {
-              id(home_time_color) = color;
-              disp1->set_component_font_color(hmi::home::TIME.name, color);
-              return;
-            }
+          if (page != "mem") return;
+          if (component == "date_color") {
+            id(home_date_color) = color;
+            disp1->set_component_font_color(hmi::home::DATE.name, color);
+            return;
+          }
+          if (component == "time_color") {
+            id(home_time_color) = color;
+            disp1->set_component_font_color(hmi::home::TIME.name, color);
+            return;
+          }
+
+  - id: !extend action_component_text
+    then:
+      - lambda: |-
+          if (page != "mem") return;
+          if (component == "weather_state") {
+            weather_condition_index = get_weather_index(txt.c_str());
+            page_home_weather_update->execute();
+            return;
           }
 
   - id: !extend action_component_val
@@ -216,10 +227,16 @@ script:
           ESP_LOGD("${TAG_PAGE_HOME}", "Update weather pic: %" PRIu8, weather_pic_corrected);
           disp1->set_component_pic(hmi::home::WEATHER.name, weather_pic_corrected);
 
+  - id: page_home_weather_update
+    mode: restart
+    then:
+
+
   - id: !extend stop_all
     then:
       - lambda: |-
           page_home->stop();  // Page home is an exception to the stop_page_constructor, as it can be constructed in the background
           page_home_icon_visibility->stop();
           page_home_weather_pic->stop();
+          page_home_weather_update->stop();
 ...
