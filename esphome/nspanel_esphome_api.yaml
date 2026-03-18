@@ -26,7 +26,7 @@ api:
       - lambda: |-
           update_flag_api_ready->execute();
           boot_log->execute("API", "Client connected");
-          dump_config->execute();
+          // dump_config->execute();
 
   on_client_disconnected:
     then:
@@ -180,7 +180,7 @@ api:
             ESP_LOGV("${TAG_API}", "  visible: %s", YESNO(visible));
 
             // Extract component information using helper function
-            const NextionComponent component = extractNextionComponent(id, page);
+            const esphome::nspanel_easy::NSPanelEasyNextionComponent component = extractNextionComponent(id, page);
 
             action_icon->execute(
               component,
@@ -300,7 +300,8 @@ script:
           if (page == "mem") return;
 
           // Extract component information using helper function
-          const NextionComponent nextion_component = extractNextionComponent(component, page);
+          const esphome::nspanel_easy::NSPanelEasyNextionComponent nextion_component =
+                                                                              extractNextionComponent(component, page);
           const std::string component_page = nextion_component.page;
           const char* target_id = nextion_component.component_id;
           const bool is_home_page = (component_page == hmi::home::PAGE.name);
@@ -324,10 +325,10 @@ script:
     mode: queued
     max_runs: 10
     parameters:
-      component: NextionComponent  # Component identifier
-      icon: string                 # The icon code
-      icon_color: int32_t          # -1 if no color should be set, otherwise the decimal RGB565 color
-      visible: bool                # Set to true to show the component, or false to hide it.
+      component: esphome::nspanel_easy::NSPanelEasyNextionComponent  # Component identifier
+      icon: string  # The icon code
+      icon_color: int32_t  # -1 if no color should be set, otherwise the decimal RGB565 color
+      visible: bool  # Set to true to show the component, or false to hide it.
       is_home_page: bool
       is_current_page: bool
     then:

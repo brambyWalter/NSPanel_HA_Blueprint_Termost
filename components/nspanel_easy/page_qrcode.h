@@ -15,6 +15,7 @@
  * of the NSPanel interface.
  */
 
+namespace esphome {
 namespace nspanel_easy {
   namespace hmi {
     namespace qrcode {
@@ -55,5 +56,6 @@ namespace nspanel_easy {
     }  // namespace qrcode
   }    // namespace hmi
 }  // namespace nspanel_easy
+}  // namespace esphome
 
 #endif  // NSPANEL_EASY_PAGE_QRCODE

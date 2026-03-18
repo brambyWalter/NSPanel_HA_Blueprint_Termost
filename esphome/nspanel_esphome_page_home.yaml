@@ -251,7 +251,8 @@ script:
           const bool is_current_page = (current_page_id == hmi::home::PAGE.id);
 
           // Extract component parts (handles both "id" and "page.id" formats)
-          const NextionComponent component = extractNextionComponent(component_id, hmi::home::PAGE.name);
+          const esphome::nspanel_easy::NSPanelEasyNextionComponent component =
+                                                            extractNextionComponent(component_id, hmi::home::PAGE.name);
 
           // Determine target format: use page.id if not current, otherwise just id
           char target_id[30];  // 14 + 1 (dot) + 14 + 1 (null) = 30
