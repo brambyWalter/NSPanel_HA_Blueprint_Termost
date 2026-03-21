@@ -60,7 +60,7 @@ You can look up the action names available on your Home Assistant instance under
 ### Table of Contents
 <!-- markdownlint-disable MD013 -->
 | Action ID | Action Name | Description |
-|------------|--------------|-------------|
+| --------- | ----------- | ----------- |
 | [`button`](#button-action-button) | [Button Action](#button-action-button) | Configures properties and state of buttons on a specified button page. |
 | [`command`](#command-action-command) | [Command Action](#command-action-command) | Sends a custom command directly to the display. |
 | [`component_color`](#component-color-action-component_color) | [Component Color Action](#component-color-action-component_color) | Changes the foreground color of a specified component on the display. |
@@ -721,7 +721,7 @@ RTTTL is a compact format for storing melody sequences in a text-based format, m
 This string must conform to the RTTTL format, which includes the melody's name, default settings, and a sequence of notes.
 
 **Example Tones:**
-For example tones and further inspiration, you can visit examples of RTTTL songs [here](https://esphome.io/components/rtttl/#common-beeps).
+For example tones and further inspiration, you can visit this list with [examples of RTTTL songs](https://esphome.io/components/rtttl/#common-beeps).
 
 **Home Assistant Example:**
 

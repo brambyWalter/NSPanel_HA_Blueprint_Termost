@@ -9,7 +9,9 @@ The individual elements of the Blueprint are described below.
 
 It is possible to change both the color of the labels and the icons for most of the elements on each screen.
 
-On the blueprint settings, you will be able to select any of the MDI icons supported by Home Assistant, however, your panel will only support the icons available on the [HASwitchPlate Material Design Icons](https://htmlpreview.github.io/?https://github.com/jobr99/Generate-HASP-Fonts/blob/master/cheatsheet.html).
+On the blueprint settings, you will be able to select any of the MDI icons supported by Home Assistant,
+however, your panel will only support the icons available on the
+[HASwitchPlate Material Design Icons](https://htmlpreview.github.io/?https://github.com/jobr99/Generate-HASP-Fonts/blob/master/cheatsheet.html).
 
 For an easier overview, the menu items "Icon Color" and "Label Color" will not be described separately in the following documentation.
 
