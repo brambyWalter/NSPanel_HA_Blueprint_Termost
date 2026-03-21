@@ -227,8 +227,8 @@ The use of a non-conductive tool, like the blue plastic one shown in the picture
       | Panel's Board | TTL USB-to-Serial |
       | :--: | :--: |
       | `3V3` | `VCC`, `3V3`, or `3.3V` |
-      | `TX`  | `RX`  |
-      | `RX`  | `TX`  |
+      | `TX` | `RX` |
+      | `RX` | `TX` |
       | `GND` | `GND` |
       | `IO0` | `GND`<br>This can be connected to a `GND` pin on the panel's board. |
     <!-- markdownlint-enable MD033 -->
