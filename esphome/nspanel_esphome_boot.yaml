@@ -150,6 +150,14 @@ script:
   - id: boot_nextion
     mode: single
     then:
+      - lambda: |-
+          // Display settings
+          boot_log->execute("Boot", "Sending display settings");
+          disp1->send_command_printf("brightness=%i", int(display_brightness->state));
+          disp1->send_command_printf("brightness_dim=%i", int(display_dim_brightness->state));
+          disp1->send_command_printf("brightness_sleep=%i", int(display_sleep_brightness->state));
+          disp1->send_command_printf("wakeup_page_id=%" PRIu8, get_page_id(wakeup_page_name->current_option()));
+          boot_progress->execute(5);
 
   - id: boot_preparation
     mode: single
