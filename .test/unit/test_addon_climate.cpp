@@ -4,6 +4,8 @@
  */
 
 #include <gtest/gtest.h>
+#include <cstdint>
+#include <set>
 #include <string>
 
 // Define the macro before including the header
