@@ -11,7 +11,7 @@ blueprint:
   description: >
     # NSPanel Easy Configuration via Blueprint
 
-    **Blueprint release**: 10
+    **Blueprint release**: 11
 
 
     This project enables comprehensive configuration of your NSPanel through a Blueprint featuring a user interface.
@@ -4211,7 +4211,7 @@ trigger_variables:
     }}
 
 variables:
-  blueprint_version: 10
+  blueprint_version: 11
   pages:
     current: '{{ states(currentpage) }}'
     alarm: "alarm"
