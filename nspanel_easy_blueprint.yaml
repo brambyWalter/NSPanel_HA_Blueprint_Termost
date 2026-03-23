@@ -8551,9 +8551,6 @@ actions:
                                   else "unknown"
                                 }}
                           - condition:
-                              - '{{ nspanel_event is defined }}'
-                              - '{{ nspanel_event.page is defined }}'
-                              - '{{ nspanel_event.page == pages.switch }}'
                               - '{{ switch_entity is defined }}'
                               - '{{ switch_entity is string }}'
                               - '{{ switch_entity is match "switch." or switch_entity is match "input_boolean." }}'
