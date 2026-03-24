@@ -92,7 +92,7 @@ Variable (string) icon
         ID            : 15
         Scope         : local
         Text          : 
-        Max. Text Size: 3
+        Max. Text Size: 4
     
 Variable (int32) inner_d
     Attributes
