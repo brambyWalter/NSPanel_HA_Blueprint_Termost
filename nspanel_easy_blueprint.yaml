@@ -8280,7 +8280,7 @@ actions:
                                   if
                                     climate_entity is defined and
                                     climate_entity is string and
-                                    climate_entity.split(".") | count == 2
+                                    (climate_entity == "embedded_climate" or climate_entity.split(".") | count == 2)
                                   else "unknown"
                                 }}
                               hvac_modes: '{{ state_attr(climate_entity, "hvac_modes") if settings_entity_domain == "climate" }}'
@@ -9916,7 +9916,10 @@ actions:
                                     last_click_button.entity is defined and
                                     last_click_button.entity is string and
                                     last_click_button.entity | length > 0 and
-                                    last_click_button.entity.split(".") | count == 2
+                                    (
+                                      last_click_button.entity == "embedded_climate" or
+                                      last_click_button.entity.split(".") | count == 2
+                                    )
                                   else "unknown"
                                 }}
                           - choose:
