@@ -4,7 +4,6 @@
 
 #include <array>
 #include <cstdint>
-#include <cstring>
 #include <initializer_list>
 #include <string>
 #include "esphome/core/string_ref.h"  // For StringRef
@@ -39,21 +38,48 @@ extern uint8_t last_page_id;
 extern uint8_t wakeup_page_id;
 
 /**
+ * Compares two null-terminated C-strings at compile time.
+ * Equivalent to strcmp(a, b) == 0, but constexpr-compatible.
+ * std::strcmp becomes constexpr only in C++23; this works with C++17/20.
+ *
+ * @param a First null-terminated string.
+ * @param b Second null-terminated string.
+ * @return true if strings are identical, false otherwise.
+ */
+constexpr bool page_names_equal(const char *a, const char *b) {
+  while (*a && *b) {
+    if (*a != *b)
+      return false;
+    ++a;
+    ++b;
+  }
+  return *a == *b;
+}
+
+/**
  * Retrieves the index of a given page name within the page_names array.
+ * When called with a string literal, this is resolved entirely at compile time.
  *
  * @param page_name The name of the page to find.
- * @return The index of the page_name in the page_names array. If the page_name
- *         is not found, returns UINT8_MAX as an indicator that no matching page was found.
+ * @return The index of the page_name in the page_names array, or UINT8_MAX if not found.
  */
-inline uint8_t get_page_id(const char *page_name) {
+constexpr uint8_t get_page_id(const char *page_name) {
   if (page_name == nullptr || *page_name == '\0')
     return UINT8_MAX;
   for (uint8_t i = 0; i < PAGE_COUNT; ++i) {
-    if (strcmp(page_names[i], page_name) == 0)
+    if (page_names_equal(page_names[i], page_name))
       return i;
   }
   return UINT8_MAX;
 }
+
+/**
+ * Retrieves the index of a given page name within the page_names array.
+ * Runtime overload for StringRef; cannot be constexpr as StringRef is not a literal type.
+ *
+ * @param page_name The name of the page to find.
+ * @return The index of the page_name in the page_names array, or UINT8_MAX if not found.
+ */
 inline uint8_t get_page_id(const esphome::StringRef &page_name) {
   if (page_name.empty())
     return UINT8_MAX;
