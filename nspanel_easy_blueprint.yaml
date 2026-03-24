@@ -10367,7 +10367,8 @@ actions:
               - alias: Switch page
                 conditions:
                   - '{{ pages.current == pages.switch }}'
-                  - '{{ trigger.entity_id is match "switch." or trigger.entity_id is match "input_boolean."}}'
+                  - '{{ trigger.entity_id.split(".") | count == 2 }}'
+                  - '{{ trigger.entity_id.split(".")[0] in ["switch", "input_boolean"] }}'
                   - '{{ trigger.entity_id == detailed_entity_state }}'
                 sequence: *refresh_page_switch
               - alias: Water Heater page
@@ -10532,7 +10533,8 @@ actions:
               - alias: Switch page
                 conditions:
                   - '{{ pages.current == pages.switch }}'
-                  - '{{ trigger_entity_id is match "switch." or trigger_entity_id is match "input_boolean." }}'
+                  - '{{ trigger_entity_id.split(".") | count == 2 }}'
+                  - '{{ trigger_entity_id.split(".")[0] in ["switch", "input_boolean"] }}'
                   - '{{ trigger_entity_id == detailed_entity_state }}'
                 sequence: *refresh_page_switch
               - alias: 'Alarm page'
