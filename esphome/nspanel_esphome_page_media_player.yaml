@@ -11,7 +11,6 @@ substitutions:
   PAGE_MEDIA_PLAYER_DELAY_DEFAULT: ${DELAY_DEFAULT}
   PAGE_MEDIA_PLAYER_DELAY_LONG: ${DELAY_LONG}
   PAGE_MEDIA_PLAYER_DELAY_SHORT: ${DELAY_SHORT}
-  PAGE_MEDIA_PLAYER_NAME: media_player
   COMPONENT_ID_MEDIA_PLAYER_BT_VOL_DOWN: 6
   COMPONENT_ID_MEDIA_PLAYER_BT_VOL_UP: 7
   MEDIA_PLAYER_FEATURE_PAUSE: 1
@@ -192,7 +191,7 @@ script:
       - lambda: |-
           if (params_count < 2) return;
 
-          if (params[0] == "${PAGE_MEDIA_PLAYER_NAME}") {
+          if (params[0] == "media_player") {
             // CSV Format:
             // media_player,volume_mute,<value>
             // media_player,volume_set,<value>
