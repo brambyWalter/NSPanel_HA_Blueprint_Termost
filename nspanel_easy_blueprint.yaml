@@ -8201,7 +8201,6 @@ actions:
                                     entity: '{{ entity_id }}'
                                     state: '{{ media_player.state if media_player.state is string else "" }}'
                                     is_volume_muted: '{{ media_player.is_volume_muted if media_player.is_volume_muted is boolean else false }}'
-                                    friendly_name: '{{ media_player.friendly_name if media_player.friendly_name is string else "" }}'
                                     volume_level: '{{ media_player.volume_level }}'
                                     media_title: >
                                       {{
@@ -8282,7 +8281,6 @@ actions:
                               - *delay_default
                               - action: 'esphome.{{ nspanel_name }}_page_alarm'
                                 data:
-                                  page_title: '{{ entity.name }}'
                                   state: '{{ entity_state }}'
                                   supported_features: '{{ supported_features }}'
                                   code_format: '{{ alarm.code_format if alarm.code_format else "none" }}'

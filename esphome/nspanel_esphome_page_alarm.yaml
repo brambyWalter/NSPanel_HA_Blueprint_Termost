@@ -20,7 +20,6 @@ api:
     # Updates the alarm settings page with current state and configuration, integrating with the panel's interface.
     - action: page_alarm
       variables:
-        page_title: string       # Title for the alarm settings page, displayed prominently at the top.
         state: string            # Current state of the alarm system (e.g., "armed_home", "disarmed").
         supported_features: int  # Bitmask representing the alarm system's supported features, determining available controls on the page.
         code_format: string      # Format required for the alarm code (numeric, alphanumeric).
@@ -128,20 +127,6 @@ api:
             disp1->set_component_text("bt_disarm_text", wrapText("${LANG_ALARM_DISARM}",
                                       10, ${LANG_BYTES_PER_CHAR}).c_str());
             feed_wdt_delay(${PAGE_ALARM_DELAY_SHORT});
-
-            // Page header
-            ESP_LOGV("${TAG_PAGE_ALARM}", "Page header");
-            update_alarm_icon->execute("icon_state", state.c_str());  // Icon
-            // Page header - Title
-            std::string title = page_title.c_str();
-
-            // Replace the first occurrence of "\r" (two chars: backslash + r) with a space
-            auto pos = title.find("\\r");
-            if (pos != std::string::npos) {
-              title.replace(pos, 2, " ");
-            }
-
-            disp1->set_component_text("page_label", title.c_str());
 
             ESP_LOGV("${TAG_PAGE_ALARM}", "Done!");
 
