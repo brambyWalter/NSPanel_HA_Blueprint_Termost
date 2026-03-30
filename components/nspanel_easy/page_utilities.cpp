@@ -2,7 +2,7 @@
 
 #ifdef NSPANEL_EASY_PAGE_UTILITIES
 
-#include "icons.h"
+#include "nextion_constants.h"
 #include "page_utilities.h"
 #include <cstdlib>  // For malloc/free
 #ifdef USE_ESP_IDF
@@ -15,7 +15,7 @@ namespace esphome {
 namespace nspanel_easy {
 
 bool page_utilities_enabled = false;
-uint16_t page_utilities_icon_color = Colors::GRAY_LIGHT;
+uint16_t page_utilities_icon_color = Colors::RGB565_GRAY_LIGHT;
 
 static constexpr size_t UTILITIES_GROUPS_COUNT = 8;
 
