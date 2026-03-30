@@ -19,15 +19,6 @@
 namespace esphome {
 namespace nspanel_easy {
 
-/**
- * @brief Tracks whether the screensaver page is currently visible on the display.
- *
- * Set to @c true once the screensaver has been rendered.
- * Reset to @c false whenever the panel wakes up or navigates away.
- * Used to avoid redundant redraws when the screensaver is already active.
- */
-extern bool page_screensaver_rendered;
-
 namespace hmi {
 namespace screensaver {
 

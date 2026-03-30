@@ -21,7 +21,7 @@ globals:
   - id: screensaver_background_color
     type: uint16_t
     restore_value: true
-    initial_value: 'Color::RGB565_BLACK'
+    initial_value: 'Colors::RGB565_BLACK'
   - id: screensaver_display_time
     type: bool
     restore_value: true
@@ -79,28 +79,37 @@ script:
   - id: !extend action_component_color
     then:
       - lambda: |-
-          if (page != "screensaver") return;
-          if (component == "text") {
+          if (page != "mem") return;
+          if (component == hmi::screensaver::TEXT.name) {
             id(screensaver_display_time_color) = color;
-          } else if (component == "screensaver_bco" and color != id(screensaver_background_color)) {
-            id(screensaver_background_color) = color;
-            if (current_page_id == get_page_id("screensaver")) {
-              disp1->send_command("screensaver.bco=screensaver_bco");
+            if (id(screensaver_display_time) and current_page_id == get_page_id("screensaver")) {
+              disp1->set_component_foreground_color(hmi::screensaver::TEXT.name, id(screensaver_display_time_color));
             }
-            page_screensaver_setup_nextion->exectute();
+            return;
           }
-          page_screensaver->execute();
+          if (component == "screensaver_bco" and id(screensaver_background_color) != color) {
+            id(screensaver_background_color) = color;
+            disp1->send_command_printf("screensaver_bco=%" PRIu16, id(screensaver_background_color));
+            return;
+          }
 
   - id: !extend action_component_val
     then:
       - lambda: |-
           if (page != "mem") return;
           if (component == "screensaver_display_time") {
-            id(screensaver_display_time) = (val > 0);
-          } else if (component == "screensaver_time_font") {
-            id(screensaver_display_time_font) = val;
+            const bool temp_display_time = (val > 0);
+            if (id(screensaver_display_time) != temp_display_time) {
+              id(screensaver_display_time) = temp_display_time;
+              page_screensaver->execute();
+            }
+            return;
           }
-          page_screensaver->execute();
+          if (component == "screensaver_time_font" and id(screensaver_display_time_font) != val) {
+            id(screensaver_display_time_font) = val;
+            page_screensaver->execute();
+            return;
+          }
 
   - id: !extend ha_button
     then:
@@ -109,22 +118,20 @@ script:
             timer_reset_all->execute();
             return;
           }
-          static const bool wakeup_with_button_press = ${'true' if wakeup_with_button_press else 'false'};
-          ESP_LOGV("${TAG_PAGE_SCREENSAVER}", "wakeup_with_button_press: %s", YESNO(wakeup_with_button_press));
-          if (not wakeup_with_button_press) return;
-          wakeup->execute(true);
+          ESP_LOGV("${TAG_PAGE_SCREENSAVER}", "wakeup_with_button_press: ${wakeup_with_button_press}");
+          if (${wakeup_with_button_press | lower}) {
+            wakeup->execute(true);
+          }
 
   - id: !extend boot_nextion
     then:
-      - script.execute: page_screensaver_setup_nextion
+      - lambda: |-
+          disp1->send_command_printf("screensaver_bco=%" PRIu16, id(screensaver_background_color));
 
   - id: !extend page_change
     then:
       - lambda: |-
-          if (new_page_id != get_page_id("screensaver")) {
-            page_screensaver_rendered = false;
-            return;
-          }
+          if (new_page_id != get_page_id("screensaver")) return;
           page_screensaver->execute();
 
   - id: page_screensaver
@@ -133,20 +140,17 @@ script:
       - lambda: |-
           if (current_page_id != get_page_id("screensaver")) return;
           page_screensaver_set_brightness->execute();
-          if (!page_screensaver_rendered) {
-            disp1->send_command_printf("wakeup_page_id=%" PRIu8, wakeup_page_id);
-            disp1->send_command("screensaver.bco=screensaver_bco");
-            refresh_hardware_buttons_bars->execute(3);
-            page_screensaver_rendered = true;
-          }
+          disp1->send_command_printf("wakeup_page_id=%" PRIu8, wakeup_page_id);
+          disp1->set_component_background_color("screensaver", id(screensaver_background_color));
           if (id(screensaver_display_time)) {
-            disp1->set_component_font("text", id(screensaver_display_time_font));
-            disp1->set_component_font_color("text", id(screensaver_display_time_color));
-            disp1->show_component("text");
+            disp1->set_component_background_color(hmi::screensaver::TEXT.name, id(screensaver_background_color));
+            disp1->set_component_foreground_color(hmi::screensaver::TEXT.name, id(screensaver_display_time_color));
+            disp1->set_component_font(hmi::screensaver::TEXT.name, id(screensaver_display_time_font));
+            disp1->show_component(hmi::screensaver::TEXT.name);
           }
-          refresh_datetime->execute();
-      - delay: 5s
-      - script.execute: page_screensaver_set_brightness
+          refresh_hardware_buttons_bars->execute(3);
+          if (id(screensaver_display_time)) refresh_datetime->execute();
+          page_screensaver_set_brightness_with_wait->execute();
 
   - id: page_screensaver_set_brightness
     mode: single
@@ -155,18 +159,18 @@ script:
           if (current_page_id != get_page_id("screensaver")) return;
           set_brightness->execute(int(display_sleep_brightness->state));
 
-  - id: page_screensaver_setup_nextion
+  - id: page_screensaver_set_brightness_with_wait
     mode: restart
     then:
-      - lambda: |-
-          disp1->send_command_printf("screensaver_bco=%" PRIu16, screensaver_background_color);
+      - delay: 5s
+      - script.execute: page_screensaver_set_brightness
 
   - id: !extend stop_all
     then:
       - lambda: |-
           page_screensaver->stop();
           page_screensaver_set_brightness->stop();
-          page_screensaver_setup_nextion->stop();
+          page_screensaver_set_brightness_with_wait->stop();
           timer_sleep->stop();
 
   - id: timer_sleep      # Handles the sleep (go to screensaver page) after a timeout

@@ -15,8 +15,6 @@
 namespace esphome {
 namespace nspanel_easy {
 
-bool page_screensaver_rendered = false;  ///< Initially not rendered
-
 }  // namespace nspanel_easy
 }  // namespace esphome
 
