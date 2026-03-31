@@ -70,18 +70,11 @@ struct BlueprintStatusFlags {
   uint8_t relay_settings : 1;       ///< Relay settings configuration completed
   uint8_t version : 1;              ///< Blueprint version received
   uint8_t hw_buttons_settings : 1;  ///< Hardware buttons settings completed
-  uint8_t page_utilities : 1;       ///< Utilities page configuration completed
-  uint8_t reserved : 2;             ///< Reserved (not used in percentage calculation)
+  uint8_t reserved : 3;             ///< Reserved (not used in percentage calculation)
 
   // Default constructor - all flags start as false (zero-initialized)
   BlueprintStatusFlags()
-      : page_home(0),
-        page_qrcode(0),
-        relay_settings(0),
-        version(0),
-        hw_buttons_settings(0),
-        page_utilities(0),
-        reserved(0) {}
+      : page_home(0), page_qrcode(0), relay_settings(0), version(0), hw_buttons_settings(0), reserved(0) {}
 
   /**
    * `@brief` Check if all active flags (bits 0-5) are set
@@ -89,7 +82,7 @@ struct BlueprintStatusFlags {
    */
   bool all_active_flags_set() const {
     // All 6 active flags must be set
-    return page_home && page_qrcode && relay_settings && version && hw_buttons_settings && page_utilities;
+    return page_home && page_qrcode && relay_settings && version && hw_buttons_settings;
   }
 
   /**
@@ -97,7 +90,7 @@ struct BlueprintStatusFlags {
    * `@return` Number of flags set
    */
   uint8_t count_active_flags_set() const {
-    return page_home + page_qrcode + relay_settings + version + hw_buttons_settings + page_utilities;
+    return page_home + page_qrcode + relay_settings + version + hw_buttons_settings;
   }
 
   /**
@@ -105,7 +98,7 @@ struct BlueprintStatusFlags {
    * `@return` Percentage (0.0-100.0) of active flags set (bits 0-5)
    */
   float get_completion_percentage() const {
-    static constexpr uint8_t TOTAL_ACTIVE_FLAGS = 6;
+    static constexpr uint8_t TOTAL_ACTIVE_FLAGS = 5;
     return (static_cast<float>(count_active_flags_set()) / TOTAL_ACTIVE_FLAGS) * 100.0f;
   }
 
@@ -121,7 +114,6 @@ struct BlueprintStatusFlags {
     relay_settings = false;
     version = false;
     hw_buttons_settings = false;
-    page_utilities = false;
     reserved = 0;
   }
 };

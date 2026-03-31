@@ -70,7 +70,6 @@ logger:
 
 nspanel_easy:  # Adds custom library for NSPanel HA Blueprint project
   id: nspanel_easy_component
-  disable_bootloader_logs: false  # To do: The code supporting this should be removed
   on_dump_config:
     then:
       - script.execute: dump_config
@@ -109,10 +108,10 @@ script:
             - lambda: return !is_device_ready_for_tasks();
           then:
             - lambda: |-
-                ESP_LOGW("${TAG_BASE}", "Waiting for the system to be ready before executing an action");
+                ESP_LOGV("${TAG_BASE}", "Waiting for the system to be ready before executing an action");
             - delay: 5s
       - lambda: |-
-          ESP_LOGV("${TAG_BASE}", "The system is ready to run actions");
+          ESP_LOGI("${TAG_BASE}", "The system is ready to run actions");
 
   - id: watchdog_round
     mode: restart

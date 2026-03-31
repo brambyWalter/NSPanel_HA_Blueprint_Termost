@@ -4201,7 +4201,7 @@ trigger_variables:
     }}
 
 variables:
-  blueprint_version: 15
+  blueprint_version: 16
   pages:
     current: '{{ states(currentpage) }}'
     alarm: "alarm"
@@ -6481,35 +6481,18 @@ actions:
                                   utilities_enabled: !input utilities_enabled
                                   bt_utilities_icon: !input home_button08_icon
                               - *delay_boot
-                              - alias: utilities_enabled
-                                action: 'esphome.{{ nspanel_name }}_component_val'
+                              - action: 'esphome.{{ nspanel_name }}_icon'
                                 data:
-                                  page: mem
-                                  id: utilities_enabled
-                                  val: '{{ 1 if utilities_enabled else 0 }}'
-                                continue_on_error: true
-                              - condition: '{{ utilities_enabled }}'
-                              - *delay_boot
-                              - alias: utilities_icon
-                                action: 'esphome.{{ nspanel_name }}_component_text'
-                                data:
-                                  page: mem
-                                  id: utilities_icon
-                                  txt: >
+                                  page: home
+                                  id: bt_utilities
+                                  icon: >
                                     {{
                                       all_icons[bt_utilities_icon.split("mdi:")[1]]
                                       if bt_utilities_icon is string and bt_utilities_icon.split("mdi:")[1] in all_icons
                                       else all_icons.gauge
                                     }}
-                                continue_on_error: true
-                              - *delay_boot
-                              - alias: utilities_icon_color
-                                action: 'esphome.{{ nspanel_name }}_component_color'
-                                data:
-                                  page: mem
-                                  id: utilities_icon_color
-                                  color: !input home_button08_icon_color
-                                continue_on_error: true
+                                  icon_color: !input home_button08_icon_color
+                                  visible: '{{ utilities_enabled }}'
 
                       ###### Notification button ######
                       - &refresh_page_home_notification_button
@@ -7515,6 +7498,7 @@ actions:
                                 {{
                                   home_page.entity_value
                                   | selectattr("entity", "defined")
+                                  | rejectattr("entity", "eq", "")
                                   | rejectattr("entity", "eq", [])
                                   | list
                                 }}
@@ -7719,12 +7703,21 @@ actions:
                       - alias: Light settings page
                         conditions: '{{ nspanel_event.page == pages.light }}'
                         sequence: &refresh_page_light
-                          - variables:
+                          - &get_entity_id_from_event_or_trigger
+                            variables:
                               entity_id: >
                                 {{
                                   nspanel_event.entity
                                   if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
+                                  else (
+                                    trigger.entity_id
+                                    if trigger.entity_id is defined
+                                    else (
+                                      trigger.event.data.entity_id
+                                      if trigger is defined and trigger.event is defined and trigger.event.data is defined and trigger.event.data.entity_id is defined
+                                      else ""
+                                    )
+                                  )
                                 }}
                           - *variable_entity
                           - &entity_details_title_with_icon
@@ -7900,13 +7893,8 @@ actions:
                       - alias: Cover settings page
                         conditions: '{{ nspanel_event.page == pages.cover }}'
                         sequence: &refresh_page_cover
+                          - *get_entity_id_from_event_or_trigger
                           - variables:
-                              entity_id: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
                               entity_device_class: '{{ state_attr(entity_id, "device_class") | default("") }}'
                               cover_icons:
                                 open: >
@@ -8037,13 +8025,8 @@ actions:
                       - alias: Fan settings page
                         conditions: '{{ nspanel_event.page == pages.fan }}'
                         sequence: &refresh_page_fan
+                          - *get_entity_id_from_event_or_trigger
                           - variables:
-                              entity_id: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
                               fan:
                                 supported_features: '{{ state_attr(entity_id, "supported_features") | int(0) }}'
                                 percentage: >
@@ -8130,13 +8113,8 @@ actions:
                       - alias: Media player settings page
                         conditions: '{{ nspanel_event.page == pages.media_player }}'
                         sequence: &refresh_page_media_player
+                          - *get_entity_id_from_event_or_trigger
                           - variables:
-                              entity_id: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
                               wait_completed: false
                           - *variable_entity
                           - *entity_details_title_with_icon
@@ -8229,17 +8207,12 @@ actions:
                       - alias: Alarm settings page
                         conditions: '{{ nspanel_event.page == pages.alarm }}'
                         sequence: &refresh_page_alarm
+                          - *get_entity_id_from_event_or_trigger
                           - variables:
-                              alarm_entity_temp: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
                               alarm_entity: >
                                 {{
-                                  alarm_entity_temp
-                                  if alarm_entity_temp is string and alarm_entity_temp | length > 0
+                                  entity_id
+                                  if entity_id is string and entity_id | length > 0
                                   else None
                                 }}
                           - alias: Alarm settings page - update
@@ -8272,18 +8245,12 @@ actions:
                           - '{{ nspanel_event.page is defined }}'
                           - '{{ nspanel_event.page == pages.climate }}'
                         sequence: &refresh_page_climate
-                          - &variables_climate_entity
-                            variables:
-                              climate_entity_temp: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
+                          - *get_entity_id_from_event_or_trigger
+                          - variables:
                               climate_entity: >
                                 {{
-                                  climate_entity_temp
-                                  if climate_entity_temp is string and climate_entity_temp | length > 0 and climate_entity_temp != "embedded_climate"
+                                  entity_id
+                                  if entity_id is string and entity_id | length > 0 and entity_id != "embedded_climate"
                                   else climate
                                 }}
                               settings_entity_domain: >
@@ -8360,25 +8327,6 @@ actions:
                                 }}
                               sequence:
                                 - *display_value
-                                - variables:
-                                    var_icon: >
-                                      {{
-                                        all_icons[repeat.item.icon.split("mdi:")[1]]
-                                        if
-                                          repeat.item.icon is defined and
-                                          repeat.item.icon is string and
-                                          repeat.item.icon.split("mdi:")[1] in all_icons
-                                        else False
-                                      }}
-                                - if: '{{ var_icon != False }}'
-                                  then:
-                                    - *delay_default
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
-                                      data:
-                                        page: '{{ repeat.item.page }}'
-                                        id: '{{ repeat.item.component }}_icon'
-                                        txt: '{{ var_icon }}'
-                                      continue_on_error: true
                                 - if: '{{ repeat.item.label_color_rgb != [200, 204, 200] }}'
                                   then:
                                     - *delay_default
@@ -8386,6 +8334,13 @@ actions:
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}'
+                                        color: '{{ repeat.item.label_color_rgb }}'
+                                      continue_on_error: true
+                                    - *delay_default
+                                    - action: 'esphome.{{ nspanel_name }}_component_color'
+                                      data:
+                                        page: '{{ repeat.item.page }}'
+                                        id: '{{ repeat.item.component }}_icon'
                                         color: '{{ repeat.item.label_color_rgb }}'
                                       continue_on_error: true
 
@@ -8546,14 +8501,7 @@ actions:
                           - '{{ nspanel_event.page is defined }}'
                           - '{{ nspanel_event.page == pages.button }}'
                         sequence: &refresh_page_button
-                          - &variables_button_entity
-                            variables:
-                              entity_id: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
+                          - *get_entity_id_from_event_or_trigger
                           - condition:
                               - '{{ entity_id is defined }}'
                               - '{{ entity_id is string }}'
@@ -8591,14 +8539,7 @@ actions:
                           - '{{ nspanel_event.page is defined }}'
                           - '{{ nspanel_event.page == pages.switch }}'
                         sequence: &refresh_page_switch
-                          - &variables_switch_entity
-                            variables:
-                              entity_id: >
-                                {{
-                                  nspanel_event.entity
-                                  if nspanel_event is defined and nspanel_event.entity is defined and nspanel_event.entity is string and nspanel_event.entity | length > 1
-                                  else (trigger.entity_id if trigger.entity_id is defined else ((trigger.event | default({})).get('data') or {}).get('entity_id'))
-                                }}
+                          - *get_entity_id_from_event_or_trigger
                           - condition:
                               - '{{ entity_id is defined }}'
                               - '{{ entity_id is string }}'
@@ -8731,6 +8672,7 @@ actions:
                                 {{
                                   water_heater_page_entities
                                   | selectattr("entity", "defined")
+                                  | rejectattr("entity", "eq", "")
                                   | rejectattr("entity", "eq", [])
                                   | list
                                 }}
@@ -10455,7 +10397,8 @@ actions:
                   | selectattr("entity", "eq", trigger.entity_id)
                   | list
                 }}
-              sequence: *display_value
+              sequence:
+                - *display_value
 
       - alias: Update climate page custom buttons
         conditions:
@@ -10500,7 +10443,8 @@ actions:
                   | selectattr("entity", "eq", trigger.entity_id)
                   | list
                 }}
-              sequence: *display_value
+              sequence:
+                - *display_value
 
       - alias: Update utilities pages
         conditions:
