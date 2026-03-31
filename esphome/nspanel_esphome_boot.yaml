@@ -43,13 +43,11 @@ script:
       - script.wait: boot_nextion
       - delay: 1s
       # This should be moved somewhere else
-      - lambda: boot_progress->execute(0);
       - lambda: |-
           boot_log->execute("Boot", "Starting sequence");
           boot_log->execute("Boot", "Waiting for Wi-Fi");
           wait_for_wifi->execute();
       - script.wait: wait_for_wifi
-      - lambda: boot_progress->execute(1);
 
       - delay: ${DELAY_DEFAULT}ms
       - if:
@@ -64,11 +62,9 @@ script:
                 boot_log->execute("Boot", "Wi-Fi connected");
                 page_boot_show_ip->execute();
 
-      - lambda: boot_progress->execute(2);
       - lambda: wait_for_api->execute();
       - script.wait: wait_for_api
       - lambda: |-
-          boot_progress->execute(3);
           if (system_flags.api_ready) {
             boot_log->execute("Boot", "API connected");
           } else {
@@ -81,7 +77,6 @@ script:
 
       # Wait for a response from the blueprint
       - delay: ${DELAY_DEFAULT}ms
-      - lambda: boot_progress->execute(4);
       - if:
           condition:
             - lambda: return not system_flags.blueprint_ready;
@@ -91,7 +86,6 @@ script:
                 wait_for_blueprint->execute();
             - script.wait: wait_for_blueprint
       - lambda: |-
-          boot_progress->execute(5);
           if (not system_flags.blueprint_ready) {
             boot_log->execute("Boot", "Blueprint not available");
           }
@@ -115,18 +109,13 @@ script:
           wait_for_blueprint->execute();
           feed_wdt_delay(${DELAY_DEFAULT});
       - script.wait: wait_for_wifi
-      - lambda: boot_progress->execute(6);
       - script.wait: wait_for_api
-      - lambda: boot_progress->execute(7);
       - script.wait: wait_for_blueprint
-      - lambda: boot_progress->execute(8);
       - script.wait: wait_for_version_tft
-      - lambda: boot_progress->execute(9);
       - script.execute: boot_wrap_up
       - script.wait: boot_wrap_up
 
       - lambda: |-
-          boot_progress->execute(10);
           feed_wdt_delay(${DELAY_DEFAULT});
           set_brightness->execute(display_brightness->state);
           boot_log->execute("Boot", "Jump to wake-up page");
@@ -167,21 +156,6 @@ script:
       - lambda: |-
           ESP_LOGI("${TAG_BOOT}", "Starting boot preparation sequence");
 
-  - id: boot_progress
-    mode: restart
-    parameters:
-      step: uint
-    then:
-      - lambda: |-
-          ESP_LOGD("${TAG_BOOT}", "Progress: %.1f%%", blueprint_status_flags.get_completion_percentage());
-          if (step >= 10) {
-            ESP_LOGI("${TAG_BOOT}", "Progress: Completed");
-            disp1->set_component_value("boot.progress", 100);
-            system_flags.boot_completed = true;
-          } else {
-            disp1->set_component_value("boot.progress", step*10);
-          }
-
   - id: boot_request_blueprint_settings
     mode: single
     parameters:
@@ -209,7 +183,6 @@ script:
           boot_log->stop();
           boot_nextion->stop();
           boot_preparation->stop();
-          boot_progress->stop();
           boot_request_blueprint_settings->stop();
           boot_wrap_up->stop();
           wait_for_boot_completed->stop();
