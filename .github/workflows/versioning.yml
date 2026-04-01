@@ -239,35 +239,35 @@ jobs:
 
           # Python is used instead of yq — yq re-serializes the entire file on
           # in-place edits, introducing unwanted blank lines across releases.
-          # Python updates only the targeted placeholder values by body index,
+          # Python updates only the targeted placeholder values by label name,
           # leaving all other formatting and content untouched.
-          python3 - <<EOF
-import re
+          python3 -c "
+import re, sys
 
-with open("${TEMPLATE}", "r") as f:
+template = sys.argv[1]
+tft = sys.argv[2]
+version = sys.argv[3]
+blueprint = sys.argv[4]
+
+with open(template) as f:
     content = f.read()
 
-# Update placeholder values by matching the label that precedes each one.
-# Each label+placeholder pair is unique, making this safe and index-independent.
 content = re.sub(
     r'(label: TFT Version\b.*?placeholder: )e\.g\.,.*',
-    r'\g<1>e.g., ${MIN_TFT_VERSION}',
-    content, flags=re.DOTALL, count=1
-)
+    r'\g<1>e.g., ' + tft,
+    content, flags=re.DOTALL, count=1)
 content = re.sub(
     r'(label: Firmware Version\b.*?placeholder: )e\.g\.,.*',
-    r'\g<1>e.g., ${VERSION}',
-    content, flags=re.DOTALL, count=1
-)
+    r'\g<1>e.g., ' + version,
+    content, flags=re.DOTALL, count=1)
 content = re.sub(
     r'(label: Blueprint Version\b.*?placeholder: )e\.g\.,.*',
-    r'\g<1>e.g., ${MIN_BLUEPRINT_VERSION}',
-    content, flags=re.DOTALL, count=1
-)
+    r'\g<1>e.g., ' + blueprint,
+    content, flags=re.DOTALL, count=1)
 
-with open("${TEMPLATE}", "w") as f:
+with open(template, 'w') as f:
     f.write(content)
-EOF
+" "$TEMPLATE" "${MIN_TFT_VERSION}" "${VERSION}" "${MIN_BLUEPRINT_VERSION}"
 
       - name: Update blueprint version and name
         if: steps.skip_check.outputs.skip == 'false'
