@@ -45,7 +45,6 @@ script:
             return;
           }
           version_blueprint->publish_state(txt);
-          version_blueprint_set->execute();
 
   - id: !extend boot_early_routines
     then:
@@ -85,7 +84,7 @@ script:
           ESP_LOGD("${TAG_VERSIONING}", "  ESPHome:   ${version}");
           ESP_LOGD("${TAG_VERSIONING}", "  TFT:       %.0f", version_tft->state);
           system_flags.version_check_ok = true;
-          if (version_blueprint->state < "${min_blueprint_version}") {
+          if (!calver_gte(version_blueprint->state, "${min_blueprint_version}")) {
             ESP_LOGW("${TAG_VERSIONING}", "Blueprint version mismatch!");
             if (!version_blueprint->state.empty()) {
               system_flags.version_check_ok = false;
@@ -159,16 +158,8 @@ script:
     then:
       - lambda: |-
           check_versions->stop();
-          version_blueprint_set->stop();
           wait_for_version_blueprint->stop();
           wait_for_versions->stop();
-
-  - id: version_blueprint_set
-    then:
-      - lambda: |-
-          ESP_LOGI("${TAG_VERSIONING}", "Blueprint version: %s", version_blueprint->state.c_str());
-          blueprint_status_flags.version = (version_blueprint->state >= "${min_blueprint_version}");
-          check_versions->execute(!blueprint_status_flags.version || (version_tft->state <= 0));
 
   - id: wait_for_version_blueprint
     mode: single
@@ -177,6 +168,7 @@ script:
           count: 60  # seconds
           then:
             - lambda: |-
+                ESP_LOGV("${TAG_VERSIONING}", "Blueprint version: '%s'", version_blueprint->state.c_str());
                 if (!version_blueprint->state.empty()) wait_for_version_blueprint->stop();
                 if (iteration % 5 == 1) boot_log->execute("Boot", "Waiting for Blueprint version");
                 if (iteration % 9 == 0) boot_request_blueprint_settings->execute("timeout");
@@ -220,4 +212,10 @@ text_sensor:
     update_interval: never
     # Initial state is empty, which HA renders as unavailable.
     # Published by action_component_text when the version is received from HA.
+    on_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("${TAG_VERSIONING}", "Blueprint version: %s", version_blueprint->state.c_str());
+            blueprint_status_flags.version = (calver_gte(version_blueprint->state, "${min_blueprint_version}"));
+            check_versions->execute(!blueprint_status_flags.version || (version_tft->state <= 0));
 ...
