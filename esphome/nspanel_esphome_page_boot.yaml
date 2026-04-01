@@ -79,7 +79,7 @@ script:
             ESP_LOGI("${TAG_PAGE_BOOT}", "Display params:");
             ESP_LOGI("${TAG_PAGE_BOOT}", "  Mode:        %" PRIu8, display_mode);
             ESP_LOGI("${TAG_PAGE_BOOT}", "  Charset:     %" PRIu8, display_charset);
-            ESP_LOGI("${TAG_PAGE_BOOT}", "  TFT version: %.0f%s", temp_version_tft, tft_ver_valid ? "" : " (INVALID)");
+            ESP_LOGI("${TAG_PAGE_BOOT}", "  TFT version: %.0f%s", parsed_version_tft, tft_ver_valid ? "" : " (INVALID)");
 
             system_flags.display_settings_received = tft_ver_valid and display_mode > 0 and display_charset > 0;
           }
