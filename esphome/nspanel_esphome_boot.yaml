@@ -39,8 +39,6 @@ script:
       - script.wait: boot_critical_components
       - script.execute: boot_early_routines
       - script.wait: boot_early_routines
-      - script.execute: boot_nextion
-      - script.wait: boot_nextion
       - delay: 1s
       # This should be moved somewhere else
       - lambda: |-
@@ -77,14 +75,10 @@ script:
 
       # Wait for a response from the blueprint
       - delay: ${DELAY_DEFAULT}ms
-      - if:
-          condition:
-            - lambda: return not system_flags.blueprint_ready;
-          then:
-            - lambda: |-
-                boot_request_blueprint_settings->execute("start");
-                wait_for_blueprint->execute();
-            - script.wait: wait_for_blueprint
+      - lambda: |-
+          boot_request_blueprint_settings->execute("start");
+          wait_for_blueprint->execute();
+      - script.wait: wait_for_blueprint
       - lambda: |-
           if (not system_flags.blueprint_ready) {
             boot_log->execute("Boot", "Blueprint not available");
@@ -97,7 +91,12 @@ script:
           disp1->send_command_printf("brightness_dim=%i", int(display_dim_brightness->state));
           disp1->send_command_printf("brightness_sleep=%i", int(display_sleep_brightness->state));
           disp1->send_command_printf("wakeup_page_id=%" PRIu8, get_page_id(wakeup_page_name->current_option()));
+          feed_wdt_delay(${DELAY_DEFAULT});
 
+      - script.execute: boot_nextion
+      - script.wait: boot_nextion
+
+      - lambda: |-
           // Wrap-up
           feed_wdt_delay(${DELAY_DEFAULT});
           boot_log->execute("Boot", "Wait to finish");
@@ -158,7 +157,7 @@ script:
           ESP_LOGI("${TAG_BOOT}", "Starting boot preparation sequence");
 
   - id: boot_request_blueprint_settings
-    mode: single
+    mode: restart
     parameters:
       step: string
     then:
@@ -166,7 +165,8 @@ script:
           if (system_flags.blueprint_ready) return;
           static uint32_t last_boot_event_fired = 0;
           const uint32_t now = App.get_loop_component_start_time();
-          if ((uint32_t)(now - last_boot_event_fired) < ${BOOT_EVENT_REPEAT_INTERVAL_MS}) return;
+          if (step != "start" &&
+              (uint32_t)(now - last_boot_event_fired) < ${BOOT_EVENT_REPEAT_INTERVAL_MS}) return;
           ESP_LOGD("${TAG_BOOT}", "Request blueprint settings");
           fire_ha_event("boot", {{"step", step.c_str()}});
           last_boot_event_fired = now;
