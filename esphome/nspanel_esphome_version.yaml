@@ -114,7 +114,9 @@ script:
             {"blueprint", version_blueprint->state.c_str() },
             {"min_blueprint_version", "${min_blueprint_version}"},
             {"esphome", "${version}"},
-            {"tft", std::to_string(static_cast<unsigned int>(version_tft->state))},
+            {"tft", std::isnan(version_tft->state) ?
+                    "0" :
+                    std::to_string(static_cast<unsigned int>(version_tft->state))},
             {"min_tft_version", "${min_tft_version}"},
           #ifdef NSPANEL_EASY_ADDON_UPLOAD_TFT
             {"upload_tft_installed", "true"},
