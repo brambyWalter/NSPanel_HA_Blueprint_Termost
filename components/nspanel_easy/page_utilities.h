@@ -22,8 +22,7 @@
  * of the NSPanel interface.
  */
 
-namespace esphome {
-namespace nspanel_easy {
+namespace esphome::nspanel_easy {
 
 extern bool page_utilities_enabled;
 extern uint16_t page_utilities_icon_color;
@@ -59,8 +58,7 @@ template<unsigned int N> void copyStringToCharArray(char (&dest)[N], const std::
   dest[length] = '\0';
 }
 
-namespace hmi {
-namespace utilities {
+namespace hmi::utilities {
 
 /**
  * @namespace utilities
@@ -134,9 +132,7 @@ constexpr HMIComponent GROUP06_LINE = {"utilities.group06_line", 84};      ///< 
 // Navigation button
 constexpr HMIComponent BUTTON_BACK = {"button_back", 90};  ///< Back button (local scope)
 
-}  // namespace utilities
-}  // namespace hmi
-}  // namespace nspanel_easy
-}  // namespace esphome
+}  // namespace hmi::utilities
+}  // namespace esphome::nspanel_easy
 
 #endif  // NSPANEL_EASY_PAGE_UTILITIES
