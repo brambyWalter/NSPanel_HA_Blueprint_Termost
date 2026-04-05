@@ -448,6 +448,27 @@ jobs:
           name: prebuilt-wall-display
           path: prebuilt/
 
+      - name: Verify pre-built artifacts
+        run: |
+          # Check all required files exist and are non-empty (-s: exists and size > 0).
+          # Factory binaries are optional and excluded from this check.
+          ok=true
+          for f in \
+            prebuilt/nspanel_esphome_prebuilt.bin \
+            prebuilt/nspanel_esphome_prebuilt.bin.md5 \
+            prebuilt/nspanel_esphome_prebuilt.manifest.json \
+            prebuilt/wall_display.bin \
+            prebuilt/wall_display.bin.md5 \
+            prebuilt/wall_display.manifest.json; do
+            if [ ! -s "$f" ]; then
+              echo "ERROR: missing or empty file: $f"
+              ok=false
+            else
+              echo "OK: $f ($(wc -c < "$f") bytes)"
+            fi
+          done
+          [ "$ok" = true ] || exit 1
+
       - name: Commit pre-built artifacts
         env:
           NEW_VERSION: ${{ needs.bump.outputs.version }}
