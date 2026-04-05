@@ -92,7 +92,7 @@ The remaining settings are accessible via the device's page in Home Assistant
 
 <!-- markdownlint-disable MD013 MD033 -->
 | Entity | Supported values | Default | Description |
-|:-|:-:|:-:|:-|
+| :- | :-: | :-: | :- |
 | Cover relays mode | `Relay 1 opens, relay 2 closes` or `Relay 2 opens, relay 1 closes` | `Relay 1 opens, relay 2 closes` | Defines which relay opens the cover and which closes it. |
 | Cover open duration | `1ms` to `600000ms` | `1ms` (disabled) | The amount of time it takes the cover to open from the fully closed state. |
 | Cover close duration | `1ms` to `600000ms` | `1ms` (disabled) | The amount of time it takes the cover to close from the fully open state. |
