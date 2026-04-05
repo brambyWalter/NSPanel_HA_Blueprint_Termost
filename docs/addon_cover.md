@@ -80,7 +80,7 @@ The following keys are available in your `substitutions` section:
 
 <!-- markdownlint-disable MD013 MD033 -->
 | Key | Required | Supported values | Default | Description |
-|:-|:-:|:-:|:-:|:-|
+| :- | :-: | :-: | :-: | :- |
 | `cover_device_class` | Optional | Any of the [device classes supported by Home Assistant](https://www.home-assistant.io/integrations/cover/#device-class) | `""` (none) | Sets the cover type at compile time. Influences how the entity is represented in Home Assistant. |
 | `interlock_wait_time` | Optional | `1` to `5000` | `250` | Relay interlock delay in ms. Imposes a time delay from one relay turning off until the other can turn on, preventing both relays from being on simultaneously.<br>***ATTENTION***: this is a software interlock — see [ESPHome Switch Interlocking](https://esphome.io/components/switch/gpio.html#interlocking). |
 <!-- markdownlint-enable MD013 MD033 -->
