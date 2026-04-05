@@ -437,7 +437,17 @@ jobs:
         run: |
           # Remove all known generated files so stale artifacts from a previous
           # release (e.g. factory binaries) are not silently carried forward.
-          rm -f             prebuilt/nspanel_esphome_prebuilt.bin             prebuilt/nspanel_esphome_prebuilt.bin.md5             prebuilt/nspanel_esphome_prebuilt.manifest.json             prebuilt/nspanel_esphome_prebuilt-factory.bin             prebuilt/nspanel_esphome_prebuilt-factory.bin.md5             prebuilt/wall_display.bin             prebuilt/wall_display.bin.md5             prebuilt/wall_display.manifest.json             prebuilt/wall_display-factory.bin             prebuilt/wall_display-factory.bin.md5
+          rm -f \
+            prebuilt/nspanel_esphome_prebuilt.bin \
+            prebuilt/nspanel_esphome_prebuilt.bin.md5 \
+            prebuilt/nspanel_esphome_prebuilt.manifest.json \
+            prebuilt/nspanel_esphome_prebuilt-factory.bin \
+            prebuilt/nspanel_esphome_prebuilt-factory.bin.md5 \
+            prebuilt/wall_display.bin \
+            prebuilt/wall_display.bin.md5 \
+            prebuilt/wall_display.manifest.json \
+            prebuilt/wall_display-factory.bin \
+            prebuilt/wall_display-factory.bin.md5
 
       - name: Download nspanel-easy artifacts
         uses: actions/download-artifact@v4
