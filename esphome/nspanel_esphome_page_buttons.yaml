@@ -34,52 +34,82 @@ api:
         label: string      # Main text label for the button.
       then:
         - lambda: |-
+            const uint16_t icon_color_rgb565 = rgbTo565(icon_color);
+
             ESP_LOGV("${TAG_API}", "Action `button` triggered:");
             ESP_LOGV("${TAG_API}", "  page: %s", page.c_str());
             ESP_LOGV("${TAG_API}", "  id: %s", id.c_str());
             ESP_LOGV("${TAG_API}", "  state: %s", ONOFF(state));
-            ESP_LOGV("${TAG_API}", "  icon_color: %" PRIu16, rgbTo565(icon_color));
+            ESP_LOGV("${TAG_API}", "  icon_color: %" PRIu16, icon_color_rgb565);
             ESP_LOGV("${TAG_API}", "  icon_font: %i", icon_font);
             ESP_LOGV("${TAG_API}", "  bri: %s", bri.c_str());
             ESP_LOGV("${TAG_API}", "  label: %s", label.c_str());
 
-            if (page != current_page->state) {
+            const uint8_t page_id = get_page_id(page.c_str());
+            if (current_page_id != page_id) {
               ESP_LOGW("${TAG_API}", "Page '%s' visible while '%s' was expected",
                                       page_names[current_page_id], page.c_str());
               return;
             }
 
-            const uint8_t button_pic_id = (current_theme == ThemeMode::LIGHT) ?
-                                          ${THEME_PAGE_BUTTONS_LIGHT_PIC_BUTTON} :
-                                          ${THEME_PAGE_BUTTONS_DARK_PIC_BUTTON};
-            const uint8_t button_pressed_pic_id = (current_theme == ThemeMode::LIGHT) ?
-                                                  ${THEME_PAGE_BUTTONS_LIGHT_PIC_PRESSED} :
-                                                  ${THEME_PAGE_BUTTONS_DARK_PIC_PRESSED};
-
-
-            disp1->set_component_picc((id + "pic").c_str(), state ? button_pressed_pic_id : button_pic_id);
-            disp1->set_component_picc((id + "bri").c_str(), state ? button_pressed_pic_id : button_pic_id);
-            disp1->set_component_picc((id + "text").c_str(), state ? button_pressed_pic_id : button_pic_id);
-            disp1->set_component_picc((id + "icon").c_str(), state ? button_pressed_pic_id : button_pic_id);
-            disp1->set_component_font((id + "icon").c_str(), icon_font);
-            disp1->set_component_foreground_color((id + "bri").c_str(), state ? ${COLOR_BLUE_INDIGO} : ${COLOR_WHITE});
-            disp1->set_component_foreground_color((id + "text").c_str(), state ? ${COLOR_BLUE_INDIGO} : 65535);
-            disp1->set_component_font_color((id + "icon").c_str(), rgbTo565(icon_color));
-            disp1->set_component_text((id + "icon").c_str(), icon.c_str());
-            feed_wdt_delay(${DELAY_SHORT});
-
-            disp1->set_component_text((id + "text").c_str(),
-                                      wrapText(label.c_str(), 10, ${LANG_BYTES_PER_CHAR}).c_str());
-            disp1->set_component_text((id + "bri").c_str(), (strcmp(bri.c_str(), "0") == 0) ? " " : bri.c_str());
-
-            disp1->send_command_printf("vis %s,1", (id + "pic").c_str());
-            disp1->send_command_printf("vis %s,1", (id + "icon").c_str());
-            disp1->send_command_printf("vis %s,1", (id + "text").c_str());
-            disp1->send_command_printf("vis %s,1", (id + "bri").c_str());
-            disp1->send_command_printf("vis %s,1", id.c_str());
+            action_button->execute(
+              page_id,
+              id.c_str(),
+              state,
+              icon.c_str(),
+              icon_color_rgb565,
+              static_cast<uint8_t>(icon_font),
+              bri.c_str(),
+              label.c_str()
+            );
 
 esphome:
   platformio_options:
     build_flags:
       - -D NSPANEL_EASY_PAGE_BUTTONS
+
+script:
+  - id: action_button
+    mode: queued
+    max_runs: 24
+    parameters:
+      page_id: uint8_t      # Identifier of the page where the button is located.
+      button_id: string     # Unique identifier for the button.
+      state: bool           # Determines the button's state, influencing background and other visual aspects.
+      icon: string          # Icon codepoint from HASwitchPlate Material Design Icons. Example: "\uE6E8" for mdi:lightbulb-on-outline.
+      icon_color: uint16_t  # RGB color (RGB565) for the icon.
+      icon_font: uint8_t    # Nextion font identifier for the icon, default is 8.
+      bri: string           # Brightness level or other dynamic info to be displayed close to the icon.
+      label: string         # Main text label for the button.
+    then:
+      - lambda: |-
+          if (current_page_id != page_id) return;
+
+          const uint8_t button_pic_id = (current_theme == ThemeMode::LIGHT) ?
+                                        ${THEME_PAGE_BUTTONS_LIGHT_PIC_BUTTON} :
+                                        ${THEME_PAGE_BUTTONS_DARK_PIC_BUTTON};
+          const uint8_t button_pressed_pic_id = (current_theme == ThemeMode::LIGHT) ?
+                                                ${THEME_PAGE_BUTTONS_LIGHT_PIC_PRESSED} :
+                                                ${THEME_PAGE_BUTTONS_DARK_PIC_PRESSED};
+
+          disp1->set_component_picc((button_id + "pic").c_str(), state ? button_pressed_pic_id : button_pic_id);
+          disp1->set_component_picc((button_id + "bri").c_str(), state ? button_pressed_pic_id : button_pic_id);
+          disp1->set_component_picc((button_id + "text").c_str(), state ? button_pressed_pic_id : button_pic_id);
+          disp1->set_component_picc((button_id + "icon").c_str(), state ? button_pressed_pic_id : button_pic_id);
+          disp1->set_component_font((button_id + "icon").c_str(), icon_font);
+          disp1->set_component_foreground_color((button_id + "bri").c_str(),
+                                                state ? Colors::RGB565_BLUE_INDIGO : Colors::RGB565_WHITE);
+          disp1->set_component_foreground_color((button_id + "text").c_str(),
+                                                state ? Colors::RGB565_BLUE_INDIGO : Colors::RGB565_WHITE);
+          disp1->set_component_font_color((button_id + "icon").c_str(), icon_color);
+          disp1->set_component_text((button_id + "icon").c_str(), icon.c_str());
+
+          disp1->set_component_text((button_id + "text").c_str(), wrapText(label.c_str(), 10, ${LANG_BYTES_PER_CHAR}).c_str());
+          disp1->set_component_text((button_id + "bri").c_str(), (strcmp(bri.c_str(), "0") == 0) ? " " : bri.c_str());
+
+          disp1->send_command_printf("vis %s,1", (button_id + "pic").c_str());
+          disp1->send_command_printf("vis %s,1", (button_id + "icon").c_str());
+          disp1->send_command_printf("vis %s,1", (button_id + "text").c_str());
+          disp1->send_command_printf("vis %s,1", (button_id + "bri").c_str());
+          disp1->send_command_printf("vis %s,1", button_id.c_str());
 ...
