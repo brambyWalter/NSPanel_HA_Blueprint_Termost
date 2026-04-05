@@ -54,7 +54,7 @@ substitutions:
 packages:
   remote_package:
     url: https://github.com/edwardtfn/NSPanel-Easy
-    ref: main
+    ref: latest
     refresh: 300s
     files:
       - nspanel_esphome.yaml # Basic package
@@ -80,7 +80,7 @@ The following keys are available in your `substitutions` section:
 
 <!-- markdownlint-disable MD013 MD033 -->
 | Key | Required | Supported values | Default | Description |
-|:-|:-:|:-:|:-:|:-|
+| :- | :-: | :-: | :-: | :- |
 | `cover_device_class` | Optional | Any of the [device classes supported by Home Assistant](https://www.home-assistant.io/integrations/cover/#device-class) | `""` (none) | Sets the cover type at compile time. Influences how the entity is represented in Home Assistant. |
 | `interlock_wait_time` | Optional | `1` to `5000` | `250` | Relay interlock delay in ms. Imposes a time delay from one relay turning off until the other can turn on, preventing both relays from being on simultaneously.<br>***ATTENTION***: this is a software interlock — see [ESPHome Switch Interlocking](https://esphome.io/components/switch/gpio.html#interlocking). |
 <!-- markdownlint-enable MD013 MD033 -->
@@ -92,7 +92,7 @@ The remaining settings are accessible via the device's page in Home Assistant
 
 <!-- markdownlint-disable MD013 MD033 -->
 | Entity | Supported values | Default | Description |
-|:-|:-:|:-:|:-|
+| :- | :-: | :-: | :- |
 | Cover relays mode | `Relay 1 opens, relay 2 closes` or `Relay 2 opens, relay 1 closes` | `Relay 1 opens, relay 2 closes` | Defines which relay opens the cover and which closes it. |
 | Cover open duration | `1ms` to `600000ms` | `1ms` (disabled) | The amount of time it takes the cover to open from the fully closed state. |
 | Cover close duration | `1ms` to `600000ms` | `1ms` (disabled) | The amount of time it takes the cover to close from the fully open state. |

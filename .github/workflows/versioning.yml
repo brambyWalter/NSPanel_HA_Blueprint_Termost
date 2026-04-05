@@ -2,13 +2,17 @@
 #
 # Triggered by merging a PR to the main branch, it automatically:
 # 1. Bumps the CalVer version (YYYY.M.seq)
-# 2. Updates the bug report template with current version placeholders
-# 3. Commits the changes and pushes to main
-# 4. Builds pre-built firmware binaries in parallel (nspanel-easy, wall-display)
-# 5. Commits the compiled binaries, checksums, and manifests to main
-# 6. Creates a version tag and GitHub Release
-# 7. Updates the stable and latest floating tags
-# 8. Announces the release on Discord
+# 2. Calculates the minimum upstream version (current month minus 2, YYYY.M.0)
+# 3. Resolves the "next" sentinel in min_blueprint_version, if set
+# 4. Updates min_esphome_compiler_version and blueprint homeassistant.min_version
+# 5. Updates the bug report template with current version placeholders
+# 6. Updates the blueprint version and display name
+# 7. Commits all version changes and pushes to main
+# 8. Builds pre-built firmware binaries in parallel (nspanel-easy, wall-display)
+# 9. Commits the compiled binaries, checksums, and manifests to main
+# 10. Creates a version tag and GitHub Release
+# 11. Updates the stable and latest floating tags
+# 12. Announces the release on Discord
 #
 # The workflow skips execution if the merge commit message contains
 # [skip-versioning] to prevent loops from its own version bump commits.
@@ -152,12 +156,62 @@ jobs:
           echo "version=${NEXT_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Bumping version: $CURRENT_VERSION -> $NEXT_VERSION"
 
+      - name: Calculate minimum upstream versions
+        id: min_upstream
+        if: steps.skip_check.outputs.skip == 'false'
+        run: |
+          # Minimum upstream version is always 2 months behind the current month,
+          # with patch fixed at 0 (e.g. April 2026 -> 2026.2.0, Jan 2026 -> 2025.11.0).
+          # This is the contract for the minimum ESPHome compiler and Home Assistant
+          # versions required to build and run NSPanel Easy.
+          CURRENT_YEAR=$(date +%Y)
+          CURRENT_MONTH=$(date +%-m)  # No leading zero
+
+          MIN_MONTH=$((CURRENT_MONTH - 2))
+          MIN_YEAR=$CURRENT_YEAR
+          if [[ $MIN_MONTH -le 0 ]]; then
+            MIN_MONTH=$((MIN_MONTH + 12))
+            MIN_YEAR=$((MIN_YEAR - 1))
+          fi
+
+          MIN_UPSTREAM_VERSION="${MIN_YEAR}.${MIN_MONTH}.0"
+          echo "version=${MIN_UPSTREAM_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Minimum upstream version: ${MIN_UPSTREAM_VERSION}"
+
       - name: Update version.yaml file
         if: steps.skip_check.outputs.skip == 'false'
         env:
           NEW_VERSION: ${{ steps.next_version.outputs.version }}
         run: |
           yq eval '.version = strenv(NEW_VERSION)' -i ./versioning/version.yaml
+
+      - name: Resolve min_blueprint_version sentinel and update upstream versions
+        if: steps.skip_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.next_version.outputs.version }}
+          MIN_UPSTREAM_VERSION: ${{ steps.min_upstream.outputs.version }}
+        run: |
+          ESPHOME_VERSION_FILE="esphome/nspanel_esphome_version.yaml"
+          MIN_BP=$(yq eval '.substitutions.min_blueprint_version' "$ESPHOME_VERSION_FILE")
+
+          # If min_blueprint_version is set to the sentinel "next", replace it
+          # with the actual version being released, tying the compatibility
+          # requirement to this exact release.
+          if [[ "$MIN_BP" == "next" || "$MIN_BP" == '${version}' ]]; then
+            yq eval \
+              '.substitutions.min_blueprint_version = strenv(NEW_VERSION)' \
+              -i "$ESPHOME_VERSION_FILE"
+            echo "Resolved min_blueprint_version sentinel to ${NEW_VERSION}"
+          else
+            echo "min_blueprint_version is already set to ${MIN_BP}, no sentinel to resolve"
+          fi
+
+          # Always update the minimum ESPHome compiler version to 2 months ago,
+          # keeping the upstream contract in sync with the release date.
+          yq eval \
+            '.substitutions.min_esphome_compiler_version = strenv(MIN_UPSTREAM_VERSION)' \
+            -i "$ESPHOME_VERSION_FILE"
+          echo "Updated min_esphome_compiler_version to ${MIN_UPSTREAM_VERSION}"
 
       - name: Extract cross-component version information
         id: versions
@@ -189,11 +243,53 @@ jobs:
             "$VERSION" \
             "$MIN_BLUEPRINT_VERSION"
 
+      - name: Update blueprint version and name
+        if: steps.skip_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.next_version.outputs.version }}
+          MIN_UPSTREAM_VERSION: ${{ steps.min_upstream.outputs.version }}
+        run: |
+          BLUEPRINT="nspanel_easy_blueprint.yaml"
+
+          # sed is used intentionally here instead of yq — the blueprint contains
+          # a large icon table with unicode escape sequences (\uXXXX) that yq would
+          # silently convert to their literal UTF-8 characters, corrupting the file.
+
+          # Update the blueprint display name shown in the HA Blueprints dashboard.
+          sed -i \
+            "s/^  name: NSPanel Easy Configuration.*/  name: NSPanel Easy Configuration (v${NEW_VERSION})/" \
+            "$BLUEPRINT"
+          if ! grep -q "^  name: NSPanel Easy Configuration (v${NEW_VERSION})" "$BLUEPRINT"; then
+            echo "ERROR: Failed to update blueprint display name in $BLUEPRINT"
+            exit 1
+          fi
+
+          # Update the blueprint's own version number, used by ESPHome to verify
+          # compatibility against min_blueprint_version at runtime.
+          sed -i \
+            "s/^  blueprint_version: .*/  blueprint_version: ${NEW_VERSION}/" \
+            "$BLUEPRINT"
+          if ! grep -q "^  blueprint_version: ${NEW_VERSION}$" "$BLUEPRINT"; then
+            echo "ERROR: Failed to update blueprint_version in $BLUEPRINT"
+            exit 1
+          fi
+
+          # Update the minimum Home Assistant version required to run this blueprint,
+          # kept 2 months behind the release date to match the upstream contract.
+          sed -i \
+            "s/^    min_version: .*/    min_version: ${MIN_UPSTREAM_VERSION}/" \
+            "$BLUEPRINT"
+          if ! grep -q "^    min_version: ${MIN_UPSTREAM_VERSION}$" "$BLUEPRINT"; then
+            echo "ERROR: Failed to update min_version in $BLUEPRINT"
+            exit 1
+          fi
+
       - name: Restore YAML document end markers
         if: steps.skip_check.outputs.skip == 'false'
         run: |
-          # Re-append document end marker stripped by yq on version.yaml in-place edits.
-          for file in ./versioning/version.yaml; do
+          # yq strips the YAML document end marker (...) on in-place edits.
+          # Re-append it to all files modified by yq.
+          for file in ./versioning/version.yaml esphome/nspanel_esphome_version.yaml; do
             if [ -f "$file" ] && ! tail -1 "$file" | grep -qx '\.\.\.'; then
               echo '...' >> "$file"
             fi
@@ -204,7 +300,8 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.next_version.outputs.version }}
         run: |
-          git add ./versioning/version.yaml .github/ISSUE_TEMPLATE/bug.yml
+          git add ./versioning/version.yaml .github/ISSUE_TEMPLATE/bug.yml \
+                  esphome/nspanel_esphome_version.yaml nspanel_easy_blueprint.yaml
           git commit -m "Bump version to ${NEW_VERSION} [skip-versioning]"
 
       - name: Push changes to main
