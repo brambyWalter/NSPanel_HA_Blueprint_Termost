@@ -63,9 +63,17 @@ script:
             // Stop the timer which sends these params, as those are not going to change anymore
             disp1->send_command("tm_esphome.en=0");
 
-            // Parse display parameters
-            display_mode    = atoi(params[2].c_str());
-            display_charset = atoi(params[3].c_str());
+            // Parse display parameters — use strtoul for strict validation,
+            // rejecting negative values, whitespace, and non-numeric input.
+            char *end = nullptr;
+
+            const unsigned long parsed_mode = strtoul(params[2].c_str(), &end, 10);
+            const bool mode_valid = (end != params[2].c_str()) && (*end == '\0') && (parsed_mode <= UINT8_MAX);
+            display_mode = mode_valid ? static_cast<uint8_t>(parsed_mode) : 0;
+
+            const unsigned long parsed_charset = strtoul(params[3].c_str(), &end, 10);
+            const bool charset_valid = (end != params[3].c_str()) && (*end == '\0') && (parsed_charset <= UINT8_MAX);
+            display_charset = charset_valid ? static_cast<uint8_t>(parsed_charset) : 0;
 
             // Validate TFT version string — must be bare "major" or "major.minor",
             // with both sides non-empty and no more than one dot.
@@ -74,10 +82,10 @@ script:
             const bool tft_ver_valid =
                 !ver_str.empty() &&
                 ver_str.find_first_not_of("0123456789.") == std::string::npos &&  // digits and dot only
-                (dot == std::string::npos ||                  // bare integer, no dot
-                 (dot != 0 &&                                 // dot not at start
-                  dot != ver_str.size() - 1 &&               // dot not at end
-                  ver_str.find('.', dot + 1) == std::string::npos));  // no second dot
+                (dot == std::string::npos ||                                      // bare integer, no dot
+                 (dot != 0 &&                                                     // dot not at start
+                  dot != ver_str.size() - 1 &&                                    // dot not at end
+                  ver_str.find('.', dot + 1) == std::string::npos));              // no second dot
             version_tft->publish_state(tft_ver_valid ? ver_str : "");
 
             ESP_LOGI("${TAG_PAGE_BOOT}", "Display params:");
