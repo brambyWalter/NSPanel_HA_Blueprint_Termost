@@ -241,6 +241,13 @@ def build_ttf(meta, svg_dir, output_path, version_str):
         if len(failed) > 5:
             print(f"    ... and {len(failed) - 5} more")
 
+        # Prevent shipping silently-broken icon sets.
+        allowed_blank_glyphs = {"ab-testing"}
+        unexpected_failed = [name for name, _ in failed if name not in allowed_blank_glyphs]
+        if unexpected_failed:
+            print("ERROR: Unexpected glyph failures detected; aborting artifact generation.")
+            sys.exit(2)
+
     fb.setupGlyf(glyphs)
     fb.setupHorizontalMetrics(metrics)
     fb.font.save(str(output_path))
