@@ -71,7 +71,7 @@ Variable (string) version
     Attributes
         ID            : 14
         Scope         : local
-        Text          : 2026.3.0
+        Text          : 2026.4.0
         Max. Text Size: 8
     
 Text nspanel_easy
@@ -347,8 +347,7 @@ Timer tm_esphome
                 rest
             }
             covx display_mode,va0.txt,0,0
-            covx charset,va1.txt,0,0
-            csv.txt="blank,params,"+va0.txt+","+va1.txt+","+version.txt
+            csv.txt="blank,params,"+va0.txt+","+version.txt
             printh 92
             prints "localevent",0
             printh 00
