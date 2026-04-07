@@ -190,7 +190,8 @@ uint8_t adjusted_text_length(const std::string &text, const std::string &half_wi
   for (char const &c : text) {
     length += (half_width_chars.find(c) != std::string::npos) ? 0.5f : 1.0f;
   }
-  return static_cast<uint8_t>(std::ceil(length));
+  const float ceiled = std::ceil(length);
+  return static_cast<uint8_t>(ceiled > 255.0f ? 255.0f : ceiled);
 }
 
 }  // namespace esphome::nspanel_easy

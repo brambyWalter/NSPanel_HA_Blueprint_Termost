@@ -234,7 +234,7 @@ script:
       - script.wait: stop_all
       - wait_until:
           condition:
-            - lambda: return (!(display_mode > 0 and display_mode < 4));
+            - lambda: return (!(display_mode > 0 and display_mode < UINT8_MAX));
           timeout: 1s
 
       # Stop Bluetooth stack if present
