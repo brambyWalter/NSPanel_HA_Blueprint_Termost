@@ -16,9 +16,9 @@ substitutions:
   wifi_password: NSPanel_Easy
 
 packages:
-  - core_package: !include ../esphome/nspanel_esphome_core.yaml
-  - standard_pkg: !include ../esphome/nspanel_esphome_standard.yaml
-  - upload_tft_package: !include ../esphome/nspanel_esphome_addon_upload_tft.yaml
+  - !include ../esphome/nspanel_esphome_core.yaml
+  - !include ../esphome/nspanel_esphome_standard.yaml
+  - !include ../esphome/nspanel_esphome_addon_upload_tft.yaml
 
 api:
   actions:
