@@ -192,7 +192,7 @@ script:
           static const char* const NEXTION_UPDATE_URL = "${nextion_update_url}";
           if (NEXTION_UPDATE_URL[0] != '\0') {
             resolved_url = NEXTION_UPDATE_URL;
-          } else if (!url.empty()) {
+          } else if (!url.empty() && url != "default") {
             // URL explicitly provided to this script
             resolved_url = url;
           } else {
