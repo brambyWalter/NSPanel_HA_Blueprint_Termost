@@ -19,8 +19,8 @@ substitutions:
   temp_step: "0.5"   # Temperature granularity
 
 packages:
-  - !include nspanel_esphome_prebuilt.yaml
-  - !include ../esphome/nspanel_esphome_addon_climate_heat.yaml
+  prebuilt_package: !include nspanel_esphome_prebuilt.yaml
+  climate_heat: !include ../esphome/nspanel_esphome_addon_climate_heat.yaml
 
 dashboard_import:
   package_import_url: github://edwardtfn/NSPanel-Easy/prebuilt/wall_display.yaml@main
