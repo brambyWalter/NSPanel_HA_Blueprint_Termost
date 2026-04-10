@@ -70,8 +70,10 @@ jobs:
           #   original_title: <title>
           #   -->
           ORIGINAL_TITLE=$(echo "$PR_BODY" \
+            | awk '/^<!-- release-meta/,/^-->/' \
             | grep 'original_title:' \
-            | sed 's/original_title: //')
+            | sed 's/original_title: //' \
+            | head -1)
 
           # Fall back to the bump PR title (minus the ci: prefix and marker)
           # if the meta block is missing for any reason.
