@@ -7457,28 +7457,24 @@ actions:
                                                     else "_{_unavailable_}_"
                                                   }}
                                               continue_on_error: true
-                                            # Restore visibility for zero → non-zero transitions
-                                            - if: '{{ hide_if_zero is defined and hide_if_zero }}'
-                                              then:
-                                                - *delay_default
-                                                - action: 'esphome.{{ nspanel_name }}_components_visibility'
-                                                  data:
-                                                    page: '{{ repeat.item.page }}'
-                                                    ids:
-                                                      - '{{ repeat.item.component }}'
-                                                      - '{{ repeat.item.component }}_icon'
-                                                    visible: true
-                                                  continue_on_error: true
+                                            # Restore visibility after any displayable state (e.g. zero → non-zero transition)
+                                            - *delay_default
+                                            - action: 'esphome.{{ nspanel_name }}_components_visibility'
+                                              data:
+                                                page: '{{ repeat.item.page }}'
+                                                ids:
+                                                  - '{{ repeat.item.component }}'
+                                                  - '{{ repeat.item.component }}_icon'
+                                                visible: true
+                                              continue_on_error: true
                                       else:
-                                        # No value (unavailable/unknown): hide both value and icon
+                                        # No value (unavailable/unknown): show localized marker
                                         - *delay_default
-                                        - action: 'esphome.{{ nspanel_name }}_components_visibility'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text'
                                           data:
                                             page: '{{ repeat.item.page }}'
-                                            ids:
-                                              - '{{ repeat.item.component }}'
-                                              - '{{ repeat.item.component }}_icon'
-                                            visible: false
+                                            id: '{{ repeat.item.component }}'
+                                            txt: '_{_unavailable_}_'
                                           continue_on_error: true
 
                       ## BUTTON PAGES 01 - 04 ##
