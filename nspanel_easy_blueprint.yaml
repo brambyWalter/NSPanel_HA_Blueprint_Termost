@@ -7468,13 +7468,23 @@ actions:
                                                 visible: true
                                               continue_on_error: true
                                       else:
-                                        # No value (unavailable/unknown): show localized marker
+                                        # No value (unavailable/unknown): show localized marker and keep icon visible
                                         - *delay_default
                                         - action: 'esphome.{{ nspanel_name }}_component_text'
                                           data:
                                             page: '{{ repeat.item.page }}'
                                             id: '{{ repeat.item.component }}'
                                             txt: '_{_unavailable_}_'
+                                          continue_on_error: true
+                                        # Ensure both value and icon are visible (recovery from hide-if-zero)
+                                        - *delay_default
+                                        - action: 'esphome.{{ nspanel_name }}_components_visibility'
+                                          data:
+                                            page: '{{ repeat.item.page }}'
+                                            ids:
+                                              - '{{ repeat.item.component }}'
+                                              - '{{ repeat.item.component }}_icon'
+                                            visible: true
                                           continue_on_error: true
 
                       ## BUTTON PAGES 01 - 04 ##
