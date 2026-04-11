@@ -552,15 +552,15 @@ standard panel functionality:
 
 | Action | Default | Re-enable with |
 | :- | :-: | :- |
-| `upload_tft` | excluded | `include_action_upload_tft: "true"` |
-| `wake_up` | excluded | `include_action_wake_up: "true"` |
+| `upload_tft` | excluded | `include_action_upload_tft: true` |
+| `wake_up` | excluded | `include_action_wake_up: true` |
 
 To re-enable one or both, add the corresponding substitution:
 
 ```yaml
 substitutions:
-  include_action_upload_tft: "true"  # Register the upload_tft API action
-  include_action_wake_up: "true"     # Register the wake_up API action
+  include_action_upload_tft: true  # Register the upload_tft API action
+  include_action_wake_up: true     # Register the wake_up API action
 ```
 
 **`upload_tft`** — triggers a TFT file upload from a specified URL. Not needed if you rely
