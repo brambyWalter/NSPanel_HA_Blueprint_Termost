@@ -18,21 +18,8 @@ substitutions:
 
 esp32:
   framework:
-    advanced:
-      loop_task_stack_size: 16384
-      # minimum_chip_revision: "3.0"  # To do: Wait as this was released on v2026.1.0
-      # sram1_as_iram: true  # To do: Enable this after v2026.6.0
     sdkconfig_options:
       CONFIG_ESP32_REV_MIN_3: y  # Remove after implementing `minimum_chip_revision`
-      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: y
-      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: y
-      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "16384"
-      CONFIG_MBEDTLS_DYNAMIC_BUFFER: y
-      CONFIG_MBEDTLS_DYNAMIC_FREE_CA_CERT: y
-      CONFIG_MBEDTLS_DYNAMIC_FREE_CONFIG_DATA: y
-      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: y
-      CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY: y
-      CONFIG_SPIRAM_RODATA: y
 
 esphome:
   platformio_options:

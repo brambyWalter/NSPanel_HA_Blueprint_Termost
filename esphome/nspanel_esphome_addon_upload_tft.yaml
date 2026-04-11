@@ -73,7 +73,7 @@ button:
 
 display:
   - id: !extend disp1
-    tft_url: "${nextion_update_base_url}/nspanel_blank.tft"
+    tft_url: "http://x/x.tft"
     exit_reparse_on_start: true
 
 globals:
