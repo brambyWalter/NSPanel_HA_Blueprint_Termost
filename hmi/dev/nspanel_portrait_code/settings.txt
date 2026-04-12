@@ -19,27 +19,46 @@ Page settings
     
     Events
         Preinitialize Event
+            // Brightness slider
             dim=brightness
             brightslider.val=brightness
             covx brightslider.val,bright_text.txt,0,0
             bright_text.txt+="%"
+            // Dim slider
             dimslider.val=brightness_dim
             covx dimslider.val,dim_text.txt,0,0
             dim_text.txt+="%"
-            vis lbl_sleep,0
-            vis bt_sleep,0
-            for(sys0=1;sys0<=last_component.id;sys0++)
+            // Light theme: apply background image and foreground colors
+            if(theme==1)
             {
-                b[sys0].picc=settings.pic
-                b[sys0].pco=color_pco_main
+                // Page background
+                settings.pic=pic_background_main
+                // Section labels
+                lbl_bright.picc=settings.pic
+                lbl_bright.pco=color_pco_main
+                lbl_dim.picc=settings.pic
+                lbl_dim.pco=color_pco_main
+                // Slider value labels
+                bright_text.picc=settings.pic
+                bright_text.pco=color_pco_main
+                dim_text.picc=settings.pic
+                dim_text.pco=color_pco_main
+                // Sliders
+                brightslider.pic=89
+                brightslider.pic1=88
+                dimslider.pic=91
+                dimslider.pic1=90
+                // Action buttons
+                bt_reboot_pic.pic=92
+                bt_sleep_pic.pic=93
+                bt_theme_pic.pic=94
+                // Back button
+                button_back.pco=color_pco_navigation
+                button_back.picc=settings.pic
+                button_back.picc2=settings.pic
             }
+            // Back button font (theme-independent)
             button_back.font=button_back_font
-            button_back.pco=color_pco_navigation
-            button_back.picc2=settings.pic
-            brightslider.picc1=slider_picc1.val
-            dimslider.picc1=slider_picc1.val
-            t2.pco=color_pco_navigation
-            t3.pco=color_pco_navigation
             sendme
         
         Touch Press Event
@@ -50,22 +69,10 @@ Page settings
         
 Variable (string) csv
     Attributes
-        ID            : 27
+        ID            : 11
         Scope         : local
         Text          : 
         Max. Text Size: 50
-    
-Variable (int32) slider_picc1
-    Attributes
-        ID   : 28
-        Scope: global
-        Value: 34
-    
-Variable (int32) last_component
-    Attributes
-        ID   : 29
-        Scope: local
-        Value: 0
     
 Text bright_text
     Attributes
@@ -74,10 +81,10 @@ Text bright_text
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 244
-        y coordinate            : 225
+        x coordinate            : 76
+        y coordinate            : 323
         Width                   : 60
-        Height                  : 40
+        Height                  : 20
         Effect                  : load
         Effect Priority         : 0
         Effect Time             : 300
@@ -85,8 +92,8 @@ Text bright_text
         Associated Keyboard     : none
         Font ID                 : 1
         Cropped Back. Picture ID: 0
-        Horizontal Alignment    : right
-        Vertical Alignment      : bottom
+        Horizontal Alignment    : center
+        Vertical Alignment      : center
         Input Type              : character
         Text                    : 80%
         Max. Text Size          : 4
@@ -101,10 +108,10 @@ Text dim_text
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 244
-        y coordinate            : 325
+        x coordinate            : 182
+        y coordinate            : 323
         Width                   : 60
-        Height                  : 40
+        Height                  : 20
         Effect                  : load
         Effect Priority         : 0
         Effect Time             : 300
@@ -112,8 +119,8 @@ Text dim_text
         Associated Keyboard     : none
         Font ID                 : 1
         Cropped Back. Picture ID: 0
-        Horizontal Alignment    : right
-        Vertical Alignment      : bottom
+        Horizontal Alignment    : center
+        Vertical Alignment      : center
         Input Type              : character
         Text                    : 20%
         Max. Text Size          : 4
@@ -121,82 +128,17 @@ Text dim_text
         Horizontal Spacing      : 0
         Vertical Spacing        : 0
     
-Text lbl_reboot
-    Attributes
-        ID                  : 5
-        Scope               : local
-        Dragging            : 0
-        Send Component ID   : on press and release
-        Opacity             : 127
-        x coordinate        : 15
-        y coordinate        : 58
-        Width               : 225
-        Height              : 45
-        Effect              : load
-        Effect Priority     : 0
-        Effect Time         : 300
-        Fill                : solid color
-        Style               : flat
-        Associated Keyboard : none
-        Font ID             : 3
-        Back. Color         : 6339
-        Font Color          : 65535
-        Horizontal Alignment: left
-        Vertical Alignment  : center
-        Input Type          : character
-        Text                :  Reboot
-        Max. Text Size      : 25
-        Word wrap           : disabled
-        Horizontal Spacing  : 0
-        Vertical Spacing    : 0
-    
-    Events
-        Touch Press Event
-            tm_boot_page.en=1
-        
-        Touch Release Event
-            tm_boot_page.en=0
-        
-Text lbl_sleep
-    Attributes
-        ID                  : 6
-        Scope               : local
-        Dragging            : 0
-        Send Component ID   : on press and release
-        Opacity             : 127
-        x coordinate        : 15
-        y coordinate        : 107
-        Width               : 225
-        Height              : 45
-        Effect              : load
-        Effect Priority     : 0
-        Effect Time         : 300
-        Fill                : solid color
-        Style               : flat
-        Associated Keyboard : none
-        Font ID             : 3
-        Back. Color         : 6339
-        Font Color          : 65535
-        Horizontal Alignment: left
-        Vertical Alignment  : center
-        Input Type          : character
-        Text                :  Sleep mode
-        Max. Text Size      : 25
-        Word wrap           : disabled
-        Horizontal Spacing  : 0
-        Vertical Spacing    : 0
-    
 Text lbl_bright
     Attributes
-        ID                      : 7
+        ID                      : 5
         Scope                   : local
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 18
-        y coordinate            : 225
-        Width                   : 180
-        Height                  : 40
+        x coordinate            : 77
+        y coordinate            : 43
+        Width                   : 60
+        Height                  : 20
         Effect                  : load
         Effect Priority         : 0
         Effect Time             : 300
@@ -204,8 +146,8 @@ Text lbl_bright
         Associated Keyboard     : none
         Font ID                 : 1
         Cropped Back. Picture ID: 0
-        Horizontal Alignment    : left
-        Vertical Alignment      : bottom
+        Horizontal Alignment    : center
+        Vertical Alignment      : center
         Input Type              : character
         Text                    : Bright
         Max. Text Size          : 25
@@ -215,15 +157,15 @@ Text lbl_bright
     
 Text lbl_dim
     Attributes
-        ID                      : 8
+        ID                      : 6
         Scope                   : local
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 18
-        y coordinate            : 325
-        Width                   : 180
-        Height                  : 40
+        x coordinate            : 183
+        y coordinate            : 43
+        Width                   : 60
+        Height                  : 20
         Effect                  : load
         Effect Priority         : 0
         Effect Time             : 300
@@ -231,8 +173,8 @@ Text lbl_dim
         Associated Keyboard     : none
         Font ID                 : 1
         Cropped Back. Picture ID: 0
-        Horizontal Alignment    : left
-        Vertical Alignment      : bottom
+        Horizontal Alignment    : center
+        Vertical Alignment      : center
         Input Type              : character
         Text                    : Dim
         Max. Text Size          : 25
@@ -240,220 +182,164 @@ Text lbl_dim
         Horizontal Spacing      : 0
         Vertical Spacing        : 0
     
-Text lbl_brightness
+Text bt_reboot_icon
     Attributes
-        ID                      : 16
-        Scope                   : local
-        Dragging                : 0
-        Send Component ID       : on press and release
-        Opacity                 : 127
-        x coordinate            : 18
-        y coordinate            : 195
-        Width                   : 286
-        Height                  : 30
-        Effect                  : load
-        Effect Priority         : 0
-        Effect Time             : 300
-        Fill                    : crop image
-        Associated Keyboard     : none
-        Font ID                 : 3
-        Cropped Back. Picture ID: 0
-        Horizontal Alignment    : center
-        Vertical Alignment      : center
-        Input Type              : character
-        Text                    : Brightness
-        Max. Text Size          : 25
-        Word wrap               : disabled
-        Horizontal Spacing      : 0
-        Vertical Spacing        : 0
+        ID                  : 15
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 40
+        y coordinate        : 373
+        Width               : 50
+        Height              : 50
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 10
+        Back. Color         : 10597
+        Font Color          : 65535
+        Horizontal Alignment: right
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : \xee\x9c\x88
+        Max. Text Size      : 4
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
     
-Text t0
+Text bt_sleep_icon
     Attributes
-        ID                      : 17
-        Scope                   : local
-        Dragging                : 0
-        Send Component ID       : on press and release
-        Opacity                 : 127
-        x coordinate            : 271
-        y coordinate            : 269
-        Width                   : 37
-        Height                  : 34
-        Effect                  : load
-        Effect Priority         : 0
-        Effect Time             : 300
-        Fill                    : crop image
-        Associated Keyboard     : none
-        Font ID                 : 7
-        Cropped Back. Picture ID: 0
-        Horizontal Alignment    : center
-        Vertical Alignment      : center
-        Input Type              : character
-        Text                    : \xee\x96\xa7
-        Max. Text Size          : 10
-        Word wrap               : disabled
-        Horizontal Spacing      : 0
-        Vertical Spacing        : 0
+        ID                  : 16
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 135
+        y coordinate        : 373
+        Width               : 50
+        Height              : 50
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 10
+        Back. Color         : 10597
+        Font Color          : 65535
+        Horizontal Alignment: right
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : \xee\x92\xb1
+        Max. Text Size      : 4
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
     
-    Events
-        Touch Release Event
-            if(brightslider.val<100)
-            {
-                brightslider.val++
-                covx brightslider.val,bright_text.txt,0,0
-                bright_text.txt+="%"
-                printh 91
-                prints "brightslider",0
-                printh 00
-                prints brightslider.val,0
-                printh FF FF FF
-            }
-        
-Text t1
+Text bt_theme_icon
     Attributes
-        ID                      : 18
-        Scope                   : local
-        Dragging                : 0
-        Send Component ID       : on press and release
-        Opacity                 : 127
-        x coordinate            : 271
-        y coordinate            : 370
-        Width                   : 37
-        Height                  : 34
-        Effect                  : load
-        Effect Priority         : 0
-        Effect Time             : 300
-        Fill                    : crop image
-        Associated Keyboard     : none
-        Font ID                 : 7
-        Cropped Back. Picture ID: 0
-        Horizontal Alignment    : center
-        Vertical Alignment      : center
-        Input Type              : character
-        Text                    : \xee\x96\xa7
-        Max. Text Size          : 10
-        Word wrap               : disabled
-        Horizontal Spacing      : 0
-        Vertical Spacing        : 0
+        ID                  : 17
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 230
+        y coordinate        : 373
+        Width               : 50
+        Height              : 50
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 10
+        Back. Color         : 10597
+        Font Color          : 65535
+        Horizontal Alignment: right
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : \xee\x94\x8d
+        Max. Text Size      : 4
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
     
-    Events
-        Touch Release Event
-            if(dimslider.val<100)
-            {
-                dimslider.val++
-                covx dimslider.val,dim_text.txt,0,0
-                dim_text.txt+="%"
-                printh 91
-                prints "dimslider",0
-                printh 00
-                prints dimslider.val,0
-                printh FF FF FF
-            }
-        
-Text t2
+Picture bt_reboot_pic
     Attributes
-        ID                      : 19
-        Scope                   : local
-        Dragging                : 0
-        Send Component ID       : on press and release
-        Opacity                 : 127
-        x coordinate            : 15
-        y coordinate            : 370
-        Width                   : 30
-        Height                  : 34
-        Effect                  : load
-        Effect Priority         : 0
-        Effect Time             : 300
-        Fill                    : crop image
-        Associated Keyboard     : none
-        Font ID                 : 7
-        Cropped Back. Picture ID: 0
-        Horizontal Alignment    : center
-        Vertical Alignment      : center
-        Input Type              : character
-        Text                    : \xee\x96\xa7
-        Max. Text Size          : 10
-        Word wrap               : disabled
-        Horizontal Spacing      : 0
-        Vertical Spacing        : 0
+        ID               : 12
+        Scope            : local
+        Dragging         : 0
+        Send Component ID: disabled
+        Opacity          : 127
+        x coordinate     : 35
+        y coordinate     : 368
+        Width            : 60
+        Height           : 60
+        Effect           : load
+        Effect Priority  : 0
+        Effect Time      : 300
+        Picture ID       : 85
     
-    Events
-        Touch Release Event
-            if(dimslider.val>0)
-            {
-                dimslider.val--
-                covx dimslider.val,dim_text.txt,0,0
-                dim_text.txt+="%"
-                printh 91
-                prints "dimslider",0
-                printh 00
-                prints dimslider.val,0
-                printh FF FF FF
-            }
-        
-Text t3
+Picture bt_sleep_pic
     Attributes
-        ID                      : 20
-        Scope                   : local
-        Dragging                : 0
-        Send Component ID       : on press and release
-        Opacity                 : 127
-        x coordinate            : 15
-        y coordinate            : 269
-        Width                   : 30
-        Height                  : 34
-        Effect                  : load
-        Effect Priority         : 0
-        Effect Time             : 300
-        Fill                    : crop image
-        Associated Keyboard     : none
-        Font ID                 : 7
-        Cropped Back. Picture ID: 0
-        Horizontal Alignment    : center
-        Vertical Alignment      : center
-        Input Type              : character
-        Text                    : \xee\x96\xa7
-        Max. Text Size          : 10
-        Word wrap               : disabled
-        Horizontal Spacing      : 0
-        Vertical Spacing        : 0
+        ID               : 13
+        Scope            : local
+        Dragging         : 0
+        Send Component ID: disabled
+        Opacity          : 127
+        x coordinate     : 130
+        y coordinate     : 368
+        Width            : 60
+        Height           : 60
+        Effect           : load
+        Effect Priority  : 0
+        Effect Time      : 300
+        Picture ID       : 86
     
-    Events
-        Touch Release Event
-            if(brightslider.val>0)
-            {
-                brightslider.val--
-                covx brightslider.val,bright_text.txt,0,0
-                bright_text.txt+="%"
-                printh 91
-                prints "brightslider",0
-                printh 00
-                prints brightslider.val,0
-                printh FF FF FF
-            }
-        
+Picture bt_theme_pic
+    Attributes
+        ID               : 14
+        Scope            : local
+        Dragging         : 0
+        Send Component ID: disabled
+        Opacity          : 127
+        x coordinate     : 225
+        y coordinate     : 368
+        Width            : 60
+        Height           : 60
+        Effect           : load
+        Effect Priority  : 0
+        Effect Time      : 300
+        Picture ID       : 87
+    
 Slider brightslider
     Attributes
-        ID                             : 1
-        Scope                          : local
-        Dragging                       : 0
-        Send Component ID              : on press and release
-        Opacity                        : 127
-        x coordinate                   : 46
-        y coordinate                   : 273
-        Width                          : 227
-        Height                         : 32
-        Effect                         : load
-        Effect Priority                : 0
-        Effect Time                    : 300
-        Direction                      : horizontal
-        Fill                           : crop image
-        Cursor width                   : auto
-        Cursor height                  : 255
-        Cropped Back. Picture ID       : 33
-        Cropped Slided Back. Picture ID: 34
-        Position                       : 80
-        Upper range limit              : 100
-        Lower range limit              : 0
+        ID                     : 1
+        Scope                  : local
+        Dragging               : 0
+        Send Component ID      : on press and release
+        Opacity                : 127
+        x coordinate           : 87
+        y coordinate           : 65
+        Width                  : 40
+        Height                 : 250
+        Effect                 : load
+        Effect Priority        : 0
+        Effect Time            : 300
+        Direction              : vertical
+        Fill                   : image
+        Cursor width           : auto
+        Cursor height          : 255
+        Back. Picture ID       : 82
+        Slided Back. Picture ID: 81
+        Position               : 80
+        Upper range limit      : 100
+        Lower range limit      : 0
     
     Events
         Touch Release Event
@@ -464,27 +350,27 @@ Slider brightslider
         
 Slider dimslider
     Attributes
-        ID                             : 2
-        Scope                          : local
-        Dragging                       : 0
-        Send Component ID              : on press and release
-        Opacity                        : 127
-        x coordinate                   : 46
-        y coordinate                   : 374
-        Width                          : 227
-        Height                         : 32
-        Effect                         : load
-        Effect Priority                : 0
-        Effect Time                    : 300
-        Direction                      : horizontal
-        Fill                           : crop image
-        Cursor width                   : auto
-        Cursor height                  : 255
-        Cropped Back. Picture ID       : 33
-        Cropped Slided Back. Picture ID: 34
-        Position                       : 20
-        Upper range limit              : 100
-        Lower range limit              : 0
+        ID                     : 2
+        Scope                  : local
+        Dragging               : 0
+        Send Component ID      : on press and release
+        Opacity                : 127
+        x coordinate           : 193
+        y coordinate           : 65
+        Width                  : 40
+        Height                 : 250
+        Effect                 : load
+        Effect Priority        : 0
+        Effect Time            : 300
+        Direction              : vertical
+        Fill                   : image
+        Cursor width           : auto
+        Cursor height          : 255
+        Back. Picture ID       : 84
+        Slided Back. Picture ID: 83
+        Position               : 20
+        Upper range limit      : 100
+        Lower range limit      : 0
     
     Events
         Touch Release Event
@@ -495,7 +381,7 @@ Slider dimslider
         
 Button button_back
     Attributes
-        ID                                  : 11
+        ID                                  : 7
         Scope                               : local
         Dragging                            : 0
         Send Component ID                   : on press and release
@@ -525,187 +411,64 @@ Button button_back
         Touch Press Event
             page home_page_id
         
-Dual-state Button bt_reboot
+Hotspot bt_reboot_hs
     Attributes
-        ID                        : 9
-        Scope                     : local
-        Dragging                  : 0
-        Send Component ID         : on press and release
-        Opacity                   : 127
-        x coordinate              : 240
-        y coordinate              : 58
-        Width                     : 65
-        Height                    : 45
-        Effect                    : load
-        Effect Priority           : 0
-        Effect Time               : 300
-        Fill                      : solid color
-        Style                     : flat
-        Font ID                   : 10
-        Back. Color (Unpressed)   : 6339
-        Back. Picture ID (Pressed): 65535
-        Back. Color (Pressed)     : 6339
-        Font Color (Unpressed)    : 65535
-        Font Color (Pressed)      : 1055
-        Horizontal Alignment      : center
-        Vertical Alignment        : center
-        State                     : unpressed
-        Text                      : \xee\x9c\x88
-        Max. Text Size            : 3
-        Word wrap                 : disabled
-        Horizontal Spacing        : 0
-        Vertical Spacing          : 0
-    
-Dual-state Button bt_sleep
-    Attributes
-        ID                        : 10
-        Scope                     : local
-        Dragging                  : 0
-        Send Component ID         : on press and release
-        Opacity                   : 127
-        x coordinate              : 240
-        y coordinate              : 107
-        Width                     : 65
-        Height                    : 45
-        Effect                    : load
-        Effect Priority           : 0
-        Effect Time               : 300
-        Fill                      : solid color
-        Style                     : flat
-        Font ID                   : 10
-        Back. Color (Unpressed)   : 6339
-        Back. Picture ID (Pressed): 65535
-        Back. Color (Pressed)     : 6339
-        Font Color (Unpressed)    : 65535
-        Font Color (Pressed)      : 1055
-        Horizontal Alignment      : center
-        Vertical Alignment        : center
-        State                     : unpressed
-        Text                      : \xee\xa8\x98
-        Max. Text Size            : 3
-        Word wrap                 : disabled
-        Horizontal Spacing        : 0
-        Vertical Spacing          : 0
-    
-Hotspot bt_bright_down
-    Attributes
-        ID               : 12
+        ID               : 18
         Scope            : local
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
-        x coordinate     : 0
-        y coordinate     : 257
-        Width            : 45
-        Height           : 60
+        x coordinate     : 30
+        y coordinate     : 363
+        Width            : 70
+        Height           : 70
+        Effect           : load
+        Effect Priority  : 0
+        Effect Time      : 300
+    
+Hotspot bt_sleep_hs
+    Attributes
+        ID               : 19
+        Scope            : local
+        Dragging         : 0
+        Send Component ID: on press and release
+        Opacity          : 127
+        x coordinate     : 125
+        y coordinate     : 363
+        Width            : 70
+        Height           : 70
         Effect           : load
         Effect Priority  : 0
         Effect Time      : 300
     
     Events
-        Touch Release Event
-            if(brightslider.val>0)
-            {
-                brightslider.val--
-                covx brightslider.val,bright_text.txt,0,0
-                bright_text.txt+="%"
-                printh 91
-                prints "brightslider",0
-                printh 00
-                prints brightslider.val,0
-                printh FF FF FF
-            }
+        Touch Press Event
+            page screensaver
         
-Hotspot bt_bright_up
+Hotspot bt_theme_hs
     Attributes
-        ID               : 13
+        ID               : 20
         Scope            : local
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
-        x coordinate     : 274
-        y coordinate     : 255
-        Width            : 43
-        Height           : 60
+        x coordinate     : 220
+        y coordinate     : 363
+        Width            : 70
+        Height           : 70
         Effect           : load
         Effect Priority  : 0
         Effect Time      : 300
     
     Events
-        Touch Release Event
-            if(brightslider.val<100)
-            {
-                brightslider.val++
-                covx brightslider.val,bright_text.txt,0,0
-                bright_text.txt+="%"
-                printh 91
-                prints "brightslider",0
-                printh 00
-                prints brightslider.val,0
-                printh FF FF FF
-            }
-        
-Hotspot bt_dim_down
-    Attributes
-        ID               : 14
-        Scope            : local
-        Dragging         : 0
-        Send Component ID: on press and release
-        Opacity          : 127
-        x coordinate     : 0
-        y coordinate     : 358
-        Width            : 45
-        Height           : 60
-        Effect           : load
-        Effect Priority  : 0
-        Effect Time      : 300
-    
-    Events
-        Touch Release Event
-            if(dimslider.val>0)
-            {
-                dimslider.val--
-                covx dimslider.val,dim_text.txt,0,0
-                dim_text.txt+="%"
-                printh 91
-                prints "dimslider",0
-                printh 00
-                prints dimslider.val,0
-                printh FF FF FF
-            }
-        
-Hotspot bt_dim_up
-    Attributes
-        ID               : 15
-        Scope            : local
-        Dragging         : 0
-        Send Component ID: on press and release
-        Opacity          : 127
-        x coordinate     : 274
-        y coordinate     : 358
-        Width            : 45
-        Height           : 60
-        Effect           : load
-        Effect Priority  : 0
-        Effect Time      : 300
-    
-    Events
-        Touch Release Event
-            if(dimslider.val<100)
-            {
-                dimslider.val++
-                covx dimslider.val,dim_text.txt,0,0
-                dim_text.txt+="%"
-                printh 91
-                prints "dimslider",0
-                printh 00
-                prints dimslider.val,0
-                printh FF FF FF
-            }
+        Touch Press Event
+            theme=1-theme
+            theme_apply.previous_page.val=dp
+            page theme_apply
         
 Timer tm_bright
     Attributes
-        ID         : 21
+        ID         : 8
         Scope      : local
         Period (ms): 1000
         Enabled    : no
@@ -726,7 +489,7 @@ Timer tm_bright
         
 Timer tm_dim
     Attributes
-        ID         : 22
+        ID         : 9
         Scope      : local
         Period (ms): 1000
         Enabled    : no
@@ -745,20 +508,9 @@ Timer tm_dim
             brightness_dim=dimslider.val
             tm_dim.en=0
         
-Timer tm_boot_page
-    Attributes
-        ID         : 23
-        Scope      : local
-        Period (ms): 1000
-        Enabled    : no
-    
-    Events
-        Timer Event
-            page boot
-        
 Timer tm_debug
     Attributes
-        ID         : 24
+        ID         : 10
         Scope      : local
         Period (ms): 5000
         Enabled    : no
@@ -767,17 +519,3 @@ Timer tm_debug
         Timer Event
             page debug
         
-Timer tm_bright_slid
-    Attributes
-        ID         : 25
-        Scope      : local
-        Period (ms): 1000
-        Enabled    : no
-    
-Timer tm_dim_slider
-    Attributes
-        ID         : 26
-        Scope      : local
-        Period (ms): 1000
-        Enabled    : no
-    

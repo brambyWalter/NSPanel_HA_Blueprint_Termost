@@ -104,6 +104,32 @@ for i in 32 33 34 37 46 47; do
   fi
 done
 
+# 81,82: brightslider (blue, gray) | 83,84: dimslider (blue, gray)
+# 85,86,87: action buttons 1, 2, 3
+if [[ $VARIANT = landscape* ]]; then
+  # brightslider: x=15, y=80, w=420, h=36
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_horizontal_blue.png" -geometry +15+80 -composite -background black -flatten -crop 420x36+15+80 +repage "$VARIANT/81.png"
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_horizontal_gray.png" -geometry +15+80 -composite -background black -flatten -crop 420x36+15+80 +repage "$VARIANT/82.png"
+  # dimslider: x=15, y=147, w=420, h=36
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_horizontal_blue.png" -geometry +15+147 -composite -background black -flatten -crop 420x36+15+147 +repage "$VARIANT/83.png"
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_horizontal_gray.png" -geometry +15+147 -composite -background black -flatten -crop 420x36+15+147 +repage "$VARIANT/84.png"
+  # action buttons: x=57/177/297, y=210, w=60, h=60
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +57+210  -composite -background black -flatten -crop 60x60+57+210  +repage "$VARIANT/85.png"
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +177+210 -composite -background black -flatten -crop 60x60+177+210 +repage "$VARIANT/86.png"
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +297+210 -composite -background black -flatten -crop 60x60+297+210 +repage "$VARIANT/87.png"
+else
+  # brightslider: x=87, y=65, w=40, h=250
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_vertical_blue.png" -geometry +87+65  -composite -background black -flatten -crop 40x250+87+65  +repage "$VARIANT/81.png"
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_vertical_gray.png" -geometry +87+65  -composite -background black -flatten -crop 40x250+87+65  +repage "$VARIANT/82.png"
+  # dimslider: x=193, y=65, w=40, h=250
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_vertical_blue.png" -geometry +193+65 -composite -background black -flatten -crop 40x250+193+65 +repage "$VARIANT/83.png"
+  magick_command "$VARIANT/0.png" "pics/brightness_bar_vertical_gray.png" -geometry +193+65 -composite -background black -flatten -crop 40x250+193+65 +repage "$VARIANT/84.png"
+  # action buttons: x=35/130/225, y=368, w=60, h=60
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +35+368  -composite -background black -flatten -crop 60x60+35+368  +repage "$VARIANT/85.png"
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +130+368 -composite -background black -flatten -crop 60x60+130+368 +repage "$VARIANT/86.png"
+  magick_command "$VARIANT/0.png" "pics/60x60_button_dark_gray.png" -geometry +225+368 -composite -background black -flatten -crop 60x60+225+368 +repage "$VARIANT/87.png"
+fi
+
 # Keep these with black background, either as they are on a black screen or they don't have transparency (e.g. sliders)
 
 # 16: Slider cursor on Settings page
