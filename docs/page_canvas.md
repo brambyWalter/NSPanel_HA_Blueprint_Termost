@@ -260,7 +260,7 @@ automation:
 Display resolution: 480×320 px. The right 30 px (x=450 to x=479) are not visible on EU model,
 so the effective drawing area is 450×320 px.
 
-```
+```txt
 (0,0) ────────────────────── (449,0)  ← 450px visible width
   │  header (icon/title/close) │   ← 48 px tall
   │────────────────────────────│
@@ -274,7 +274,7 @@ so the effective drawing area is 450×320 px.
 
 Display resolution: 320×480 px. The full width is visible.
 
-```
+```txt
 (0,0) ──────────── (319,0)   ← 320px visible width
   │  header         │   ← 48 px tall
   │─────────────────│
