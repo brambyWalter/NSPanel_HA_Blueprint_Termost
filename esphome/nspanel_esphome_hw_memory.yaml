@@ -18,14 +18,15 @@ substitutions:
 
 esp32:
   framework:
-    sdkconfig_options:
-      CONFIG_ESP32_REV_MIN_3: y  # Remove after implementing `minimum_chip_revision`
+    advanced:
+      minimum_chip_revision: "3.0"
+    #sdkconfig_options:
+    #  CONFIG_ESP32_REV_MIN_3: y  # Remove after implementing `minimum_chip_revision`
 
 esphome:
   platformio_options:
     build_flags:
       - -D NSPANEL_EASY_HW_MEMORY
-      - -D USE_ESP32_MIN_CHIP_REVISION_SET  # Remove after implementing `minimum_chip_revision`
 
 nspanel_easy:
   psram_clk_pin: ${GPIO_PSRAM_CLK_PIN}
