@@ -409,7 +409,7 @@ def build_cheatsheet(name_to_ttf_cp, zi_map, ttf_filename, output_path, version_
     .grid {{ display: flex; flex-wrap: wrap; padding: 0.8em; gap: 5px; }}
     .icon {{
       width: 128px; padding: 10px 6px 7px; background: #2d2d2d;
-      border-radius: 4px; text-align: center; cursor: pointer;
+      border-radius: 4px; text-align: center;
       border: 1px solid transparent; transition: border-color 0.15s;
       user-select: none;
     }}

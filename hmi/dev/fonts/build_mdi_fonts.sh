@@ -17,7 +17,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 SVG_DIR="$(cd "${REPO_DIR}/../MaterialDesign-SVG" 2>/dev/null && pwd)" || {
   echo "ERROR: MaterialDesign-SVG repo not found at ${REPO_DIR}/../MaterialDesign-SVG"
   echo "  Clone it with:"
