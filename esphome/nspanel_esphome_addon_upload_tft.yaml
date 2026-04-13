@@ -73,8 +73,8 @@ button:
 
 display:
   - id: !extend disp1
-    tft_url: "http://x/x.tft"
     exit_reparse_on_start: true
+    tft_url: "http://x/x.tft"  # This is an intentional placeholder URL and will be replaced dynamically
 
 globals:
   - id: first_time_synced_ms

@@ -15,11 +15,10 @@ display:
     on_touch:
       then:
         - lambda: |-
-            if (
-                  !touch_event and  // Only act with release
-                  page_id == get_page_id("settings") and
-                  component_id == 9  // Reboot button
-                ) {
+            if 
+            if (page_id != get_page_id("settings")) return;
+            if (touch_event) return;  // Ignore any touch event and only act with release
+            if (component_id == 18) {  // Reboot button hotspot
               screen_power->turn_off();
               App.safe_reboot();
             }

@@ -22,8 +22,6 @@ esp32:
   framework:
     advanced:
       minimum_chip_revision: "3.0"
-    #sdkconfig_options:
-    #  CONFIG_ESP32_REV_MIN_3: y  # Remove after implementing `minimum_chip_revision`
 
 esphome:
   platformio_options:
