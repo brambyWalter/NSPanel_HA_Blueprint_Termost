@@ -45,9 +45,9 @@ static constexpr uint8_t CHIP_COUNT = 10;
  * without requiring a new HA push.
  */
 struct ChipState {
-  char     icon[4];   ///< UTF-8 MDI codepoint (1–3 bytes + null terminator)
-  uint16_t color;     ///< RGB565 foreground color
-  bool     visible;   ///< Whether the chip should be shown
+  char icon[4];    ///< UTF-8 MDI codepoint (1–3 bytes + null terminator)
+  uint16_t color;  ///< RGB565 foreground color
+  bool visible;    ///< Whether the chip should be shown
 };
 
 /**
@@ -58,23 +58,23 @@ struct ChipState {
  * must be either home or screensaver before any render call is issued.
  */
 static constexpr const char *CHIP_NAMES[CHIP_COUNT] = {
-  "chip_relay1",  ///< Index 0
-  "chip_relay2",  ///< Index 1
-  "chip_climate", ///< Index 2
-  "chip01",       ///< Index 3
-  "chip02",       ///< Index 4
-  "chip03",       ///< Index 5
-  "chip04",       ///< Index 6
-  "chip05",       ///< Index 7
-  "chip06",       ///< Index 8
-  "chip07",       ///< Index 9
+    "chip_relay1",   ///< Index 0
+    "chip_relay2",   ///< Index 1
+    "chip_climate",  ///< Index 2
+    "chip01",        ///< Index 3
+    "chip02",        ///< Index 4
+    "chip03",        ///< Index 5
+    "chip04",        ///< Index 6
+    "chip05",        ///< Index 7
+    "chip06",        ///< Index 8
+    "chip07",        ///< Index 9
 };
 
 // Named indices for direct access by relay and climate logic.
-static constexpr uint8_t CHIP_IDX_RELAY1  = 0;  ///< chip_relay1 index in chip_states
-static constexpr uint8_t CHIP_IDX_RELAY2  = 1;  ///< chip_relay2 index in chip_states
+static constexpr uint8_t CHIP_IDX_RELAY1 = 0;   ///< chip_relay1 index in chip_states
+static constexpr uint8_t CHIP_IDX_RELAY2 = 1;   ///< chip_relay2 index in chip_states
 static constexpr uint8_t CHIP_IDX_CLIMATE = 2;  ///< chip_climate index in chip_states
-static constexpr uint8_t CHIP_IDX_USER    = 3;  ///< First user chip (chip01) index in chip_states
+static constexpr uint8_t CHIP_IDX_USER = 3;     ///< First user chip (chip01) index in chip_states
 
 /// @brief Shadow state array; one entry per chip slot.
 static ChipState chip_states[CHIP_COUNT] = {};
