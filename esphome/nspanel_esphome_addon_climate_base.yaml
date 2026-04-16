@@ -71,8 +71,6 @@ climate:
               update_climate_chip->execute();
             }
 
-
-
 globals:
   - id: climate_chip_visibility
     type: uint8_t

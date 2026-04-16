@@ -106,7 +106,7 @@ script:
           chip_states[CHIP_IDX_RELAY1].icon[sizeof(chip_states[CHIP_IDX_RELAY1].icon) - 1] = '\0';
           chip_states[CHIP_IDX_RELAY1].color = id(home_relay1_icon_color);
           chip_states[CHIP_IDX_RELAY1].visible = relay_1->state;
- 
+
           strncpy(chip_states[CHIP_IDX_RELAY2].icon, id(home_relay2_icon).c_str(),
                   sizeof(chip_states[CHIP_IDX_RELAY2].icon) - 1);
           chip_states[CHIP_IDX_RELAY2].icon[sizeof(chip_states[CHIP_IDX_RELAY2].icon) - 1] = '\0';
