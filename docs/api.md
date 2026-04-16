@@ -422,7 +422,7 @@ This action is ideal for dynamically updating icons on your Panel, allowing for 
 
 **Parameters:**
 
-- `page` (string): Use `chips` for chip components. Leave empty for current page or use the page name for other components.
+- `page` (string): Use `chips` for chip components or use the page name for other components.
 - `id` (string): Identifier of the chip or button component. Refer to "[Screen components](#screen-components)" for more details.
 - `icon` (string): Icon codepoint from
   [HASwitchPlate Material Design Icons](https://htmlpreview.github.io/?https://github.com/jobr99/Generate-HASP-Fonts/blob/master/cheatsheet.html).
