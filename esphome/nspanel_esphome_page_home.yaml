@@ -106,6 +106,8 @@ script:
   - id: !extend action_icon
     then:
       - lambda: |-
+          if (!is_home_page) return;
+
           // Only applies to home page buttons (button01..button08) on new design
           if (!display_easy) return;
           if (!is_home_page) return;
@@ -116,14 +118,13 @@ script:
           constexpr uint8_t BUTTON_PREFIX_LEN = 6u;  // strlen("button")
           constexpr uint8_t BUTTON_COUNT      = 8u;
 
-          const std::string comp_id(component.component_id);
-          if (comp_id.length() != BUTTON_PREFIX_LEN + 2u ||
-              comp_id.substr(0u, BUTTON_PREFIX_LEN) != "button") {
+          if (component_id.length() != BUTTON_PREFIX_LEN + 2u ||
+              component_id.substr(0u, BUTTON_PREFIX_LEN) != "button") {
             return;  // Not a home button component
           }
 
           // Parse the two-digit index; reject non-numeric suffixes
-          const std::string suffix = comp_id.substr(BUTTON_PREFIX_LEN);
+          const std::string suffix = component_id.substr(BUTTON_PREFIX_LEN);
           if (!std::isdigit(static_cast<unsigned char>(suffix[0])) ||
               !std::isdigit(static_cast<unsigned char>(suffix[1]))) {
             return;  // Not a valid button component
@@ -139,7 +140,7 @@ script:
 
           // Only draw the circle when the blueprint has populated the icon
           if (icon.empty()) {
-            ESP_LOGD("${TAG_PAGE_HOME}", "%s has no icon, skipping circle", component.component_id);
+            ESP_LOGD("${TAG_PAGE_HOME}", "%s has no icon, skipping circle", component_id.c_str());
             return;
           }
 
@@ -152,10 +153,10 @@ script:
           disp1->send_command_printf("cirs %" PRIu16 ",%" PRIu16 ",%" PRIu16 ",color_containers",
                                       circle_x, circle_y, circle_radius);
           feed_wdt_delay(${DELAY_SHORT});
-          disp1->send_command_printf("ref %s", component.component_id);
+          disp1->send_command_printf("ref %s", component_id.c_str());
 
           ESP_LOGD("${TAG_PAGE_HOME}", "Drew circle for %s at (%" PRIu16 ",%" PRIu16 ")",
-                    component.component_id, circle_x, circle_y);
+                    component_id.c_str(), circle_x, circle_y);
 
   - id: !extend boot_nextion
     then:

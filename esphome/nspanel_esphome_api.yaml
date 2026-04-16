@@ -160,11 +160,12 @@ api:
             ESP_LOGV("${TAG_API}", "Processing component ID: %s", id.c_str());
             ESP_LOGV("${TAG_API}", "  page: %s", page.c_str());
 
+            const bool is_chip_target = (page == "chips");
             const bool is_home_page = (page == hmi::home::PAGE.name);
-            const bool is_current_page = (page == current_page->state);
+            const bool is_current_page = (page == current_page->state) || (is_chip_target && is_chips_page);
 
             // Only process if home page (global) OR current page
-            if (!is_home_page && !is_current_page) {
+            if (!is_home_page && !is_current_page && !is_current_page) {
               ESP_LOGV("${TAG_API}", "Skipping: Not current page");
               return;
             }
@@ -183,12 +184,9 @@ api:
             ESP_LOGV("${TAG_API}", "  icon_color: %" PRIu16, rgbTo565(icon_color));
             ESP_LOGV("${TAG_API}", "  visible: %s", YESNO(visible));
 
-            // Extract component information using helper function
-            const esphome::nspanel_easy::NSPanelEasyNextionComponent component = extractNextionComponent(id, page);
-
             action_icon->execute(
               page.c_str(),
-              component,
+              id.c_str(),
               icon.c_str(),
               icon_color.size() == 3 ? rgbTo565(icon_color) : -1,
               visible,
@@ -326,16 +324,21 @@ script:
     max_runs: 10
     parameters:
       page: string
-      component: esphome::nspanel_easy::NSPanelEasyNextionComponent  # Component identifier
-      icon: string         # The icon code
-      icon_color: int32_t  # -1 if no color should be set, otherwise the decimal RGB565 color
-      visible: bool        # Set to true to show the component, or false to hide it.
+      component_id: string  # Component identifier
+      icon: string          # The icon code
+      icon_color: int32_t   # -1 if no color should be set, otherwise the decimal RGB565 color
+      visible: bool         # Set to true to show the component, or false to hide it.
       is_home_page: bool
       is_current_page: bool
     then:
       - lambda: |-
           if (page == "chips") return;  // This is handled elsewhere
+          if (page == "mem") return;    // This is handled elsewhere
+
           // Determine target ID format based on page context
+          // Extract component information using helper function
+          const NSPanelEasyNextionComponent component = extractNextionComponent(component_id, page);
+
           const char* target_id;
           char full_id[30];  // 14 + 1 (dot) + 14 + 1 (null) = 30
 

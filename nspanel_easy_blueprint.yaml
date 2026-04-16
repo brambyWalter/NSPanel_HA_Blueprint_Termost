@@ -6,7 +6,7 @@
 ##################################################################################################
 ---
 blueprint:
-  name: NSPanel Easy Configuration (v2026.4.16)
+  name: NSPanel Easy Configuration (v9999.99.9)
   author: Edward Firmo (https://github.com/edwardtfn)
   description: >
     # NSPanel Easy Configuration via Blueprint
@@ -4058,7 +4058,7 @@ trigger_variables:
 
 variables:
   # Version will be following release version defined automatically when merging to main
-  blueprint_version: 2026.4.16
+  blueprint_version: 9999.99.9
   pages:
     current: '{{ states(currentpage) }}'
     alarm: "alarm"
@@ -4477,52 +4477,38 @@ triggers:
   - triggers:  # Home page - Chips
       - alias: Chip 01
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip01
+        trigger: state
+        entity_id: !input chip01
 
       - alias: Chip 02
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip02
+        trigger: state
+        entity_id: !input chip02
 
       - alias: Chip 03
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip03
+        trigger: state
+        entity_id: !input chip03
 
       - alias: Chip 04
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip04
+        trigger: state
+        entity_id: !input chip04
 
       - alias: Chip 05
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip05
+        trigger: state
+        entity_id: !input chip05
 
       - alias: Chip 06
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip06
+        trigger: state
+        entity_id: !input chip06
 
       - alias: Chip 07
         id: trigger_chip_state
-        trigger: event
-        event_type: state_changed
-        event_data:
-          entity_id: !input chip07
+        trigger: state
+        entity_id: !input chip07
 
   - triggers:  # Home page - Values
       - alias: Value 01
@@ -7240,7 +7226,7 @@ actions:
                                       continue_on_error: true
 
                           ###### Climate chip ######
-                          - &update-home_page-climate_chip
+                          - &update_home_page_climate_chip
                             if: '{{ (not embedded_climate) and climate is string and climate is match "climate." }}'
                             then:
                               - variables:
@@ -7270,7 +7256,7 @@ actions:
                               - *delay_default
                               - action: 'esphome.{{ nspanel_name }}_icon'
                                 data:
-                                  page: home
+                                  page: chips
                                   id: chip_climate
                                   icon: '{{ entity.icon if entity.icon is defined else "" }}'
                                   icon_color: >
@@ -10427,7 +10413,7 @@ actions:
           - condition: trigger
             id: climate_state
         sequence:
-          - *update-home_page-climate_chip
+          - *update_home_page_climate_chip
           - if:
               - '{{ trigger.event.data.new_state.state not in enum.states.unknown }}'
               - '{{ pages.current == pages.climate }}'
@@ -10579,7 +10565,7 @@ actions:
                   | list
                 }}
               sequence:
-                - *update_chips_bar
+                - *update_individual_chip
 
       - alias: Hardware button - State
         conditions:
