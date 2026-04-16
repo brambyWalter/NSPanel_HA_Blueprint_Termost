@@ -124,7 +124,9 @@ script:
   - id: !extend page_change
     then:
       - lambda: |-
-          is_chips_page = (new_page_id == get_page_id("home") || new_page_id == get_page_id("screensaver"));
+          is_chips_page = (new_page_id == get_page_id("boot")
+                        || new_page_id == get_page_id("home")
+                        || new_page_id == get_page_id("screensaver"));
           if (!is_chips_page) return;
 
           ESP_LOGV("${TAG_CHIPS}", "Rendering chips");
