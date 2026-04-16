@@ -453,10 +453,10 @@ script:
               disp1->set_component_visibility(CHIP_NAMES[CHIP_IDX_CLIMATE], visible);
           }
 
+          if (current_page_id != get_page_id("climate")) return;
+          if (detailed_entity->state != "embedded_climate") return;
+
           // Apply the icon and color to the target icon on climate page
-          if (current_page_id == get_page_id("climate")) {
-            disp1->set_component_text("target_icon", icon);
-            disp1->set_component_font_color("target_icon", static_cast<uint16_t>(color));
-            return;
-          }
+          disp1->set_component_text("target_icon", icon);
+          disp1->set_component_font_color("target_icon", static_cast<uint16_t>(color));
 ...

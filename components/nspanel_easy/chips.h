@@ -77,7 +77,7 @@ static constexpr uint8_t CHIP_IDX_CLIMATE = 2;  ///< chip_climate index in chip_
 static constexpr uint8_t CHIP_IDX_USER = 3;     ///< First user chip (chip01) index in chip_states
 
 /// @brief Shadow state array; one entry per chip slot.
-static ChipState chip_states[CHIP_COUNT] = {};
+extern ChipState chip_states[CHIP_COUNT];
 
 extern bool is_chips_page;
 
