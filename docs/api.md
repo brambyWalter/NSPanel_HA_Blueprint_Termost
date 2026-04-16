@@ -902,16 +902,19 @@ automation:
 ![Image](pics/Nextion_Components_Home_Chips_US.png)
 
 #### User-defined Chips
+
 - **Description**: Chips are status indicator icons shown on the home page and screensaver. Their behaviour is controlled by the blueprint.
 - **Availability**: Rendered on home page and screensaver. Use `page: chips` in the `icon` action to update them from any page context.
 - **Ids**: `chip01` to `chip07`.
 
 #### Relays Chips
+
 - **Description**: Icons representing each of the relay states.
 - **Availability**: Rendered on home page and screensaver.
 - **Ids**: `chip_relay1` and `chip_relay2`.
 
 #### Climate Chip
+
 - **Description**: Icon representing the state of the main climate entity.
 - **Availability**: Rendered on home page and screensaver.
 - **Ids**: `chip_climate`.
