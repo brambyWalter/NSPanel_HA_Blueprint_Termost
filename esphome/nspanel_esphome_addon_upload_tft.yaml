@@ -187,11 +187,11 @@ script:
             disp1->send_command("tm_esphome.en=0");  // Stop updates from boot page
           }
           ESP_LOGD("${TAG_UPLOAD_TFT}", "Open upload dialog");
-          disp1->set_component_text("confim.page_name", "tft_upload");
+          disp1->set_component_text("confirm.page_name", "tft_upload");
           disp1->set_component_text("confirm.title", "NSPanel Easy");
           disp1->set_component_text("confirm.body", "TFT Upload");
           goto_page->execute(get_page_id("confirm"));
-          disp1->hide_component("btclose");
+          disp1->hide_component("bclose");
           disp1->hide_component("bt_accept");
           disp1->hide_component("bt_clear");
 
