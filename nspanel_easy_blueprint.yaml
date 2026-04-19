@@ -5902,6 +5902,10 @@ actions:
       # yamllint enable rule:truthy rule:line-length
       # yamllint enable rule:comments-indentation
 
+  - condition: '{{ nspanel_name is defined }}'
+  - condition: '{{ nspanel_name is string }}'
+  - condition: '{{ nspanel_name | length > 0 }}'
+
   - alias: Global anchor repository
     if: '{{ false }}'  # It should never execute directly
     then:
