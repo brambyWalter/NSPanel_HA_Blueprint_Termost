@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <string>
 
 /**
  * @file chips.h
@@ -81,8 +82,6 @@ extern ChipState chip_states[CHIP_COUNT];
 
 extern bool is_chips_page;
 
-}  // namespace esphome::nspanel_easy
-
 /**
  * @brief Find the chip index for a given component name.
  *
@@ -97,5 +96,7 @@ inline uint8_t find_chip_index(const std::string &name) {
   }
   return UINT8_MAX;  // sentinel: not found
 }
+
+}  // namespace esphome::nspanel_easy
 
 #endif  // NSPANEL_EASY_CHIPS
