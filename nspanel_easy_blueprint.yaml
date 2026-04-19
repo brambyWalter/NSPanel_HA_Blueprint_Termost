@@ -3919,8 +3919,8 @@ blueprint:
           description: >
             Delay between sequential Home Assistant service calls to the panel during the boot sequence.
             Boot involves a large burst of commands (settings, icons, component initialization),
-            so a slightly higher value than the runtime delay is needed to ensure reliable boot.
-            Values below ~25 ms have been observed to cause Nextion buffer overflows during boot.
+            so a slightly higher value than the runtime delay is a safe default.
+            The default of 50 ms works well for most setups.
             Values above 100 ms are rarely needed.
           default: 50
           selector:
