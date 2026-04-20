@@ -67,10 +67,8 @@ substitutions:
         icon: mdi:magnify
         entity_category: diagnostic
         on_press:
-          - logger.log:
-              level: INFO
-              tag: nspanel.hw.uart
-              format: "Baud scan: starting"
+          - lambda: |-
+              ESP_LOGI("${TAG_UPLOAD_TFT}", "Baud scan: starting");
 
           # Power-cycle the display to ensure a clean UART state
           - switch.turn_off: screen_power
@@ -90,7 +88,7 @@ substitutions:
 
               for (size_t i = 0; i < BAUD_RATE_COUNT && !found; ++i) {
                 const uint32_t rate = BAUD_RATES[i];
-                ESP_LOGI("nspanel.hw.uart", "Baud scan: trying %" PRIu32 " bps", rate);
+                ESP_LOGI("${TAG_UPLOAD_TFT}", "Baud scan: trying %" PRIu32 " bps", rate);
 
                 // Switch ESP UART to candidate rate
                 tf_uart->set_baud_rate(rate);
@@ -129,11 +127,11 @@ substitutions:
                 }
 
                 if (got_response) {
-                  ESP_LOGI("nspanel.hw.uart", "Baud scan: found active rate %" PRIu32 " bps", rate);
+                  ESP_LOGI("${TAG_UPLOAD_TFT}", "Baud scan: found active rate %" PRIu32 " bps", rate);
                   found = true;
                   // baud_rate_active text sensor updated after lambda
                 } else {
-                  ESP_LOGD("nspanel.hw.uart", "Baud scan: no response at %" PRIu32 " bps", rate);
+                  ESP_LOGD("${TAG_UPLOAD_TFT}", "Baud scan: no response at %" PRIu32 " bps", rate);
                   // Revert to a safe rate before next attempt
                   tf_uart->set_baud_rate(${BAUD_RATE_FALLBACK});
                   tf_uart->load_settings();
@@ -143,30 +141,21 @@ substitutions:
               }
 
               if (!found) {
-                ESP_LOGE("nspanel.hw.uart", "Baud scan: no response at any rate");
+                ESP_LOGE("${TAG_UPLOAD_TFT}", "Baud scan: no response at any rate");
                 // Restore compiled primary rate so the system is not left stranded
                 tf_uart->set_baud_rate(${BAUD_RATE});
                 tf_uart->load_settings();
               }
+              // Persist scan outcome — used by the gate below
+              system_flags.baud_scan_success = found;
 
-          - lambda: |-
               // Update baud rate sensor to reflect current UART state
               baud_rate_active->update();
-
-          - if:
-              condition:
-                lambda: |-
-                  // Only trigger upload if the UART is at a known good rate
-                  // (i.e. scan found a response — not reverted to ${BAUD_RATE} on failure)
-                  return !system_flags.baud_fallback_active || tf_uart->get_baud_rate() != ${BAUD_RATE};
-              then:
-                - logger.log:
-                    level: INFO
-                    tag: nspanel.hw.uart
-                    format: "Baud scan: triggering TFT upload"
-                - lambda: |-
-                    system_flags.baud_fallback_active = (tf_uart->get_baud_rate() != ${BAUD_RATE});
-                - button.press: tft_update
+              if (system_flags.baud_scan_success) {
+                ESP_LOGI("${TAG_UPLOAD_TFT}", "Baud scan: triggering TFT upload");
+                system_flags.baud_fallback_active = (tf_uart->get_baud_rate() != ${BAUD_RATE});
+                tft_update->press();
+              }
 
 packages:
   action_upload_tft: ${ _pkg_action_upload_tft if include_action_upload_tft else {} }
