@@ -135,7 +135,7 @@ substitutions:
                 } else {
                   ESP_LOGD("nspanel.hw.uart", "Baud scan: no response at %" PRIu32 " bps", rate);
                   // Revert to a safe rate before next attempt
-                  tf_uart->set_baud_rate(115200);
+                  tf_uart->set_baud_rate(${BAUD_RATE_FALLBACK});
                   tf_uart->load_settings();
                   delay(50);
                   App.feed_wdt();
@@ -145,7 +145,7 @@ substitutions:
               if (!found) {
                 ESP_LOGE("nspanel.hw.uart", "Baud scan: no response at any rate");
                 // Restore compiled primary rate so the system is not left stranded
-                tf_uart->set_baud_rate(921600);
+                tf_uart->set_baud_rate(${BAUD_RATE});
                 tf_uart->load_settings();
               }
 
@@ -165,6 +165,8 @@ substitutions:
                     level: INFO
                     tag: nspanel.hw.uart
                     format: "Baud scan: triggering TFT upload"
+                - lambda: |-
+                    system_flags.baud_fallback_active = true;
                 - button.press: tft_update
 
 packages:
