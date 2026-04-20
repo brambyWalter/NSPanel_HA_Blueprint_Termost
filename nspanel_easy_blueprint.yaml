@@ -7796,14 +7796,14 @@ actions:
                             data:
                               page: light
                               id: light_value
-                              txt: '{{ curr_brightness }}%'
+                              txt: '{{ curr_brightness ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
                           - action: 'esphome.{{ nspanel_name }}_component_text'
                             data:
                               page: light
                               id: light_value_2
-                              txt: '{{ curr_brightness }}%'
+                              txt: '{{ curr_brightness ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -7927,7 +7927,7 @@ actions:
                             data:
                               page: cover
                               id: cover_value
-                              txt: '{{ (state_attr(entity_id, "current_position") | int ) | round(0) }} %'
+                              txt: '{{ (state_attr(entity_id, "current_position") | int ) | round(0) ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -7979,7 +7979,7 @@ actions:
                                 data:
                                   page: cover
                                   id: battery_value
-                                  txt: '{{ battery_level }} %'
+                                  txt: '{{ battery_level ~ units_separator ~ "%" }}'
                                 continue_on_error: true
                               - *delay_default
                               ### ICON Battery Font Color ###
@@ -8060,7 +8060,7 @@ actions:
                             data:
                               page: fan
                               id: fan_value
-                              txt: '{{ fan.percentage }}%'
+                              txt: '{{ fan.percentage ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
                           - action: 'esphome.{{ nspanel_name }}_component_color'
@@ -9373,18 +9373,18 @@ actions:
                                           icon: '{{ nextion.icon.weather.sun }}'
                                         - name: thunderstorm_probability
                                           visibility: '{{ is_number(thunderstorm_probability) }}'
-                                          value: '{{ (thunderstorm_probability ~ weather_units.thunderstorm_probability) if is_number(thunderstorm_probability) }}'
+                                          value: '{{ (thunderstorm_probability ~ units_separator ~ weather_units.thunderstorm_probability) if is_number(thunderstorm_probability) }}'
                                           icon: '{{ nextion.icon.weather.lightning }}'
                                         - name: precipitation
                                           visibility: '{{ is_number(precipitation) or is_number(precipitation_probability) }}'
                                           value: >
                                             {{ (precipitation ~ units_separator ~ weather_units.precipitation) if is_number(precipitation) }}
                                             {{ "-" if is_number(precipitation) and is_number(precipitation_probability) }}
-                                            {{ (precipitation_probability ~ weather_units.precipitation_probability) if is_number(precipitation_probability) }}
+                                            {{ (precipitation_probability ~ units_separator ~ weather_units.precipitation_probability) if is_number(precipitation_probability) }}
                                           icon: '{{ nextion.icon.weather.rain }}'
                                         - name: uv_index
                                           visibility: '{{ is_number(uv_index) }}'
-                                          value: '{{ (uv_index ~ weather_units.uv_index) if is_number(uv_index) }}'
+                                          value: '{{ (uv_index ~ units_separator ~ weather_units.uv_index) if is_number(uv_index) }}'
                                           icon: '{{ nextion.icon.weather.protect }}'
                                         - name: wind_speed
                                           visibility: '{{ is_number(wind_speed) }}'
