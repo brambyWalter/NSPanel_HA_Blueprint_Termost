@@ -6270,6 +6270,17 @@ actions:
                                 continue_on_error: true
                               - *delay_boot
 
+                      - alias: Localization - Units separator
+                        sequence:
+                          - alias: units_separator
+                            action: 'esphome.{{ nspanel_name }}_component_text'
+                            data:
+                              page: mem
+                              id: units_separator
+                              txt: '{{ units_separator }}'
+                            continue_on_error: true
+                          - *delay_boot
+
                       - alias: Home page
                         sequence:
                           - alias: climate_chip_visibility
