@@ -16,7 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.head_ref || github.ref_name }}  # PR head branch, otherwise selected dispatch ref
+          # PR head repo (handles forks), otherwise current repo
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          # PR head branch, otherwise selected dispatch ref
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Detect changed C/C++ files
         id: changed
@@ -39,6 +42,19 @@ jobs:
           find ./components/nspanel_easy ./.test/unit \
             \( -name "*.h" -o -name "*.c" -o -name "*.cpp" \) \
             -print0 | xargs -0 -r clang-format --style=file -i
+
+      - name: Verify formatting (fork PRs)
+        # Forks cannot be auto-committed to, so fail loudly with a clear message
+        # instructing the contributor to run clang-format locally and push the fix.
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name != github.repository &&
+          steps.changed.outputs.any_changed == 'true'
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::clang-format changes required. Run clang-format locally and push the fix."
+            exit 1
+          fi
 
       - name: Commit clang-format fixes
         if: >-

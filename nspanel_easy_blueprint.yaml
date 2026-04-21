@@ -6,7 +6,7 @@
 ##################################################################################################
 ---
 blueprint:
-  name: NSPanel Easy Configuration (v2026.4.26)
+  name: NSPanel Easy Configuration (v9999.99.9)
   author: Edward Firmo (https://github.com/edwardtfn)
   description: >
     # NSPanel Easy Configuration via Blueprint
@@ -3844,9 +3844,10 @@ blueprint:
         media_player_update_interval:
           name: Media player - Update interval
           description: >
-            Interval (msec) to call for an update from the media player entity.
-            Lower values will improve the responsiveness, but could spam your Home Assistant with constant requests,
-            while higher values will reduce the load on HA but the Media Player page can be laggy.
+            Interval (msec) to call for an update from the media player entity while the Media Player page is open.
+            Each poll forces Home Assistant to refresh the entity, which for polled integrations (Spotify, Sonos, etc.)
+            means a real API call to the upstream service. Lower values improve responsiveness but increase load on
+            both Home Assistant and the media service; higher values reduce load but the Media Player page can be laggy.
           default: 5000
           selector:
             number:
@@ -4071,7 +4072,7 @@ trigger_variables:
 
 variables:
   # Version will be following release version defined automatically when merging to main
-  blueprint_version: 2026.4.26
+  blueprint_version: 9999.99.9
   pages:
     current: '{{ states(currentpage) }}'
     alarm: "alarm"
@@ -5064,7 +5065,7 @@ actions:
 
       # yamllint disable rule:line-length rule:braces
       device_class_icons:
-        cover: { "awning-closed": "window-closed", "awning-closing": "arrow-down-box", "awning-open": "window-open", "awning-opening": "arrow-up-box", "blind-closed": "blinds-horizontal-closed", "blind-closing": "arrow-down-box", "blind-open": "blinds-horizontal", "blind-opening": "arrow-up-box", "curtain-closed": "curtains-closed", "curtains-closing": "arrow-collapse-horizontal", "curtains-open": "curtains-open", "curtains-opening": "arrow-split-vertical", "damper-closed": "circle-slice-8", "damper-closing": "circle", "damper-open": "circle", "damper-opening": "circle", "door-closed": "door-closed", "door-closing": "door-open", "door-open": "door-open", "door-opening": "door-open", "garage-closed": "garage", "garage-closing": "arrow-down-box", "garage-open": "garage-open", "garage-opening": "arrow-up-box", "garage_door-closed": "garage", "garage_door-closing": "arrow-down-box", "garage_door-open": "garage-open", "garage_door-opening": "arrow-up-box", "gate-closed": "gate", "gate-closing": "gate-arrow-right", "gate-open": "gate-open", "gate-opening": "gate-arrow-left", "shade-closed": "roller-shade-closed", "shade-closing": "arrow-down-box", "shade-open": "roller-shade", "shade-opening": "arrow-up-box", "shutter-closed": "window-shutter", "shutter-closing": "arrow-down-box", "shutter-open": "window-shutter-open", "shutter-opening": "arrow-up-box", "window-closed": "window-closed", "window-closing": "arrow-down-box", "window-open": "window-open", "window-opening": "arrow-up-box" }
+        cover: { "awning-closed": "window-closed", "awning-closing": "arrow-down-box", "awning-open": "window-open", "awning-opening": "arrow-up-box", "blind-closed": "blinds-horizontal-closed", "blind-closing": "arrow-down-box", "blind-open": "blinds-horizontal", "blind-opening": "arrow-up-box", "curtain-closed": "curtains-closed", "curtains-closed": "curtains-closed", "curtains-closing": "arrow-collapse-horizontal", "curtain-closing": "arrow-collapse-horizontal", "curtains-open": "curtains", "curtain-open": "curtains", "curtains-opening": "arrow-split-vertical", "curtain-opening": "arrow-split-vertical", "damper-closed": "circle-slice-8", "damper-closing": "circle", "damper-open": "circle", "damper-opening": "circle", "door-closed": "door-closed", "door-closing": "door-open", "door-open": "door-open", "door-opening": "door-open", "garage-closed": "garage", "garage-closing": "arrow-down-box", "garage-open": "garage-open", "garage-opening": "arrow-up-box", "garage_door-closed": "garage", "garage_door-closing": "arrow-down-box", "garage_door-open": "garage-open", "garage_door-opening": "arrow-up-box", "gate-closed": "gate", "gate-closing": "gate-arrow-right", "gate-open": "gate-open", "gate-opening": "gate-arrow-left", "shade-closed": "roller-shade-closed", "shade-closing": "arrow-down-box", "shade-open": "roller-shade", "shade-opening": "arrow-up-box", "shutter-closed": "window-shutter", "shutter-closing": "arrow-down-box", "shutter-open": "window-shutter-open", "shutter-opening": "arrow-up-box", "window-closed": "window-closed", "window-closing": "arrow-down-box", "window-open": "window-open", "window-opening": "arrow-up-box" }
         binary_sensor: { "battery-on": "battery-outline", "battery-off": "battery", "battery_charging-on": "battery-charging", "battery_charging-off": "battery", "carbon_monoxide-on": "smoke-detector-alert", "carbon_monoxide-off": "smoke-detector", "cold-on": "snowflake", "cold-off": "thermometer", "connectivity-on": "check-network-outline", "connectivity-off": "close-network-outline", "door-on": "door-open", "door-off": "door-closed", "garage_door-on": "garage-open", "garage_door-off": "garage", "gas-on": "alert-circle", "gas-off": "check-circle", "heat-on": "fire", "heat-off": "thermometer", "light-on": "brightness-7", "light-off": "brightness-5", "lock-on": "lock-open", "lock-off": "lock", "moisture-on": "water", "moisture-off": "water-off", "motion-on": "motion-sensor", "motion-off": "motion-sensor-off", "moving-on": "octagon", "moving-off": "arrow-right", "occupancy-on": "home", "occupancy-off": "home-outline", "opening-on": "square-outline", "opening-off": "square", "plug-on": "power-plug", "plug-off": "power-plug-off", "power-on": "power-plug", "power-off": "power-plug-off", "presence-on": "home", "presence-off": "home-outline", "problem-on": "alert-circle", "problem-off": "check-circle", "running-on": "play", "running-off": "stop", "safety-on": "alert-circle", "safety-off": "check-circle", "smoke-on": "smoke-detector-variant-alert", "smoke-off": "smoke-detector-variant", "sound-on": "music-note", "sound-off": "music-note-off", "tamper-on": "alert-circle", "tamper-off": "check-circle", "update-on": "package-up", "update-off": "package", "vibration-on": "vibrate", "vibration-off": "crop-portrait", "window-on": "window-open", "window-off": "window-closed" }
         button: { "identify": "help-rhombus", "restart": "restart", "update": "package-up" }
         event: { "button": "gesture-tap-button", "doorbell": "doorbell", "motion": "motion-sensor" }
@@ -8118,6 +8119,9 @@ actions:
                                       media_duration: '{{ state_attr(entity_id, "media_duration") | int(0) }}'
                                       media_position: '{{ state_attr(entity_id, "media_position") | int(0) }}'
                                       media_position_updated_at: '{{ state_attr(entity_id, "media_position_updated_at") | default(now()) }}'
+                                      # Media player groups don't expose correct supported_features, so we override with a known-good mask:
+                                      # PAUSE(1) + VOLUME_SET(4) + VOLUME_MUTE(8) + PREVIOUS_TRACK(16) + NEXT_TRACK(32) + TURN_ON(128) +
+                                      # TURN_OFF(256) + PLAY_MEDIA(512) + STOP(4096) + PLAY(16384) = 21437
                                       supported_features: >
                                         {{
                                           (1+4+8+16+32+128+256+512+4096+16384)
@@ -8154,9 +8158,9 @@ actions:
                                     media_position: '{{ media_player.media_position }}'
                                     media_position_delta: >
                                       {{
-                                        (now() | as_timestamp - media_player.media_position_updated_at | as_timestamp | default(now() | as_timestamp))
+                                        (((now() | as_timestamp) - (media_player.media_position_updated_at | as_timestamp | default(now() | as_timestamp, true))) | round(0) | int)
                                         if
-                                          media_player.media_position_updated_at and
+                                          media_player.media_position_updated_at is defined and
                                           media_player.media_position_updated_at not in [None, none, "", "unknown", "unavailable", false, 0]
                                         else 0
                                       }}
