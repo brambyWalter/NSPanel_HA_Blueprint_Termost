@@ -8,8 +8,6 @@
 
 ---
 substitutions:
-  COMPONENT_ID_MEDIA_PLAYER_BT_VOL_DOWN: 6
-  COMPONENT_ID_MEDIA_PLAYER_BT_VOL_UP: 7
   MEDIA_PLAYER_FEATURE_PAUSE: 1
   MEDIA_PLAYER_FEATURE_SEEK: 2
   MEDIA_PLAYER_FEATURE_VOLUME_SET: 4
@@ -31,10 +29,6 @@ substitutions:
   MEDIA_PLAYER_FEATURE_GROUPING: 524288
   MEDIA_PLAYER_FEATURE_MEDIA_ANNOUNCE: 1048576
   MEDIA_PLAYER_FEATURE_MEDIA_ENQUEUE: 2097152
-  MDI_ICON_PLAY: "\uE409"                # mdi:play
-  MDI_ICON_PAUSE: "\uE3E3"               # mdi:pause
-  MDI_ICON_VOLUME_VARIANT_OFF: "\uEE07"  # mdi:volume-variant-off
-  MDI_ICON_VOLUME_LOW: "\uE57E"          # mdi:volume-low
   TAG_PAGE_MEDIA_PLAYER: nspanel.page.media_player
 
 api:
@@ -54,126 +48,140 @@ api:
         supported_features: int    # Bitmask indicating the media player's supported features (e.g., play, pause, volume control).
       then:
         - lambda: |-
-            ESP_LOGD("${TAG_PAGE_MEDIA_PLAYER}", "Action: page_media_player");
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  entity: %s", entity.c_str());
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  state: %s", state.c_str());
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  is_volume_muted: %s", YESNO(is_volume_muted));
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  volume_level: %i", volume_level);
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  media_title: %s", media_title.c_str());
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  media_artist: %s", media_artist.c_str());
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  media_duration: %i", media_duration);
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  media_position: %i", media_position);
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  media_position_delta: %i", media_position_delta);
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "  supported_features: %i", supported_features);
+            ESP_LOGD("${TAG_PAGE_MEDIA_PLAYER}",
+                      "Action: page_media_player entity=%s state=%s muted=%s vol=%d "
+                      "dur=%d pos=%d delta=%d features=%d",
+                      entity.c_str(), state.c_str(), YESNO(is_volume_muted), volume_level,
+                      media_duration, media_position, media_position_delta, supported_features);
 
             if (current_page_id != get_page_id("media_player")) {
               ESP_LOGW("${TAG_PAGE_MEDIA_PLAYER}", "Not on Media Player page");
               return;
             }
 
-            // Set detailed entity sensor
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Set detailed entity sensor");
+            // Publish the entity sensor once up front so touch-event handlers always
+            // have the current entity, even when this call short-circuits below.
             detailed_entity->publish_state(entity.c_str());
 
-            // Media title
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Media title");
+            // Classify the entity state once. HA guarantees media_player states are
+            // one of: "off", "on", "idle", "playing", "paused", "standby",
+            // "buffering", "unavailable", "unknown".
+            const bool state_unavailable = (state == "unavailable" || state == "unknown");
+            const bool state_off = (state == "off");
+            const bool state_playing = (state == "playing");
+
+            // Bail out for dead entities. HA can transiently report these right after
+            // startup, after an integration reload, or when a backing service dies.
+            // Reasoning about features for such entities produces a hollowed-out UI,
+            // so hide every actionable control, stop the progress timer, and return.
+            if (state_unavailable) {
+              ESP_LOGD("${TAG_PAGE_MEDIA_PLAYER}", "Entity %s is %s; hiding controls", entity.c_str(), state.c_str());
+              disp1->set_component_visibility("bt_on_off", false);
+              disp1->set_component_visibility("bt_play_pause", false);
+              disp1->set_component_visibility("bt_prev", false);
+              disp1->set_component_visibility("bt_next", false);
+              disp1->set_component_visibility("bt_mute", false);
+              disp1->set_component_visibility("vol_slider", false);
+              disp1->set_component_visibility("vol_text", false);
+              disp1->set_component_visibility("bt_vol_down", false);
+              disp1->set_component_visibility("bt_vol_up", false);
+              disp1->set_component_visibility("time_current", false);
+              disp1->set_component_visibility("time_total", false);
+              disp1->set_component_visibility("time_progress", false);
+              disp1->send_command_printf("prg_timer.en=0");
+              return;
+            }
+
+            // Feature flags, cached once for readability and to avoid repeated masking.
+            const bool has_turn_on = (supported_features & ${MEDIA_PLAYER_FEATURE_TURN_ON}) != 0;
+            const bool has_turn_off = (supported_features & ${MEDIA_PLAYER_FEATURE_TURN_OFF}) != 0;
+            const bool has_play = (supported_features & ${MEDIA_PLAYER_FEATURE_PLAY}) != 0;
+            const bool has_play_m = (supported_features & ${MEDIA_PLAYER_FEATURE_PLAY_MEDIA}) != 0;
+            const bool has_pause = (supported_features & ${MEDIA_PLAYER_FEATURE_PAUSE}) != 0;
+            const bool has_stop = (supported_features & ${MEDIA_PLAYER_FEATURE_STOP}) != 0;
+            const bool has_prev = (supported_features & ${MEDIA_PLAYER_FEATURE_PREVIOUS_TRACK}) != 0;
+            const bool has_next = (supported_features & ${MEDIA_PLAYER_FEATURE_NEXT_TRACK}) != 0;
+            const bool has_mute = (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_MUTE}) != 0;
+            const bool has_vol_set = (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_SET}) != 0;
+            const bool has_vol_step = (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_STEP}) != 0;
+
+            // Media title and artist. Display-width limits differ by orientation;
+            // wrapText handles per-locale byte widths for multi-byte scripts.
             disp1->set_component_text("track", wrapText(media_title.c_str(),
                                                         display_portrait ? 16 : 27,
                                                         ${LANG_BYTES_PER_CHAR}).c_str());
-
-            // Media artist
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Media artist");
             disp1->set_component_text("artist", wrapText(media_artist.c_str(),
                                                           display_portrait ? 26 : 40,
                                                           ${LANG_BYTES_PER_CHAR}).c_str());
-            App.feed_wdt();
 
-            // Button - ON/OFF
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Button - ON/OFF");
-            if (supported_features & ${MEDIA_PLAYER_FEATURE_TURN_ON} and state == "off") {  //TURN_ON
-              disp1->set_component_foreground_color("bt_on_off", ${COLOR_WHITE});
-              disp1->show_component("bt_on_off");
-            } else if (supported_features & ${MEDIA_PLAYER_FEATURE_TURN_OFF} and state != "off") {  //TURN_OFF
-              disp1->set_component_foreground_color("bt_on_off", ${COLOR_BLUE_INDIGO});
-              disp1->show_component("bt_on_off");
-            } else {
-              disp1->hide_component("bt_on_off");
+            // Button - ON/OFF. The HMI touch event fires "media_player,toggle", which
+            // HA accepts for any entity exposing on/off/play/pause/stop. Show the
+            // button whenever any of those features is supported; color reflects the
+            // current on/off state. See upstream Blackymas/NSPanel_HA_Blueprint#2768
+            // for the motivating report.
+            const bool show_on_off = has_turn_on || has_turn_off || has_play || has_play_m || has_pause || has_stop;
+            if (show_on_off) {
+              disp1->set_component_foreground_color(
+                  "bt_on_off", state_off ? ${COLOR_WHITE} : ${COLOR_BLUE_INDIGO});
             }
-            App.feed_wdt();
+            disp1->set_component_visibility("bt_on_off", show_on_off);
 
-            // Button - Play/Pause
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Button - Play/Pause");
-            if (
-                (supported_features & ${MEDIA_PLAYER_FEATURE_PLAY_MEDIA} or supported_features & ${MEDIA_PLAYER_FEATURE_PLAY})
-                and state != "playing" and state != "off"
-                ) {  // PLAY_MEDIA+PLAY
-              disp1->set_component_text("bt_play_pause", "\uE409"); // mdi:play
-              disp1->show_component("bt_play_pause");
-            } else if (supported_features & ${MEDIA_PLAYER_FEATURE_PAUSE} and state == "playing" ) {  //PAUSE
-              disp1->set_component_text("bt_play_pause", "\uE3E3"); // mdi:pause
-              disp1->show_component("bt_play_pause");
-            } else {
-              disp1->hide_component("bt_play_pause");
+            // Button - Play/Pause.
+            // Show "play" when not currently playing and either PLAY or PLAY_MEDIA is
+            // supported (standard resume/start path). Show "pause" when playing and
+            // PAUSE is supported. When paused but only PAUSE is exposed (no PLAY), the
+            // button would be non-functional for resume, so it is hidden to avoid a
+            // dead control.
+            const bool show_play = !state_playing && !state_off && (has_play || has_play_m);
+            const bool show_pause = state_playing && has_pause;
+            if (show_play) {
+              disp1->set_component_text("bt_play_pause", Icons::MDI_PLAY);
+            } else if (show_pause) {
+              disp1->set_component_text("bt_play_pause", Icons::MDI_PAUSE);
             }
-            App.feed_wdt();
+            disp1->set_component_visibility("bt_play_pause", show_play || show_pause);
 
-            // Button - Previous track
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Button - Previous track");
-            disp1->send_command_printf("vis bt_prev,%i", (supported_features & ${MEDIA_PLAYER_FEATURE_PREVIOUS_TRACK} and state != "off") ? 1 : 0);
+            // Previous / Next track. Visible whenever the feature is supported and
+            // the entity is not off (idle players legitimately allow pre-playlist
+            // skipping).
+            disp1->set_component_visibility("bt_prev", has_prev && !state_off);
+            disp1->set_component_visibility("bt_next", has_next && !state_off);
 
-            // Button - Next track
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Button - Next track");
-            disp1->send_command_printf("vis bt_next,%i", (supported_features & ${MEDIA_PLAYER_FEATURE_NEXT_TRACK} and state != "off") ? 1 : 0);
-
-            // Button - Mute/Unmute
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Button - Mute/Unmute");
-            disp1->set_component_value("is_muted", is_volume_muted ? 1 : 0);
-            if (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_MUTE} and is_volume_muted) {  // unmute
-              disp1->set_component_text("bt_mute", "\uEE07"); // mdi:volume-variant-off
-              disp1->show_component("bt_mute");
-            } else if (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_MUTE}) {  // mute
-              disp1->set_component_text("bt_mute", "\uE57E"); // mdi:volume-low
-              disp1->show_component("bt_mute");
-            } else {
-              disp1->hide_component("bt_mute");
+            // Button - Mute/Unmute.
+            if (has_mute) {
+              disp1->set_component_text(
+                  "bt_mute", is_volume_muted ? Icons::MDI_VOLUME_VARIANT_OFF : Icons::MDI_VOLUME_LOW);
+              disp1->set_component_value("is_muted", is_volume_muted ? 1 : 0);
             }
-            App.feed_wdt();
+            disp1->set_component_visibility("bt_mute", has_mute);
 
-            // Volume set
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Volume set");
-            const bool has_volume_set = (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_SET});
-            const bool has_volume_step = (supported_features & ${MEDIA_PLAYER_FEATURE_VOLUME_STEP});
-
-            if (has_volume_set) {
-              if (last_volume_level != volume_level) {
-                last_volume_level = volume_level;
-                disp1->set_component_text_printf("vol_text", "%d%%", volume_level);
-                disp1->set_component_value("vol_slider", volume_level);
-              }
+            // Volume set / step controls.
+            if (has_vol_set && last_volume_level != volume_level) {
+              last_volume_level = volume_level;
+              disp1->set_component_text_printf("vol_text", "%d%%", volume_level);
+              disp1->set_component_value("vol_slider", volume_level);
             }
-            disp1->set_component_visibility("vol_slider", has_volume_set);
-            disp1->set_component_visibility("vol_text", has_volume_set);
+            disp1->set_component_visibility("vol_slider", has_vol_set);
+            disp1->set_component_visibility("vol_text", has_vol_set);
+            disp1->set_component_visibility("bt_vol_down", has_vol_step);
+            disp1->set_component_visibility("bt_vol_up", has_vol_step);
 
-            disp1->set_component_visibility("bt_vol_down", has_volume_step);
-            disp1->set_component_visibility("bt_vol_up", has_volume_step);
-            App.feed_wdt();
-
-            // Media progress bar
-            ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Media progress bar");
-            const bool has_media_duration = media_duration > 0;
-            if (has_media_duration) {
-              if (media_duration != last_media_duration or media_position != last_media_position) {
-                last_media_duration = media_duration;
-                last_media_position = media_position;
-                disp1->set_component_value("prg_current",
-                                                int(round(min(media_position + media_position_delta, media_duration))));
-              }
-              disp1->set_component_value("prg_total", int(round(media_duration)));
+            // Media progress bar. "media_duration > 0" is the cue that a finite track
+            // is loaded (livestreams report 0). prg_timer drives the client-side
+            // progress animation and must be gated on actual playback.
+            const bool has_duration = media_duration > 0;
+            if (has_duration &&
+                (media_duration != last_media_duration || media_position != last_media_position)) {
+              last_media_duration = media_duration;
+              last_media_position = media_position;
+              const int capped_pos = std::min(media_position + media_position_delta, media_duration);
+              disp1->set_component_value("prg_current", capped_pos);
+              disp1->set_component_value("prg_total", media_duration);
             }
-            disp1->send_command_printf("prg_timer.en=%i", (has_media_duration && state == "playing") ? 1 : 0);
-            disp1->set_component_visibility("time_current", has_media_duration);
-            disp1->set_component_visibility("time_total", has_media_duration);
-            disp1->set_component_visibility("time_progress", has_media_duration);
+            disp1->send_command_printf("prg_timer.en=%i", (has_duration && state_playing) ? 1 : 0);
+            disp1->set_component_visibility("time_current", has_duration);
+            disp1->set_component_visibility("time_total", has_duration);
+            disp1->set_component_visibility("time_progress", has_duration);
 
             ESP_LOGV("${TAG_PAGE_MEDIA_PLAYER}", "Action: page_media_player completed");
 
