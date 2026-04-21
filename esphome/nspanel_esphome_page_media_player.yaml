@@ -198,6 +198,7 @@ api:
               // the bar follows the active theme without ESPHome having to
               // know which theme is current.
               disp1->set_component_value("prg_current", 0);
+              disp1->set_component_value("time_progress", 0);
               disp1->send_command("time_progress.pco=color_pco_unsupported");
               last_media_duration = 0;
               last_media_position = 0;
