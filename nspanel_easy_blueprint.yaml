@@ -8121,7 +8121,7 @@ actions:
                                       media_position_updated_at: '{{ state_attr(entity_id, "media_position_updated_at") | default(now()) }}'
                                       # Media player groups don't expose correct supported_features, so we override with a known-good mask:
                                       # PAUSE(1) + VOLUME_SET(4) + VOLUME_MUTE(8) + PREVIOUS_TRACK(16) + NEXT_TRACK(32) + TURN_ON(128) +
-                                      # TURN_OFF(256) + PLAY_MEDIA(512) + STOP(4096) + PLAY(16384) = 21053
+                                      # TURN_OFF(256) + PLAY_MEDIA(512) + STOP(4096) + PLAY(16384) = 21437
                                       supported_features: >
                                         {{
                                           (1+4+8+16+32+128+256+512+4096+16384)
