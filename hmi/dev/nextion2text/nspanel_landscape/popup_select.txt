@@ -1,0 +1,645 @@
+Page popup_select
+    Attributes
+        ID                 : 0
+        Scope              : local
+        Dragging           : 0
+        Send Component ID  : disabled
+        Opacity            : 127
+        Width              : 480
+        Effect             : load
+        Effect Priority    : 0
+        Effect Time        : 300
+        Locked             : no
+        Swide up page ID   : disabled
+        Swide down page ID : disabled
+        Swide left page ID : disabled
+        Swide right page ID: disabled
+        Fill               : no background (white)
+    
+    Events
+        Preinitialize Event
+            dim=brightness
+            vis 255,0
+            sendme
+        
+Variable (int32) caller_page_id
+    Attributes
+        ID   : 14
+        Scope: local
+        Value: 0
+    
+Variable (int32) opt_count
+    Attributes
+        ID   : 15
+        Scope: local
+        Value: 0
+    
+Variable (int32) total_count
+    Attributes
+        ID   : 16
+        Scope: local
+        Value: 0
+    
+Variable (int32) selection_mask
+    Attributes
+        ID   : 17
+        Scope: local
+        Value: 0
+    
+Variable (int32) select_mode
+    Attributes
+        ID   : 18
+        Scope: local
+        Value: 0
+    
+Text card
+    Attributes
+        ID                  : 1
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 50
+        y coordinate        : 20
+        Width               : 350
+        Height              : 264
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : border
+        Associated Keyboard : none
+        Border Color        : 21197
+        Border Width        : 4
+        Font ID             : 2
+        Back. Color         : 63422
+        Font Color          : 0
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 0
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text header_bg
+    Attributes
+        ID                  : 2
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 54
+        y coordinate        : 24
+        Width               : 342
+        Height              : 28
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 2
+        Back. Color         : 48665
+        Font Color          : 8486
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 0
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text btn_back
+    Attributes
+        ID                  : 3
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 54
+        y coordinate        : 24
+        Width               : 44
+        Height              : 28
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 2
+        Back. Color         : 48665
+        Font Color          : 8486
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : <
+        Max. Text Size      : 1
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text lbl_title
+    Attributes
+        ID                  : 4
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 108
+        y coordinate        : 24
+        Width               : 240
+        Height              : 28
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 2
+        Back. Color         : 48665
+        Font Color          : 8486
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : Select
+        Max. Text Size      : 50
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Text lbl_hint
+    Attributes
+        ID                  : 5
+        Scope               : local
+        Dragging            : 0
+        Send Component ID   : disabled
+        Opacity             : 127
+        x coordinate        : 348
+        y coordinate        : 24
+        Width               : 48
+        Height              : 28
+        Effect              : load
+        Effect Priority     : 0
+        Effect Time         : 300
+        Fill                : solid color
+        Style               : flat
+        Associated Keyboard : none
+        Font ID             : 2
+        Back. Color         : 48665
+        Font Color          : 8486
+        Horizontal Alignment: center
+        Vertical Alignment  : center
+        Input Type          : character
+        Text                : 
+        Max. Text Size      : 10
+        Word wrap           : disabled
+        Horizontal Spacing  : 0
+        Vertical Spacing    : 0
+    
+Dual-state Button opt0
+    Attributes
+        ID                        : 6
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 54
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 1
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=0  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt1
+    Attributes
+        ID                        : 7
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 82
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 2
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=1  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt2
+    Attributes
+        ID                        : 8
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 110
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 3
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=2  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt3
+    Attributes
+        ID                        : 9
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 138
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 4
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=3  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt4
+    Attributes
+        ID                        : 10
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 166
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 5
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=4  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt5
+    Attributes
+        ID                        : 11
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 194
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 6
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=5  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt6
+    Attributes
+        ID                        : 12
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 222
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 7
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=6  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Dual-state Button opt7
+    Attributes
+        ID                        : 13
+        Scope                     : local
+        Dragging                  : 0
+        Send Component ID         : on release
+        Opacity                   : 127
+        x coordinate              : 58
+        y coordinate              : 250
+        Width                     : 334
+        Height                    : 26
+        Effect                    : load
+        Effect Priority           : 0
+        Effect Time               : 300
+        Fill                      : solid color
+        Style                     : flat
+        Font ID                   : 2
+        Back. Color (Unpressed)   : 57116
+        Back. Picture ID (Pressed): 65535
+        Back. Color (Pressed)     : 10961
+        Font Color (Unpressed)    : 8486
+        Font Color (Pressed)      : 65535
+        Horizontal Alignment      : left
+        Vertical Alignment        : center
+        State                     : unpressed
+        Text                      : Option 8
+        Max. Text Size            : 50
+        Word wrap                 : disabled
+        Horizontal Spacing        : 0
+        Vertical Spacing          : 0
+    
+    Events
+        Touch Release Event
+            // Touch Release - mode 0
+            sys0=7  // bit position - replace per button (0..7)
+            sys1=sys0+6  // component id
+            if(select_mode.val==0)
+            {
+                if(b[sys1].val==1)
+                {
+                    selection_mask.val=1<<sys0
+                }else
+                {
+                    selection_mask.val=0
+                }
+            }
+            render.en=1
+        
+Timer render
+    Attributes
+        ID         : 19
+        Scope      : local
+        Period (ms): 50
+        Enabled    : no
+    
+    Events
+        Timer Event
+            // render timer event
+            render.en=0
+            for(sys0=0;sys0<opt_count.val;sys0++)
+            {
+                sys1=sys0+6
+                sys2=selection_mask.val>>sys0
+                b[sys1].val=sys2&1
+            }
+        
+Timer init
+    Attributes
+        ID         : 20
+        Scope      : local
+        Period (ms): 50
+        Enabled    : no
+    
+    Events
+        Timer Event
+            // init timer event
+            init.en=0
+            if(display_mode==2)
+            {
+                // Portrait (card 280 wide, starts at 20,40)
+                sys0=opt_count.val*39
+                sys0+=41
+                fill 20,40,280,sys0,21197
+                sys1=sys0-8
+                fill 24,44,272,sys1,61310
+            }else
+            {
+                // Landscape (card 350 wide, starts at 50,20)
+                sys0=opt_count.val*28
+                sys0+=38
+                fill 50,20,350,sys0,21197
+                sys1=sys0-8
+                fill 54,24,342,sys1,61310
+            }
+            // Show static header components
+            vis header_bg,1
+            vis btn_back,1
+            vis lbl_title,1
+            // lbl_hint stays hidden in v1 (scroll indicator not shown)
+            // Show populated opt buttons
+            sys1=opt_count.val+6
+            for(sys0=6;sys0<sys1;sys0++)
+            {
+                vis b[sys0],1
+            }
+            // Kick render to paint selection state
+            render.en=1
+        

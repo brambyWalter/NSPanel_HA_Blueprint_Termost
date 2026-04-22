@@ -19,7 +19,6 @@ Page debug
     
     Events
         Preinitialize Event
-            title.txt+=boot.version.txt
             global_vars.txt+="\r- home_page_id: "
             covx home_page_id,aux.txt,0,0
             global_vars.txt+=aux.txt
@@ -111,8 +110,8 @@ Text title
         Horizontal Alignment    : left
         Vertical Alignment      : center
         Input Type              : character
-        Text                    : NSPanel HA Blueprint v
-        Max. Text Size          : 50
+        Text                    : NSPanel Easy
+        Max. Text Size          : 12
         Word wrap               : disabled
         Horizontal Spacing      : 0
         Vertical Spacing        : 0
