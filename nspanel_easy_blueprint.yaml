@@ -5933,7 +5933,7 @@ actions:
       - &variable_entity
         alias: Variable Entity
         variables:
-          entity_id_valid: >
+          entity_id_valid: &variable_entity_id_valid >
             {{
               entity_id is defined and
               entity_id is string and
@@ -7708,6 +7708,7 @@ actions:
                                     )
                                   )
                                 }}
+                              entity_id_valid: *variable_entity_id_valid
                           - *variable_entity
                           - &entity_details_title_with_icon
                             alias: Fill title of entity details page
@@ -7884,18 +7885,32 @@ actions:
                         sequence: &refresh_page_cover
                           - *get_entity_id_from_event_or_trigger
                           - variables:
-                              entity_device_class: '{{ state_attr(entity_id, "device_class") | default("") }}'
+                              entity_device_class_raw: >-
+                                {{
+                                  state_attr(entity_id, "device_class") | default("window")
+                                  if entity_id_valid
+                                  else "window"
+                                }}
+                              entity_device_class: >-
+                                {{
+                                  entity_device_class_raw
+                                  if
+                                    entity_device_class_raw is defined and
+                                    entity_device_class_raw is string and
+                                    entity_device_class_raw | length > 0
+                                  else "window"
+                                }}
                               cover_icons:
                                 open: >
                                   {{
                                     all_icons[device_class_icons.cover[entity_device_class ~ "-open"]]
-                                    if entity_device_class | length > 0 and (entity_device_class ~ "-open") in device_class_icons.cover
+                                    if (entity_device_class ~ "-open") in device_class_icons.cover
                                     else all_icons["window-open"]
                                   }}
                                 close: >
                                   {{
                                     all_icons[device_class_icons.cover[entity_device_class ~ "-closed"]]
-                                    if entity_device_class | length > 0 and (entity_device_class ~ "-closed") in device_class_icons.cover
+                                    if (entity_device_class ~ "-closed") in device_class_icons.cover
                                     else all_icons["window-closed"]
                                   }}
                           - *variable_entity
