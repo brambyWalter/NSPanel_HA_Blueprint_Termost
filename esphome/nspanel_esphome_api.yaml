@@ -60,22 +60,33 @@ api:
               color565
             );
 
-    # Updates the text of a specified component on the display.
-    - action: component_text
+    # Updates the text of a specified component on the display using a list of values.
+    # Replaces the former `component_text` action. Single-value calls should pass a
+    # one-element list. For Nextion-targeted pages, the final element wins (the script
+    # routes through action_component_text, whose !extend chain handles mem namespaces).
+    # Page modules may !extend action_component_text_list directly to handle list-shaped
+    # mem namespaces (e.g. picker options).
+    - action: component_text_list
       variables:
-        page: string  # Send `mem` for a memory var
-        id: string    # Identifier of the component. Ensure it matches the component's ID in your display layout.
-        txt: string   # New text content to be displayed. Supports both static and dynamic content.
+        page: string        # Send `mem` for a memory var
+        id: string          # Identifier of the component. Ensure it matches the component's ID in your display layout.
+        txt_list: string[]  # List of text values. For Nextion targets, only the last element is applied.
       then:
         - lambda: |-
-            std::string txt_str = std::string(txt);
-            if (txt_str == "${SENTINEL_UNAVAILABLE}") txt_str = "${LOCALIZATION[LANG].unavailable}";
-            else if (txt_str == "${SENTINEL_UNKNOWN}") txt_str = "${LOCALIZATION[LANG].unknown}";
-            else if (txt_str == "${SENTINEL_NO_NAME}") txt_str = "${LOCALIZATION[LANG].no_name}";
-            action_component_text->execute(
+            ESP_LOGV("${TAG_API}", "Action: component_text_list");
+            ESP_LOGV("${TAG_API}", "  page: %s", page.c_str());
+            ESP_LOGV("${TAG_API}", "  id: %s", id.c_str());
+            ESP_LOGV("${TAG_API}", "  txt_list size: %zu", txt_list.size());
+
+            if (txt_list.empty()) {
+              ESP_LOGW("${TAG_API}", "Empty txt_list, ignoring");
+              return;
+            }
+
+            action_component_text_list->execute(
               page.c_str(),
               id.c_str(),
-              txt_str.c_str()
+              txt_list
             );
 
     # Updates the value of a specified component on the display.
@@ -242,6 +253,31 @@ script:
             disp1->send_command_printf("%s.%s.txt=\"%s\"", page.c_str(), component.c_str(), escaped.c_str());
             return;
           }
+
+  - id: action_component_text_list
+    mode: queued
+    max_runs: 10
+    parameters:
+      page: string
+      component: string
+      txt_list: std::vector<std::string>
+    then:
+      - lambda: |-
+          ESP_LOGV("${TAG_API}", "Script: action_component_text_list");
+          ESP_LOGV("${TAG_API}", "  page: %s", page.c_str());
+          ESP_LOGV("${TAG_API}", "  component: %s", component.c_str());
+          ESP_LOGV("${TAG_API}", "  txt_list size: %zu", txt_list.size());
+          // Take last element (final state wins), reuse singular script which
+          // handles Nextion dispatch and whose !extend chain handles mem namespaces.
+          std::string txt_str = txt_list.back();
+          if (txt_str == "${SENTINEL_UNAVAILABLE}") txt_str = "${LOCALIZATION[LANG].unavailable}";
+          else if (txt_str == "${SENTINEL_UNKNOWN}") txt_str = "${LOCALIZATION[LANG].unknown}";
+          else if (txt_str == "${SENTINEL_NO_NAME}") txt_str = "${LOCALIZATION[LANG].no_name}";
+          action_component_text->execute(
+            page.c_str(),
+            component.c_str(),
+            txt_str.c_str()
+          );
 
   - id: action_component_val
     mode: single

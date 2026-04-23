@@ -6194,11 +6194,12 @@ actions:
                     sequence:
                       - alias: Blueprint version
                         sequence:
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: ver_blueprint
-                              txt: '{{ blueprint_version }}'
+                              txt_list:
+                                - '{{ blueprint_version }}'
                             continue_on_error: true
                           - &delay_boot
                             delay:
@@ -6255,30 +6256,33 @@ actions:
                                 continue_on_error: true
                               - *delay_boot
                               - alias: date_format
-                                action: 'esphome.{{ nspanel_name }}_component_text'
+                                action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: mem
                                   id: date_format
-                                  txt: !input date_format
+                                  txt_list:
+                                    - !input date_format
                                 continue_on_error: true
                               - *delay_boot
                               - alias: time_format
-                                action: 'esphome.{{ nspanel_name }}_component_text'
+                                action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: mem
                                   id: time_format
-                                  txt: !input time_format
+                                  txt_list:
+                                    - !input time_format
                                 continue_on_error: true
                               - *delay_boot
 
                       - alias: Localization - Units separator
                         sequence:
                           - alias: units_separator
-                            action: 'esphome.{{ nspanel_name }}_component_text'
+                            action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: units_separator
-                              txt: '{{ units_separator }}'
+                              txt_list:
+                                - '{{ units_separator }}'
                             continue_on_error: true
                           - *delay_boot
 
@@ -6327,16 +6331,17 @@ actions:
                               - variables:
                                   bt_entities_icon: !input home_button06_icon
                               - alias: entities_pages_icon
-                                action: 'esphome.{{ nspanel_name }}_component_text'
+                                action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: mem
                                   id: entities_pages_icon
-                                  txt: >
-                                    {{
-                                      all_icons[bt_entities_icon.split("mdi:")[1]]
-                                      if bt_entities_icon is string and bt_entities_icon.split("mdi:")[1] in all_icons
-                                      else all_icons["format-list-bulleted-square"]
-                                    }}
+                                  txt_list:
+                                    - >
+                                      {{
+                                        all_icons[bt_entities_icon.split("mdi:")[1]]
+                                        if bt_entities_icon is string and bt_entities_icon.split("mdi:")[1] in all_icons
+                                        else all_icons["format-list-bulleted-square"]
+                                      }}
                                 continue_on_error: true
                               - *delay_boot
                               - alias: entities_pages_icon_color
@@ -6431,16 +6436,17 @@ actions:
                               color: !input home_indoor_temp_label_color
                             continue_on_error: true
                           - *delay_boot
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: home
                               id: indr_temp_icon
-                              txt: >
-                                {{
-                                  all_icons[home_indoor_temp_icon.split("mdi:")[1]]
-                                  if home_indoor_temp_icon.split("mdi:") | count == 2 and home_indoor_temp_icon.split("mdi:")[1] in all_icons
-                                  else all_icons.thermometer
-                                }}
+                              txt_list:
+                                - >
+                                  {{
+                                    all_icons[home_indoor_temp_icon.split("mdi:")[1]]
+                                    if home_indoor_temp_icon.split("mdi:") | count == 2 and home_indoor_temp_icon.split("mdi:")[1] in all_icons
+                                    else all_icons.thermometer
+                                  }}
                             continue_on_error: true
                           - *delay_boot
                           - action: 'esphome.{{ nspanel_name }}_component_color'
@@ -6498,11 +6504,12 @@ actions:
                                 - '{{ repeat.item.icon is match "mdi:" }}'
                                 - '{{ repeat.item.icon.split("mdi:")[1] in all_icons }}'
                               then:
-                                - action: 'esphome.{{ nspanel_name }}_component_text'
+                                - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                   data:
                                     page: '{{ repeat.item.page }}'
                                     id: '{{ repeat.item.component }}_icon'
-                                    txt: '{{ all_icons[repeat.item.icon.split("mdi:")[1]] }}'
+                                    txt_list:
+                                      - '{{ all_icons[repeat.item.icon.split("mdi:")[1]] }}'
                                   continue_on_error: true
                                 - *delay_boot
 
@@ -6518,11 +6525,12 @@ actions:
                             continue_on_error: true
                           - *delay_boot
                           ### LABEL Font ###
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: home
                               id: left_bt_text
-                              txt: '{{ hardware.buttons.left.name }}'
+                              txt_list:
+                                - '{{ hardware.buttons.left.name }}'
                             continue_on_error: true
                           - *delay_boot
 
@@ -6538,11 +6546,12 @@ actions:
                             continue_on_error: true
                           - *delay_boot
                           ### LABEL Font ###
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: home
                               id: right_bt_text
-                              txt: '{{ hardware.buttons.right.name }}'
+                              txt_list:
+                                - '{{ hardware.buttons.right.name }}'
                             continue_on_error: true
                           - *delay_boot
 
@@ -6553,16 +6562,17 @@ actions:
                               - variables:
                                   bt_qrcode_icon: !input home_button05_icon
                               - alias: qrcode_icon_action
-                                action: 'esphome.{{ nspanel_name }}_component_text'
+                                action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: mem
                                   id: qrcode_icon
-                                  txt: >
-                                    {{
-                                      all_icons[bt_qrcode_icon.split("mdi:")[1]]
-                                      if bt_qrcode_icon is string and bt_qrcode_icon.split("mdi:")[1] in all_icons
-                                      else all_icons["qrcode-scan"]
-                                    }}
+                                  txt_list:
+                                    - >
+                                      {{
+                                        all_icons[bt_qrcode_icon.split("mdi:")[1]]
+                                        if bt_qrcode_icon is string and bt_qrcode_icon.split("mdi:")[1] in all_icons
+                                        else all_icons["qrcode-scan"]
+                                      }}
                                 continue_on_error: true
                               - *delay_boot
                           - alias: qrcode_icon_color
@@ -6607,29 +6617,31 @@ actions:
                               relay2_local_control: '{{ hardware.buttons.right.entity == relay02_entity }}'
                               relay2_fallback: !input relay_2_local_fallback
 
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: relay1_icon
-                              txt: >
-                                {{
-                                  all_icons[relay1_icon.split("mdi:")[1]]
-                                  if relay1_icon.split("mdi:")[1] in all_icons
-                                  else all_icons["numeric-1-box-outline"]
-                                }}
+                              txt_list:
+                                - >
+                                  {{
+                                    all_icons[relay1_icon.split("mdi:")[1]]
+                                    if relay1_icon.split("mdi:")[1] in all_icons
+                                    else all_icons["numeric-1-box-outline"]
+                                  }}
                             continue_on_error: true
                           - *delay_boot
 
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: relay2_icon
-                              txt: >
-                                {{
-                                  all_icons[relay2_icon.split("mdi:")[1]]
-                                  if relay2_icon.split("mdi:")[1] in all_icons
-                                  else all_icons["numeric-2-box-outline"]
-                                }}
+                              txt_list:
+                                - >
+                                  {{
+                                    all_icons[relay2_icon.split("mdi:")[1]]
+                                    if relay2_icon.split("mdi:")[1] in all_icons
+                                    else all_icons["numeric-2-box-outline"]
+                                  }}
                             continue_on_error: true
                           - *delay_boot
 
@@ -6683,11 +6695,12 @@ actions:
                               - '{{ climate_entity_id_valid }}'
                               - '{{ state_attr(climate, "friendly_name") | string | length > 0 }}'
                             then:
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: mem
                                   id: addon_climate_friendly_name
-                                  txt: '{{ climate_friendly_name if climate_friendly_name is string else "" }}'
+                                  txt_list:
+                                    - '{{ climate_friendly_name if climate_friendly_name is string else "" }}'
                                 continue_on_error: true
                               - *delay_boot
 
@@ -6811,19 +6824,21 @@ actions:
 
                       - alias: Global settings - Decimal separator
                         sequence:
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: decimal_separator
-                              txt: !input decimal_separator
+                              txt_list:
+                                - !input decimal_separator
                             continue_on_error: true
                           - *delay_boot
 
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: mem
                               id: temp_unit
-                              txt: !input temperature_unit
+                              txt_list:
+                                - !input temperature_unit
                             continue_on_error: true
                           - *delay_boot
 
@@ -7148,11 +7163,12 @@ actions:
                                     {%- endif -%}
 
                               - condition: "{{ outdoor_temp_trimmed != '' }}"
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: home
                                   id: outdoor_temp
-                                  txt: '{{ outdoor_temp_trimmed }}'
+                                  txt_list:
+                                    - '{{ outdoor_temp_trimmed }}'
                                 continue_on_error: true
                               - *delay_default
 
@@ -7208,11 +7224,12 @@ actions:
                                       {{ indoor_temp | regex_replace('\s+', ' ') | trim }}
                                     {%- endif -%}
                               - condition: '{{ indoor_temp_trimmed != "" }}'
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: home
                                   id: indr_temp
-                                  txt: '{{ indoor_temp_trimmed }}'
+                                  txt_list:
+                                    - '{{ indoor_temp_trimmed }}'
                                 continue_on_error: true
 
                           ###### Custom buttons ######
@@ -7454,34 +7471,36 @@ actions:
                                           else:
                                             - if: '{{ entity.icon | length > 0 }}'
                                               then:
-                                                - action: 'esphome.{{ nspanel_name }}_component_text'
+                                                - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                                   data:
                                                     page: '{{ repeat.item.page }}'
                                                     id: '{{ repeat.item.component }}_icon'
-                                                    txt: '{{ entity.icon }}'
+                                                    txt_list:
+                                                      - '{{ entity.icon }}'
                                                   continue_on_error: true
                                                 - *delay_default
                                             - alias: value_with_unit_and_translations
-                                              action: 'esphome.{{ nspanel_name }}_component_text'
+                                              action: 'esphome.{{ nspanel_name }}_component_text_list'
                                               data:
                                                 page: '{{ repeat.item.page }}'
                                                 id: '{{ repeat.item.component }}'
-                                                txt: &value_with_unit_and_translations >
-                                                  {{
-                                                    (
+                                                txt_list: &value_with_unit_and_translations
+                                                  - >
+                                                    {{
                                                       (
-                                                        states(entity_id, rounded=true) ~ (
-                                                          units_separator ~ unit_of_measurement
-                                                          if unit_of_measurement is string and unit_of_measurement | length > 0
-                                                          else ""
+                                                        (
+                                                          states(entity_id, rounded=true) ~ (
+                                                            units_separator ~ unit_of_measurement
+                                                            if unit_of_measurement is string and unit_of_measurement | length > 0
+                                                            else ""
+                                                          )
                                                         )
-                                                      )
-                                                      if is_number(entity_state)
-                                                      else state_translated(entity_id)
-                                                    ) | regex_replace('\s+', ' ') | trim
-                                                    if entity_id_valid and entity_has_value
-                                                    else "_{_unavailable_}_"
-                                                  }}
+                                                        if is_number(entity_state)
+                                                        else state_translated(entity_id)
+                                                      ) | regex_replace('\s+', ' ') | trim
+                                                      if entity_id_valid and entity_has_value
+                                                      else "_{_unavailable_}_"
+                                                    }}
                                               continue_on_error: true
                                             - *delay_default
                                             # Restore visibility after any displayable state (e.g. zero → non-zero transition)
@@ -7495,11 +7514,12 @@ actions:
                                               continue_on_error: true
                                       else:
                                         # No value (unavailable/unknown): show localized marker and keep icon visible
-                                        - action: 'esphome.{{ nspanel_name }}_component_text'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                           data:
                                             page: '{{ repeat.item.page }}'
                                             id: '{{ repeat.item.component }}'
-                                            txt: '_{_unavailable_}_'
+                                            txt_list:
+                                              - '_{_unavailable_}_'
                                           continue_on_error: true
                                         - *delay_default
                                         # Ensure both value and icon are visible (recovery from hide-if-zero)
@@ -7530,11 +7550,12 @@ actions:
                                     (buttons_pages.labels[event_page] | string) | length > 0
                                   }}
                                 then:
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: ""
                                       id: page_label
-                                      txt: '{{ buttons_pages.labels[event_page] | string }}'
+                                      txt_list:
+                                        - '{{ buttons_pages.labels[event_page] | string }}'
                                     continue_on_error: true
                                   - *delay_default
 
@@ -7719,11 +7740,12 @@ actions:
                                   - '{{ entity.name is string }}'
                                   - '{{ entity.name | length > 0 }}'
                                 then:
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: ""
                                       id: page_label
-                                      txt: '{{ entity.name }}'
+                                      txt_list:
+                                        - '{{ entity.name }}'
                                     continue_on_error: true
                                   - *delay_default
                               - if:
@@ -7731,11 +7753,12 @@ actions:
                                   - '{{ entity.icon is string }}'
                                   - '{{ entity.icon | length > 0 }}'
                                 then:
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: ""
                                       id: icon_state
-                                      txt: '{{ entity.icon }}'
+                                      txt_list:
+                                        - '{{ entity.icon }}'
                                     continue_on_error: true
                                   - *delay_default
                           - &variables_light_modes
@@ -7794,18 +7817,20 @@ actions:
                               val: '{{ curr_brightness }}'
                             continue_on_error: true
                           - *delay_default
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: light
                               id: light_value
-                              txt: '{{ curr_brightness ~ units_separator ~ "%" }}'
+                              txt_list:
+                                - '{{ curr_brightness ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: light
                               id: light_value_2
-                              txt: '{{ curr_brightness ~ units_separator ~ "%" }}'
+                              txt_list:
+                                - '{{ curr_brightness ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -7824,18 +7849,20 @@ actions:
                                       else ((min_color_temp_kelvin+max_color_temp_kelvin)/2) | int(4268)
                                     }}
                               - condition: '{{ is_number(curr_color_temp) }}'
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: light
                                   id: temp_value
-                                  txt: '{{ curr_color_temp }}K'
+                                  txt_list:
+                                    - '{{ curr_color_temp }}K'
                                 continue_on_error: true
                               - *delay_default
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: light
                                   id: temp_value_2
-                                  txt: '{{ curr_color_temp }}K'
+                                  txt_list:
+                                    - '{{ curr_color_temp }}K'
                                 continue_on_error: true
                               - *delay_default
                               - action: 'esphome.{{ nspanel_name }}_component_val'
@@ -7916,18 +7943,20 @@ actions:
                           - *variable_entity
                           - *entity_details_title_with_icon
                           ##### Cover Open/close Icons #####
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: cover
                               id: cover_open
-                              txt: '{{ cover_icons.open }}'
+                              txt_list:
+                                - '{{ cover_icons.open }}'
                             continue_on_error: true
                           - *delay_default
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: cover
                               id: cover_close
-                              txt: '{{ cover_icons.close }}'
+                              txt_list:
+                                - '{{ cover_icons.close }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -7939,11 +7968,12 @@ actions:
                               val: '{{ (state_attr(entity_id, "current_position") | int ) | round(0) }}'
                             continue_on_error: true
                           - *delay_default
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: cover
                               id: cover_value
-                              txt: '{{ (state_attr(entity_id, "current_position") | int ) | round(0) ~ units_separator ~ "%" }}'
+                              txt_list:
+                                - '{{ (state_attr(entity_id, "current_position") | int ) | round(0) ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -7991,11 +8021,12 @@ actions:
                                     {% else %}
                                       battery-outline
                                     {% endif %}
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: cover
                                   id: battery_value
-                                  txt: '{{ battery_level ~ units_separator ~ "%" }}'
+                                  txt_list:
+                                    - '{{ battery_level ~ units_separator ~ "%" }}'
                                 continue_on_error: true
                               - *delay_default
                               ### ICON Battery Font Color ###
@@ -8007,11 +8038,12 @@ actions:
                                 continue_on_error: true
                               - *delay_default
                               ### ICON Battery Font ###
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: cover
                                   id: battery_icon
-                                  txt: '{{ all_icons[battery_icon] }}'
+                                  txt_list:
+                                    - '{{ all_icons[battery_icon] }}'
                                 continue_on_error: true
 
                       - alias: Fan settings page
@@ -8038,11 +8070,12 @@ actions:
                           - *entity_details_title_with_icon
                           - if: '{{ fan.steps > 0 and fan.supported_features | bitwise_and(2) > 0 }}'  # Oscillate
                             then:
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: fan
                                   id: bt_oscillate
-                                  txt: '{{ all_icons["autorenew"] if state_attr(entity_id, "oscillating") | default(false) else all_icons["autorenew-off"] }}'
+                                  txt_list:
+                                    - '{{ all_icons["autorenew"] if state_attr(entity_id, "oscillating") | default(false) else all_icons["autorenew-off"] }}'
                                 continue_on_error: true
                               - *delay_default
                               - action: 'esphome.{{ nspanel_name }}_component_color'
@@ -8072,11 +8105,12 @@ actions:
                               cmd: fanslider.maxval={{ fan.steps }}
                             continue_on_error: true
                           - *delay_default
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: fan
                               id: fan_value
-                              txt: '{{ fan.percentage ~ units_separator ~ "%" }}'
+                              txt_list:
+                                - '{{ fan.percentage ~ units_separator ~ "%" }}'
                             continue_on_error: true
                           - *delay_default
                           - action: 'esphome.{{ nspanel_name }}_component_color'
@@ -8275,11 +8309,12 @@ actions:
                               - *delay_default
 
                           - condition: '{{ settings_entity_domain == "climate" }}'
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: ""
                               id: page_label
-                              txt: '{{ friendly_name }}'
+                              txt_list:
+                                - '{{ friendly_name }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -8422,11 +8457,12 @@ actions:
                                       continue_on_error: true
                                     - *delay_default
                                     ### ICON Font ###
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: climate
                                         id: '{{ repeat.item.component }}'
-                                        txt: '{{ all_icons[repeat.item.icon] }}'
+                                        txt_list:
+                                          - '{{ all_icons[repeat.item.icon] }}'
                                       continue_on_error: true
                                     - *delay_default
                                     ### Enable button click ###
@@ -8483,11 +8519,12 @@ actions:
                                       continue_on_error: true
                                     - *delay_default
                                     ### ICON Font ###
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: climate
                                         id: '{{ repeat.item.component }}'
-                                        txt: '{{ entity.icon }}'
+                                        txt_list:
+                                          - '{{ entity.icon }}'
                                       continue_on_error: true
                                     - *delay_default
                                     ### Enable button click ###
@@ -8514,11 +8551,12 @@ actions:
                           - *entity_details_title_with_icon
                           - if: '{{ entity.icon is defined and entity.icon is string and entity.icon | length > 0 }}'
                             then:
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: ""
                                   id: icon
-                                  txt: '{{ entity.icon }}'
+                                  txt_list:
+                                    - '{{ entity.icon }}'
                                 continue_on_error: true
                               - *delay_default
                           - action: 'esphome.{{ nspanel_name }}_component_val'
@@ -8626,11 +8664,12 @@ actions:
                               - *delay_default
 
                           - condition: '{{ settings_entity_domain == "water_heater" }}'
-                          - action: 'esphome.{{ nspanel_name }}_component_text'
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
                             data:
                               page: ""
                               id: page_label
-                              txt: '{{ friendly_name }}'
+                              txt_list:
+                                - '{{ friendly_name }}'
                             continue_on_error: true
                           - *delay_default
 
@@ -8685,11 +8724,12 @@ actions:
                                       }}
                                 - if: '{{ var_icon != False }}'
                                   then:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}_icon'
-                                        txt: '{{ var_icon }}'
+                                        txt_list:
+                                          - '{{ var_icon }}'
                                       continue_on_error: true
                                     - *delay_default
                                 - if: '{{ repeat.item.label_color_rgb != [200, 204, 200] }}'
@@ -8778,27 +8818,30 @@ actions:
                                   val: '{{ temp_step }}'
                                 continue_on_error: true
                               - *delay_default
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: water_heater
                                   id: temp_unit
-                                  txt: '{{ temp_unit }}'
+                                  txt_list:
+                                    - '{{ temp_unit }}'
                                 continue_on_error: true
                               - *delay_default
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: water_heater
                                   id: dec_separator
-                                  txt: '{{ decimal_separator }}'
+                                  txt_list:
+                                    - '{{ decimal_separator }}'
                                 continue_on_error: true
                               - *delay_default
 
                               ##### Current temperature #####
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: water_heater
                                   id: current_temp
-                                  txt: '{{ current_temp_text }}'
+                                  txt_list:
+                                    - '{{ current_temp_text }}'
                                 continue_on_error: true
                               - *delay_default
 
@@ -8811,11 +8854,12 @@ actions:
                                 continue_on_error: true
                               - if: '{{ is_target_temperature }}'
                                 then:
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: water_heater
                                       id: target
-                                      txt: '{{ target_temp_text }}'
+                                      txt_list:
+                                        - '{{ target_temp_text }}'
                                     continue_on_error: true
                                   - *delay_default
                                   - action: 'esphome.{{ nspanel_name }}_component_val'
@@ -8825,11 +8869,12 @@ actions:
                                       val: '{{ slider_value }}'
                                     continue_on_error: true
                                   - *delay_default
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: water_heater
                                       id: target_icon
-                                      txt: '{{ water_heater_icon }}'
+                                      txt_list:
+                                        - '{{ water_heater_icon }}'
                                     continue_on_error: true
                                   - *delay_default
 
@@ -8862,11 +8907,12 @@ actions:
                                       continue_on_error: true
                                     - *delay_default
                                     ### ICON Font ###
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: water_heater
                                         id: '{{ repeat.item.component }}'
-                                        txt: '{{ all_icons[repeat.item.icon] }}'
+                                        txt_list:
+                                          - '{{ all_icons[repeat.item.icon] }}'
                                       continue_on_error: true
                                     - *delay_default
                                     ### Enable button click ###
@@ -8889,11 +8935,12 @@ actions:
                           ##### Entity page - Label #####
                           - if: '{{ entities_pages.labels[event_page] | length > 0 }}'
                             then:
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: '{{ event_page }}'
                                   id: page_label
-                                  txt: '{{ entities_pages.labels[event_page] }}'
+                                  txt_list:
+                                    - '{{ entities_pages.labels[event_page] }}'
                                 continue_on_error: true
                               - *delay_default
                           ##### Entities #####
@@ -8930,27 +8977,29 @@ actions:
                                 - alias: Entities pages - Constructor
                                   if: '{{ event_page_constructor is defined and event_page_constructor }}'
                                   then:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}_icon'
-                                        txt: '{{ entity.icon if entitypages_show_entities_icons else "" }}'
+                                        txt_list:
+                                          - '{{ entity.icon if entitypages_show_entities_icons else "" }}'
                                       continue_on_error: true
                                     - *delay_default
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}_label'
-                                        txt: '{{ entity.name }}'
+                                        txt_list:
+                                          - '{{ entity.name }}'
                                       continue_on_error: true
                                     - *delay_default
                                 - alias: Entities pages - Values (with icons)
                                   sequence:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}'
-                                        txt: *value_with_unit_and_translations
+                                        txt_list: *value_with_unit_and_translations
                                       continue_on_error: true
                                     - *delay_default
 
@@ -9446,11 +9495,12 @@ actions:
                                         {{ (temp_max | round(0) ~ units_separator ~ weather_temp_units) if is_number(temp_max) and temp_min != temp_max }}
                                   - if: '{{ (is_number(temp_min) or is_number(temp_max)) and temperature_string is string and temperature_string | length > 0 }}'
                                     then:
-                                      - action: 'esphome.{{ nspanel_name }}_component_text'
+                                      - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                         data:
                                           page: '{{ page_name }}'
                                           id: 'temperature'  ### Temperature MIN/MAX ###
-                                          txt: '{{ temperature_string }}'
+                                          txt_list:
+                                            - '{{ temperature_string }}'
                                         continue_on_error: true
                                       - *delay_default
 
@@ -9458,26 +9508,29 @@ actions:
                                   - repeat:
                                       for_each: '{{ (parameters | selectattr("visibility", "eq", true) | list)[:5] }}'
                                       sequence:
-                                        - action: 'esphome.{{ nspanel_name }}_component_text'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                           data:
                                             page: '{{ page_name }}'
                                             id: 'value0{{ repeat.index }}'
-                                            txt: '{{ repeat.item.value }}'
+                                            txt_list:
+                                              - '{{ repeat.item.value }}'
                                           continue_on_error: true
                                         - *delay_default
-                                        - action: 'esphome.{{ nspanel_name }}_component_text'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                           data:
                                             page: '{{ page_name }}'
                                             id: 'value0{{ repeat.index }}_icon'
-                                            txt: '{{ repeat.item.icon }}'
+                                            txt_list:
+                                              - '{{ repeat.item.icon }}'
                                           continue_on_error: true
                                         - *delay_default
                                 else: &forecast_unavailable
-                                  - action: 'esphome.{{ nspanel_name }}_component_text'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                     data:
                                       page: '{{ page_name }}'
                                       id: 'value01'
-                                      txt: '_{_unavailable_}_'
+                                      txt_list:
+                                        - '_{_unavailable_}_'
                                     continue_on_error: true
                             else: *forecast_unavailable
 
@@ -9489,19 +9542,21 @@ actions:
                               - variables:
                                   page_icon: '{{ pages_utilities.title.icon.split("mdi:")[1] if pages_utilities.title.icon is string and pages_utilities.title.icon.split("mdi:") | count == 2 }}'
 
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                 data:
                                   page: utilities
                                   id: title_icon
-                                  txt: '{{ all_icons[page_icon] if page_icon in all_icons else all_icons.gauge }}'
+                                  txt_list:
+                                    - '{{ all_icons[page_icon] if page_icon in all_icons else all_icons.gauge }}'
                                 continue_on_error: true
                               - *delay_default
 
-                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                 data:
                                   page: utilities
                                   id: title
-                                  txt: '{{ pages_utilities.title.label }}'
+                                  txt_list:
+                                    - '{{ pages_utilities.title.label }}'
                                 continue_on_error: true
                               - *delay_default
 
@@ -9558,11 +9613,12 @@ actions:
                                 - alias: Utilities - Label
                                   if: '{{ label_enabled }}'
                                   then:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: utilities
                                         id: '{{ repeat.item.name }}_label'
-                                        txt: '{{ repeat.item.label }}'
+                                        txt_list:
+                                          - '{{ repeat.item.label }}'
                                       continue_on_error: true
                                     - *delay_default
                                     - action: 'esphome.{{ nspanel_name }}_component_color'
@@ -9758,11 +9814,12 @@ actions:
                                               - condition: '{{ entity.name is defined }}'
                                               - condition: '{{ entity.name is string }}'
                                               - condition: '{{ entity.name | length > 0 }}'
-                                              - action: 'esphome.{{ nspanel_name }}_component_text'
+                                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
                                                 data:
                                                   page: ""
                                                   id: page_label
-                                                  txt: '{{ entity.name }}'
+                                                  txt_list:
+                                                    - '{{ entity.name }}'
                                                 continue_on_error: true
                                       - alias: Custom hold action - Left
                                         conditions: '{{ last_click_button.hold_select == "Custom Action" and nspanel_event.component == "hw_bt_left" }}'

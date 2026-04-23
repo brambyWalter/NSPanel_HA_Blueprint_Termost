@@ -8,7 +8,7 @@ This document provides details on custom actions designed for integration with H
   - [Button Action (`button`)](#button-action-button): Configures properties and state of buttons on a specified button page.
   - [Command Action (`command`)](#command-action-command): Sends a custom command directly to the display.
   - [Component Color Action (`component_color`)](#component-color-action-component_color): Changes the foreground color of a specified component on the display.
-  - [Component Text Action (`component_text`)](#component-text-action-component_text): Updates the text of a specified component on the display.
+  - [Component Text List Action (`component_text_list`)](#component-text-list-action-component_text_list): Updates the text of a specified component on the display using a list of values.
   - [Component Value Action (`component_val`)](#component-value-action-component_val): Updates the value of a specified component on the display.
   - [Components Visibility Action (`components_visibility`)](#components-visibility-action-components_visibility): Hides or shows a specified component on the display.
   - [Entity Details Show Action (`entity_details_show`)](#entity-details-show-action-entity_details_show): Displays detailed information for a specific entity.
@@ -64,7 +64,7 @@ You can look up the action names available on your Home Assistant instance under
 | [`button`](#button-action-button) | [Button Action](#button-action-button) | Configures properties and state of buttons on a specified button page. |
 | [`command`](#command-action-command) | [Command Action](#command-action-command) | Sends a custom command directly to the display. |
 | [`component_color`](#component-color-action-component_color) | [Component Color Action](#component-color-action-component_color) | Changes the foreground color of a specified component on the display. |
-| [`component_text`](#component-text-action-component_text) | [Component Text Action](#component-text-action-component_text) | Updates the text of a specified component on the display. |
+| [`component_text_list`](#component-text-list-action-component_text_list) | [Component Text List Action](#component-text-list-action-component_text_list) | Updates the text of a specified component on the display using a list of values. |
 | [`component_val`](#component-value-action-component_val) | [Component Value Action](#component-value-action-component_val) | Updates the value of a specified component on the display. |
 | [`components_visibility`](#components-visibility-action-components_visibility) | [Components Visibility Action](#components-visibility-action-components_visibility) | Hides or shows a specified component on the display. |
 | [`entity_details_show`](#entity-details-show-action-entity_details_show) | [Entity Details Show Action](#entity-details-show-action-entity_details_show) | Displays detailed information for a specific entity. |
@@ -206,23 +206,28 @@ data:
 >
 > Ensure the `id` and color parameters accurately target and define the new color for the component.
 
-### Component Text Action: `component_text`
+### Component Text List Action: `component_text_list`
 
-Updates the text of a specified component on the display, enabling dynamic text content updates.
+Updates the text of a specified component on the display using a list of values, enabling dynamic text content updates.
+
+Replaces the former `component_text` action. Single-value callers should pass a one-element list.
 
 **Usage:**
 Ideal for user interfaces that require real-time text updates, such as status messages, labels, or any text-based information display.
+Also used by page modules that store list-shaped data in memory (e.g. the options list for the `popup_select` picker page).
 
 **Parameters:**
 
 - `page` (string): Identifier of the page where the component is. Use `mem` when setting memory vars or leave empty for current page or global vars.
 - `id` (string): Identifier of the component whose text will be updated. Ensure this matches the component's ID in your display layout.
-- `txt` (string): The new text content to display. This can include static text or dynamic information passed at runtime.
+- `txt_list` (string[]): List of text values.
+    For Nextion-targeted pages, only the last element of the list is applied (earlier elements are discarded since each write to the same component would be immediately overwritten).
+    For `page: mem` targets handled by list-aware extensions, the full list is passed through.
 
 > [!IMPORTANT]
 > **Using `page: mem` for Memory Variables**
 >
-> The base implementation of `component_text` action does **not** include handling for `page: mem`.
+> The base implementation of `component_text_list` action does **not** include handling for `page: mem`.
 > This is by design to support a modular architecture.
 >
 > To use `page: mem`, you must ensure that the appropriate extension file is included in your configuration.
@@ -241,20 +246,35 @@ Ideal for user interfaces that require real-time text updates, such as status me
 >
 > When an extension is not present, using `page: mem` will have no effect, and the action may be silently ignored.
 
-**Home Assistant Example:**
+**Home Assistant Example (single value, typical migration from `component_text`):**
 
 ```yaml
-action: esphome.<your_panel_name>_component_text
+action: esphome.<your_panel_name>_component_text_list
 data:
   page: home
   id: time
-  txt: "12:34"
+  txt_list:
+    - "12:34"
+```
+
+**Home Assistant Example (list of values, for list-aware memory namespaces):**
+
+```yaml
+action: esphome.<your_panel_name>_component_text_list
+data:
+  page: mem
+  id: popup_select_options
+  txt_list:
+    - "None"
+    - "Rainbow"
+    - "Pulse"
+    - "Twinkle"
 ```
 
 > [!NOTE]
 > Replace `<your_panel_name>` with the slugified name of your panel (see [Action naming](#action-naming-and-your_panel_name)).
 >
-> Make sure the `id` corresponds to the correct component on your display for the text update to work as intended.
+> Make sure the `id` corresponds to the correct component on your display (or the correct memory namespace key) for the text update to work as intended.
 
 ### Component Value Action: `component_val`
 
