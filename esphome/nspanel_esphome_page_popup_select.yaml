@@ -213,16 +213,11 @@ script:
           ESP_LOGD("${TAG_PAGE_POPUP_SELECT}", "Picker opened (caller=%" PRIu8 ", opts=%" PRIu8 ", mask=%" PRIu32 ")",
                                                 caller_page_id, opt_count, popup_select_cache_mask);
 
-  - id: !extend stop_all
-    then:
-      - lambda: |-
-
-
   - id: !extend stop_page_constructors
     then:
       - lambda: |-
           goto_page_popup_select->stop();
-          page_popup_select->stop()
+          page_popup_select->stop();
           popup_select_open->stop();
 
 text_sensor:

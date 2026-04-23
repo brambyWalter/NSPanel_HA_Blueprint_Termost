@@ -23,45 +23,70 @@ Page light
             {
                 page home_page_id
             }
+            // #### ON components (light mode defaults) ####
             vis light_b_press,1
             vis lightslider,1
             vis light_value,1
-            // #### OFF Button #####
+            // #### OFF Button ####
+            vis effect_button,0
             vis temp_b_press,0
             vis color_b_pres,0
-            // #### OFF Value #####
+            // #### OFF Value ####
             vis temp_value,0
             vis light_value_2,0
-            // #### OFF Slider #####
+            // #### OFF Slider ####
             vis tempslider,0
             vis colorwheel,0
-            // #### Hide color & temp buttons #####
+            // #### Hide color & temp buttons ####
             vis temp_b_press,0
             vis temp_value_2,0
             vis temp_button,0
             vis color_b_pres,0
             vis color_button,0
-            // set background image and fg color to all components
-            light.pic=pic_background_main
-            for(sys0=0;sys0<=last_component.id;sys0++)
-            {
-                b[sys0].picc=b[0].pic
-            }
-            colorwheel.pic=colorwheel_pic.val
-            tempslider.pic=tempslider_pic.val
-            tempslider.pic1=tempslider_pic.val
-            lightslider.pic=lslider_pic.val
-            lightslider.pic1=lslider_pic1.val
+            // Font (applies in both themes)
             button_back.font=button_back_font
+            // Foreground colors - use theme-aware globals, safe in both themes
             button_back.pco=color_pco_navigation
-            button_back.picc=pic_background_main
-            button_back.picc2=pic_background_main
             icon_state.pco=color_pco_main
             page_label.pco=color_pco_main
             light_value.pco=color_pco_main
             temp_value.pco=color_pco_main
             temp_value_2.pco=color_pco_main
             power_button.pco=color_pco_secondary
+            effect_button.pco=color_pco_secondary
+            // Light mode only: override HMI defaults (which target dark theme).
+            // Dark theme uses the component defaults directly, so no else branch.
+            if(theme==1)
+            {
+                // Page background
+                light.pic=pic_background_main
+                // Back button (two picc slots: released / pressed)
+                button_back.picc=pic_background_main
+                button_back.picc2=pic_background_main
+                // Text/value components
+                icon_state.picc=pic_background_main
+                page_label.picc=pic_background_main
+                light_value.picc=pic_background_main
+                light_value_2.picc=pic_background_main
+                temp_value.picc=pic_background_main
+                temp_value_2.picc=pic_background_main
+                // Mode selector buttons
+                light_b_press.pic=76
+                light_button.pic=76
+                temp_b_press.pic=77
+                temp_button.pic=77
+                color_b_pres.pic=78
+                color_button.pic=78
+                // Slider / colorwheel background pictures
+                colorwheel.pic=70
+                tempslider.pic=71
+                tempslider.pic1=71
+                lightslider.pic=72
+                lightslider.pic1=73
+                // Action buttons
+                power_button.picc=pic_background_main
+                effect_button.picc=pic_background_main
+            }
             dim=brightness
             sendme
         
@@ -105,93 +130,63 @@ Variable (string) lightsetting
         Text          : 
         Max. Text Size: 255
     
-Variable (int32) colorwheel_pic
-    Attributes
-        ID   : 28
-        Scope: global
-        Value: 17
-    
-Variable (int32) tempslider_pic
-    Attributes
-        ID   : 29
-        Scope: global
-        Value: 21
-    
-Variable (int32) lslider_pic
-    Attributes
-        ID   : 30
-        Scope: global
-        Value: 28
-    
-Variable (int32) lslider_pic1
-    Attributes
-        ID   : 31
-        Scope: global
-        Value: 29
-    
-Variable (int32) last_component
-    Attributes
-        ID   : 32
-        Scope: local
-        Value: 0
-    
 Variable (int32) r
     Attributes
-        ID   : 33
+        ID   : 28
         Scope: local
         Value: 0
     
 Variable (int32) g
     Attributes
-        ID   : 34
+        ID   : 29
         Scope: local
         Value: 0
     
 Variable (int32) b
     Attributes
-        ID   : 35
+        ID   : 30
         Scope: local
         Value: 0
     
 Variable (int32) h
     Attributes
-        ID   : 36
+        ID   : 31
         Scope: local
         Value: 0
     
 Variable (int32) s
     Attributes
-        ID   : 37
+        ID   : 32
         Scope: local
         Value: 0
     
 Variable (int32) v
     Attributes
-        ID   : 38
+        ID   : 33
         Scope: local
         Value: 0
     
 Variable (int32) p
     Attributes
-        ID   : 39
+        ID   : 34
         Scope: local
         Value: 0
     
 Variable (int32) q
     Attributes
-        ID   : 40
+        ID   : 35
         Scope: local
         Value: 0
     
 Variable (int32) t
     Attributes
-        ID   : 41
+        ID   : 36
         Scope: local
         Value: 0
     
 Variable (int32) f
     Attributes
-        ID   : 42
+        ID   : 37
         Scope: local
         Value: 0
     
@@ -202,8 +197,8 @@ Number ring
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 6
-        y coordinate            : 150
+        x coordinate            : 332
+        y coordinate            : 245
         Width                   : 21
         Height                  : 40
         Effect                  : load
@@ -229,8 +224,8 @@ Number field
         Dragging                : 0
         Send Component ID       : on press and release
         Opacity                 : 127
-        x coordinate            : 30
-        y coordinate            : 150
+        x coordinate            : 356
+        y coordinate            : 245
         Width                   : 21
         Height                  : 40
         Effect                  : load
@@ -442,6 +437,37 @@ Text power_button
         Touch Release Event
             power_button.pco=31
         
+Text effect_button
+    Attributes
+        ID                      : 38
+        Scope                   : local
+        Dragging                : 0
+        Send Component ID       : on press and release
+        Opacity                 : 127
+        x coordinate            : 15
+        y coordinate            : 74
+        Width                   : 60
+        Height                  : 60
+        Effect                  : load
+        Effect Priority         : 0
+        Effect Time             : 300
+        Fill                    : crop image
+        Associated Keyboard     : none
+        Font ID                 : 10
+        Cropped Back. Picture ID: 0
+        Horizontal Alignment    : center
+        Vertical Alignment      : center
+        Input Type              : character
+        Text                    : \xee\x99\xb3
+        Max. Text Size          : 3
+        Word wrap               : disabled
+        Horizontal Spacing      : 0
+        Vertical Spacing        : 0
+    
+    Events
+        Touch Release Event
+            effect_button.pco=31
+        
 Picture light_button
     Attributes
         ID               : 8
@@ -547,7 +573,7 @@ Picture temp_button
 Picture light_b_press
     Attributes
         ID               : 11
-        Scope            : global
+        Scope            : local
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
@@ -563,7 +589,7 @@ Picture light_b_press
 Picture temp_b_press
     Attributes
         ID               : 12
-        Scope            : global
+        Scope            : local
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
@@ -579,7 +605,7 @@ Picture temp_b_press
 Picture color_b_pres
     Attributes
         ID               : 13
-        Scope            : global
+        Scope            : local
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
@@ -906,8 +932,8 @@ Hotspot hsv2rgb
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
-        x coordinate     : 5
-        y coordinate     : 102
+        x coordinate     : 332
+        y coordinate     : 268
         Width            : 40
         Height           : 20
         Effect           : load
@@ -987,8 +1013,8 @@ Hotspot rgb888to565
         Dragging         : 0
         Send Component ID: on press and release
         Opacity          : 127
-        x coordinate     : 5
-        y coordinate     : 124
+        x coordinate     : 332
+        y coordinate     : 293
         Width            : 40
         Height           : 20
         Effect           : load
