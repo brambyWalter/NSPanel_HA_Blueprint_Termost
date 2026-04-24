@@ -179,9 +179,14 @@ Quick links for the most common needs:
 
 ### Light Settings
 
+![Light EU](docs/pics/eu_light.png)
+
+![Light US](docs/pics/us_light.png)
+
 - Current light state and brightness slider
 - RGB color wheel for color selection
 - Color temperature slider
+- Effect selector for lights that support effects
 - Quick navigation back to the originating button page
 
 ### Cover Settings

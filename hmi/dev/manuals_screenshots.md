@@ -230,3 +230,75 @@ notifi_label.txt="My sensor name"
 notifi_text01.txt="1115.4 kWh"
 notifi_text01.font=6
 ```
+
+## Light page
+
+For screenshots captured in the simulator, set `display_mode` explicitly
+because the simulator has no EEPROM to read from.
+Replace `hard_coded_display_mode` with the value matching your target build:
+`0` for EU landscape, `1` for US portrait, `2` for US landscape.
+
+```nextion
+api=1
+display_mode=hard_coded_display_mode
+page light
+back_page_id=0
+lightslider.val=100
+light_value.txt="100%"
+light_value_2.txt="100%"
+page_label.txt="Kitchen lights"
+icon_state.txt=""
+vis lightslider,1
+vis color_button,1
+vis color_touch,1
+vis effect_button,1
+```
+
+![Light EU](../../docs/pics/eu_light.png)
+
+![Light US](../../docs/pics/us_light.png)
+
+## Light effect selector
+
+Shows the effect picker overlaid on top of the light page.
+The light page is constructed first, then the popup_select page is
+populated with eight effect options and Pulse highlighted as the
+current selection.
+
+```nextion
+api=1
+display_mode=hard_coded_display_mode
+page light
+back_page_id=0
+lightslider.val=100
+light_value.txt="100%"
+light_value_2.txt="100%"
+page_label.txt="Kitchen lights"
+icon_state.txt=""
+vis lightslider,1
+vis color_button,1
+vis color_touch,1
+vis effect_button,1
+doevents
+delay 1000
+page popup_select
+caller_page_id.val=10
+select_mode.val=0
+opt_count.val=8
+total_count.val=8
+selection_mask.val=8
+lbl_title.txt="Select effect"
+opt0.txt="None"
+opt1.txt="Rainbow"
+opt2.txt="Fireplace"
+opt3.txt="Pulse"
+opt4.txt="Strobe"
+opt5.txt="Candle"
+opt6.txt="Police"
+opt7.txt="Party"
+init.en=1
+```
+
+![Light effect selector EU](../../docs/pics/eu_light_effect_selector.png)
+
+![Light effect selector US](../../docs/pics/us_light_effect_selector.png)
