@@ -236,7 +236,7 @@ notifi_text01.font=6
 For screenshots captured in the simulator, set `display_mode` explicitly
 because the simulator has no EEPROM to read from.
 Replace `hard_coded_display_mode` with the value matching your target build:
-`0` for EU landscape, `1` for US portrait, `2` for US landscape.
+`1` for EU landscape, `2` for US portrait, `3` for US landscape.
 
 ```nextion
 api=1
