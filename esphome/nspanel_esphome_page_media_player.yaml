@@ -286,6 +286,17 @@ script:
     mode: restart
     then:  # There's nothing here so far
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("media_player")) {
+            display_entity_keep = true;
+            return;
+          }
+          last_volume_level = 0;
+          last_media_duration = 0;
+          last_media_position = 0;
+
   - id: !extend stop_all
     then:
       - lambda: page_media_player->stop();

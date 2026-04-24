@@ -339,34 +339,20 @@ script:
           stop_page_constructors->execute();
 
           // Reset globals
-          ESP_LOGV("${TAG_HW_DISPLAY}", "Reset globals");
-          if (new_page_id != get_page_id("alarm") &&
-              new_page_id != get_page_id("button") &&
-              new_page_id != get_page_id("climate") &&
-              new_page_id != get_page_id("cover") &&
-              new_page_id != get_page_id("fan") &&
-              new_page_id != get_page_id("light") &&
-              new_page_id != get_page_id("media_player") &&
-              new_page_id != get_page_id("switch") &&
-              new_page_id != get_page_id("water_heater") &&
-              new_page_id != get_page_id("confirm") &&
-              new_page_id != get_page_id("popup_select") &&
-              new_page_id != get_page_id("keyb_num")) {
-              detailed_entity->publish_state("");
-              disp1->send_command_printf("back_page_id=%" PRIu8, get_page_id("home"));
-          } else {  // Report detailed entity
-            ESP_LOGD("${TAG_HW_DISPLAY}", "Entity shown: %s", detailed_entity->state.c_str());
-          }
-          if (new_page_id != get_page_id("media_player")) {
-            last_volume_level = 0;
-            last_media_duration = 0;
-            last_media_position = 0;
-          }
+          reset_globals->execute();
 
-      # Wait for other constructors to stop before telling the blueprint about a new page
+        # Wait for other processes to finish before telling the blueprint about a new page
+      - script.wait: reset_globals
       - script.wait: stop_page_constructors
 
       - lambda: |-
+          if (!display_entity_keep) {
+            detailed_entity->publish_state("");
+            disp1->send_command_printf("back_page_id=%" PRIu8, get_page_id("home"));
+          } else {  // Report detailed entity
+            ESP_LOGD("${TAG_HW_DISPLAY}", "Entity shown: %s", detailed_entity->state.c_str());
+          }
+
           // Report new page to Blueprint
           if (last_page_id != UINT8_MAX and last_page_id != new_page_id) {
             ESP_LOGV("${TAG_HW_DISPLAY}", "Report new page to Blueprint");
@@ -379,6 +365,13 @@ script:
           // Update buttons bars on screen
           ESP_LOGV("${TAG_HW_DISPLAY}", "Update buttons bars on screen");
           refresh_hardware_buttons_bars->execute(3);
+
+  - id: reset_globals
+    mode: restart
+    then:
+      - lambda: |-
+          ESP_LOGV("${TAG_HW_DISPLAY}", "Reset globals");
+          display_entity_keep = false;
 
   - id: set_brightness
     mode: single
@@ -407,6 +400,7 @@ script:
           event_from_display->stop();
           goto_page->stop();
           page_change->stop();
+          reset_globals->stop();
           set_brightness->stop();
           set_component_font_color_DEPRECATED->stop();
           theme_update->stop();

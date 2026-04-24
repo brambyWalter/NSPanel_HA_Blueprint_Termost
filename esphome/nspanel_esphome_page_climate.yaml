@@ -148,6 +148,13 @@ script:
     mode: single
     then:  # There's nothing here so far
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("climate")) {
+            display_entity_keep = true;
+          }
+
   - id: set_climate
     mode: restart
     then:

@@ -228,6 +228,13 @@ script:
 
           goto_page_popup_select->execute(caller_page_id, title.c_str());
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("popup_select")) {
+            display_entity_keep = true;
+          }
+
   - id: !extend stop_all
     then:
       - lambda: |-

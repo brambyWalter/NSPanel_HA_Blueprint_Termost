@@ -74,6 +74,13 @@ script:
           disp1->set_component_value("color_unavail", ${page_button_color_unavail});
           disp1->set_component_value("color_ring", ${page_button_color_ring});
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("button")) {
+            display_entity_keep = true;
+          }
+
   - id: !extend stop_page_constructors
     then:
       - lambda: page_button->stop();

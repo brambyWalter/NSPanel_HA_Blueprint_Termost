@@ -61,4 +61,11 @@ script:
               });
             } // endif key == "position"
           } // endif page == "cover"
+
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("cover")) {
+            display_entity_keep = true;
+          }
 ...
