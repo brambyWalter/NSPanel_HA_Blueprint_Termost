@@ -101,14 +101,6 @@ WIN_ASCENT     = 1812   # usWinAscent  (includes a small safety margin vs ASCENT
 WIN_DESCENT    = 264    # usWinDescent (positive; includes safety margin vs |DESCENT|)
 TYPO_LINE_GAP  = 184    # sTypoLineGap
 
-# Horizontal shift applied to every glyph when building the TTF, used to
-# visually center MDI icons within their Nextion .zi render cell.  Applied
-# both as a transform x-offset (shifts outline geometry right) and as the
-# hmtx lsb value (ZiLib additively honours it).  Higher values center
-# narrow glyphs better but can cause wide glyphs (e.g. qrcode-scan) to
-# clip on the right edge of the advance box.
-ICON_H_SHIFT   = 100
-
 # ZiLib codepoint remapping offset, as used in Generate-HASP-Fonts.ps1:
 #   zi_codepoint = ttf_codepoint - ZI_CP_OFFSET
 ZI_CP_OFFSET = 0xE2001
@@ -269,7 +261,7 @@ def build_ttf(meta, svg_dir, output_path, version_str):
     # each glyph the full UPM of vertical room (ASCENT above baseline,
     # |DESCENT| below) — matching how the reference build positions
     # glyphs relative to the baseline.
-    transform = (SCALE, 0, 0, -SCALE, ICON_H_SHIFT, ASCENT)
+    transform = (SCALE, 0, 0, -SCALE, 0, ASCENT)
 
     glyphs = {".notdef": TTGlyphPen(None).glyph()}
     failed = []
@@ -278,15 +270,42 @@ def build_ttf(meta, svg_dir, output_path, version_str):
         if i % 500 == 0:
             print(f"    {i}/{len(icons)}...")
         try:
-            pen  = TTGlyphPen(None)
-            tpen = Cu2QuPen(
-                TransformPen(pen, transform),
+            # First pass: render with the base y-flip transform to measure
+            # the glyph's true horizontal bbox.
+            probe_pen  = TTGlyphPen(None)
+            probe_tpen = Cu2QuPen(
+                TransformPen(probe_pen, transform),
                 max_err=1.0,
                 reverse_direction=True,
             )
             with open(svg_path) as f:
                 svg_content = f.read()
             paths = re.findall(r'<path[^>]+d="([^"]+)"', svg_content)
+            if paths:
+                for d in paths:
+                    parse_path(_fix_svg_path_data(d), probe_tpen)
+            probe_glyph = probe_pen.glyph()
+            probe_glyph.recalcBounds(None)
+
+            # Shift the outline so xMin = 0.  ZiLib calls GDI+ MeasureString
+            # to determine the glyph cell width and draws the outline at
+            # location (0, y) inside a bitmap of that width — so the outline
+            # must start at x=0 for the glyph to fit cleanly in the cell.
+            # The matching advance width (= glyph width) is set in hmtx
+            # below, which is what GDI+ returns from MeasureString.
+            if probe_glyph.numberOfContours > 0:
+                x_offset = -probe_glyph.xMin
+            else:
+                x_offset = 0
+
+            # Second pass: render with the per-glyph offset applied.
+            pen            = TTGlyphPen(None)
+            shifted_xform  = (SCALE, 0, 0, -SCALE, x_offset, ASCENT)
+            tpen           = Cu2QuPen(
+                TransformPen(pen, shifted_xform),
+                max_err=1.0,
+                reverse_direction=True,
+            )
             if paths:
                 for d in paths:
                     parse_path(_fix_svg_path_data(d), tpen)
@@ -315,14 +334,24 @@ def build_ttf(meta, svg_dir, output_path, version_str):
 
     fb.setupGlyf(glyphs)
 
-    # All glyphs use advance=UPM and lsb=ICON_H_SHIFT to horizontally shift
-    # the rendered glyph right within the Nextion cell.  ZiLib appears to
-    # additively apply the hmtx lsb on top of the glyph's own xMin, so a
-    # single flat value works well enough for visual centering across the
-    # icon set.  Tune ICON_H_SHIFT (at module top) if the overall shift
-    # looks off.
+    # Per-glyph advance width equals each glyph's actual bounding-box width
+    # (with xMin shifted to 0 above).  GDI+ MeasureString returns this
+    # advance as the string width, and ZiLib uses that to size the bitmap
+    # cell — so the cell ends up tight around the glyph, with no empty
+    # padding on the left or right.  The Nextion Editor's horizontal-center
+    # textbox alignment then centers this tight cell within the display
+    # component, giving visually centered icons on the panel.
     metrics = {".notdef": (UNITS_PER_EM, 0)}
-    metrics.update({name: (UNITS_PER_EM, ICON_H_SHIFT) for _, name, _ in icons})
+    for _, name, _ in icons:
+        g = glyphs[name]
+        if g.numberOfContours > 0:
+            # xMin is always 0 here (we shifted it in the render loop),
+            # so the glyph width equals xMax.  Fall back to UPM for any
+            # degenerate glyph that ended up empty.
+            advance = max(1, g.xMax)
+        else:
+            advance = UNITS_PER_EM
+        metrics[name] = (advance, 0)
     fb.setupHorizontalMetrics(metrics)
     fb.font.save(str(output_path))
     print(f"  Saved: {output_path}")
