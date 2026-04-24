@@ -4,6 +4,7 @@
 
 #ifdef NSPANEL_EASY_PAGE_POPUP_SELECT
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
