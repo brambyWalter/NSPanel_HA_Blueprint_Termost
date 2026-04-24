@@ -17,7 +17,7 @@ display:
         - lambda: |-
             if (page_id != get_page_id("light")) return;  // Page light
             if (touch_event) return;                      // Ignore touch and process only release
-            if (component_id == 27) {                     // power button
+            if (component_id == 21) {                     // power button
               ESP_LOGD("${TAG_PAGE_LIGHT}", "Power button tapped, informing HA");
               fire_ha_event("action_call", {
                 {"action", "light.toggle"},
@@ -25,7 +25,7 @@ display:
               });
               return;
             }
-            if (component_id == 38) {                     // effect_button
+            if (component_id == 32) {                     // effect_button
               ESP_LOGD("${TAG_PAGE_LIGHT}", "Effect button tapped, opening popup select");
               popup_select_open->execute(
                 get_page_id("light"),
