@@ -33,9 +33,6 @@ api:
             ESP_LOGV("${TAG_PAGE_QRCODE}", "  qrcode: %s", qrcode.c_str());
             ESP_LOGV("${TAG_PAGE_QRCODE}", "  show: %s", YESNO(show));
 
-            // Update blueprint status
-            blueprint_status_flags.page_qrcode = true;
-
             // Validate QRcode length
             if (qrcode.length() > ${qrcode_max_length}) {
               ESP_LOGE("${TAG_PAGE_QRCODE}", "QR code exceeds Nextion limit: %zu chars (max ${qrcode_max_length})", qrcode.length());
@@ -134,7 +131,6 @@ script:
           if (component == "qrcode_icon_color" and id(qrcode_icon_color) != color) {
             id(qrcode_icon_color) = color;
             disp1->set_component_foreground_color(hmi::home::BT_QRCODE.name, id(qrcode_icon_color));
-            blueprint_status_flags.page_qrcode = true;
             return;
           }
 
@@ -145,7 +141,6 @@ script:
           if (component == "qrcode_icon" and txt != id(qrcode_icon)) {
             id(qrcode_icon) = txt.c_str();
             disp1->set_component_text(hmi::home::BT_QRCODE.name, txt.c_str());
-            blueprint_status_flags.page_qrcode = true;
             return;
           }
 
