@@ -3,7 +3,7 @@ Page popup_select
         ID                 : 0
         Scope              : local
         Dragging           : 0
-        Send Component ID  : disabled
+        Send Component ID  : on release
         Opacity            : 127
         Width              : 480
         Effect             : load
@@ -21,6 +21,9 @@ Page popup_select
             dim=brightness
             vis 255,0
             sendme
+        
+        Touch Release Event
+            page caller_page_id.val
         
 Variable (int32) caller_page_id
     Attributes
@@ -117,7 +120,7 @@ Text btn_back
         ID                  : 3
         Scope               : local
         Dragging            : 0
-        Send Component ID   : disabled
+        Send Component ID   : on release
         Opacity             : 127
         x coordinate        : 54
         y coordinate        : 24
@@ -141,12 +144,16 @@ Text btn_back
         Horizontal Spacing  : 0
         Vertical Spacing    : 0
     
+    Events
+        Touch Release Event
+            page caller_page_id.val
+        
 Text lbl_title
     Attributes
         ID                  : 4
         Scope               : local
         Dragging            : 0
-        Send Component ID   : disabled
+        Send Component ID   : on press
         Opacity             : 127
         x coordinate        : 108
         y coordinate        : 24

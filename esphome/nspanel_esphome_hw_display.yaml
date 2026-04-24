@@ -350,6 +350,7 @@ script:
               new_page_id != get_page_id("switch") &&
               new_page_id != get_page_id("water_heater") &&
               new_page_id != get_page_id("confirm") &&
+              new_page_id != get_page_id("popup_select") &&
               new_page_id != get_page_id("keyb_num")) {
               detailed_entity->publish_state("");
               disp1->send_command_printf("back_page_id=%" PRIu8, get_page_id("home"));

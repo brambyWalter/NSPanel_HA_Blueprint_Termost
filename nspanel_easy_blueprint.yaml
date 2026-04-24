@@ -7914,12 +7914,20 @@ actions:
                             then:
                               - variables:
                                   current_effect_raw: '{{ state_attr(entity_id, "effect") }}'
-                                  current_effect: >
+                                  current_effect: >-
                                     {{
-                                      current_effect_raw
+                                      current_effect_raw | trim
                                       if current_effect_raw is defined and current_effect_raw is string and current_effect_raw | length > 0
                                       else ""
                                     }}
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
+                                data:
+                                  page: mem
+                                  id: popup_select_current
+                                  txt_list:
+                                    - '{{ current_effect }}'
+                                continue_on_error: true
+                              - *delay_default
 
                               ##### Construction-only: push options + show effect button #####
                               - if: '{{ nspanel_event is defined and nspanel_event.type == "page_changed" }}'
@@ -7950,7 +7958,7 @@ actions:
                                       effect_list_truncated: >
                                         {%- if effect_list_raw | length <= 8 -%}
                                           {{ effect_list_raw }}
-                                        {%- elif current_effect in effect_list_raw[:8] -%}
+                                        {%- elif current_effect | length == 0 or current_effect in effect_list_raw[:8] -%}
                                           {{ effect_list_raw[:8] }}
                                         {%- else -%}
                                           {{ [current_effect] + (effect_list_raw[:7] | reject("equalto", current_effect) | list) }}
@@ -9058,7 +9066,7 @@ actions:
                                 - alias: Entities pages - Constructor
                                   if: '{{ event_page_constructor is defined and event_page_constructor }}'
                                   then:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list_list'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}_icon'
@@ -9066,7 +9074,7 @@ actions:
                                           - '{{ entity.icon if entitypages_show_entities_icons else "" }}'
                                       continue_on_error: true
                                     - *delay_default
-                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list_list'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}_label'
@@ -9076,7 +9084,7 @@ actions:
                                     - *delay_default
                                 - alias: Entities pages - Values (with icons)
                                   sequence:
-                                    - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                    - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                       data:
                                         page: '{{ repeat.item.page }}'
                                         id: '{{ repeat.item.component }}'
@@ -9576,7 +9584,7 @@ actions:
                                         {{ (temp_max | round(0) ~ units_separator ~ weather_temp_units) if is_number(temp_max) and temp_min != temp_max }}
                                   - if: '{{ (is_number(temp_min) or is_number(temp_max)) and temperature_string is string and temperature_string | length > 0 }}'
                                     then:
-                                      - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                      - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                         data:
                                           page: '{{ page_name }}'
                                           id: 'temperature'  ### Temperature MIN/MAX ###
@@ -9589,7 +9597,7 @@ actions:
                                   - repeat:
                                       for_each: '{{ (parameters | selectattr("visibility", "eq", true) | list)[:5] }}'
                                       sequence:
-                                        - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                           data:
                                             page: '{{ page_name }}'
                                             id: 'value0{{ repeat.index }}'
@@ -9597,7 +9605,7 @@ actions:
                                               - '{{ repeat.item.value }}'
                                           continue_on_error: true
                                         - *delay_default
-                                        - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                        - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                           data:
                                             page: '{{ page_name }}'
                                             id: 'value0{{ repeat.index }}_icon'
@@ -9606,7 +9614,7 @@ actions:
                                           continue_on_error: true
                                         - *delay_default
                                 else: &forecast_unavailable
-                                  - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                  - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                     data:
                                       page: '{{ page_name }}'
                                       id: 'value01'
@@ -9623,7 +9631,7 @@ actions:
                               - variables:
                                   page_icon: '{{ pages_utilities.title.icon.split("mdi:")[1] if pages_utilities.title.icon is string and pages_utilities.title.icon.split("mdi:") | count == 2 }}'
 
-                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: utilities
                                   id: title_icon
@@ -9632,7 +9640,7 @@ actions:
                                 continue_on_error: true
                               - *delay_default
 
-                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                 data:
                                   page: utilities
                                   id: title
@@ -9895,7 +9903,7 @@ actions:
                                               - condition: '{{ entity.name is defined }}'
                                               - condition: '{{ entity.name is string }}'
                                               - condition: '{{ entity.name | length > 0 }}'
-                                              - action: 'esphome.{{ nspanel_name }}_component_text_list_list'
+                                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
                                                 data:
                                                   page: ""
                                                   id: page_label
