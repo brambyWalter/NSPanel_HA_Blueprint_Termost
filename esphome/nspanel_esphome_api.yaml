@@ -136,6 +136,7 @@ api:
             else if (entity_id.domain == "alarm_control_panel") entity_id.domain = "alarm";
             else if (entity_id.domain == "input_boolean") entity_id.domain = "switch";
             else if (entity_id.domain == "input_button") entity_id.domain = "button";
+            else if (entity_id.domain == "input_select") entity_id.domain = "select";
             if (entity_id.domain != "invalid" or entity == "embedded_climate") {
               detailed_entity->publish_state(entity);
               goto_page->execute(get_page_id(entity_id.domain.c_str()));

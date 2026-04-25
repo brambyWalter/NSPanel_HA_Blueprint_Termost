@@ -477,12 +477,14 @@ blueprint:
                   - fan
                   - input_boolean
                   - input_button
+                  - input_select
                   - light
                   - lock
                   - media_player
                   - remote
                   - scene
                   - script
+                  - select
                   - switch
                   - water_heater
         home_custom_button01_icon:
@@ -1290,7 +1292,7 @@ blueprint:
           name: Left hardware button - Entity (Optional)
           description: *description_button_entity
           default: *selector_entity_single_default_empty
-          selector: &hardware-button-selector
+          selector: &hardware_button_selector
             entity:
               multiple: *selector_entity_single_multiple
               filter:
@@ -1303,12 +1305,14 @@ blueprint:
                   - fan
                   - input_boolean
                   - input_button
+                  - input_select
                   - light
                   - lock
                   - media_player
                   - remote
                   - scene
                   - script
+                  - select
                   - switch
                   - water_heater
         left_button_click_custom_action:
@@ -1390,7 +1394,7 @@ blueprint:
           name: Right hardware button - Entity (Optional)
           description: *description_button_entity
           default: *selector_entity_single_default_empty
-          selector: *hardware-button-selector
+          selector: *hardware_button_selector
         right_button_click_custom_action:
           name: Right hardware button custom action (Optional)
           description: >-
@@ -1487,6 +1491,7 @@ blueprint:
                   - fan
                   - input_boolean
                   - input_button
+                  - input_select
                   - light
                   - lock
                   - media_player
@@ -1494,6 +1499,7 @@ blueprint:
                   - remote
                   - scene
                   - script
+                  - select
                   - switch
                   - water_heater
         entity01_name:
@@ -7081,7 +7087,6 @@ actions:
                   - '{{ nspanel_event.page is defined }}'
                 sequence:
                   - choose:
-                      ## PAGE HOME ##
                       - alias: Home page
                         conditions: '{{ nspanel_event.page == pages.home }}'
                         sequence: &refresh_page_home
@@ -9837,6 +9842,103 @@ actions:
                                       continue_on_error: true
                                     - *delay_default
 
+                      - alias: Select page
+                        conditions: '{{ nspanel_event.page == pages.select }}'
+                        sequence: &refresh_page_select
+                          - *get_entity_id_from_event_or_trigger
+                          - *variable_entity
+                          - *entity_details_title_with_icon
+                          - variables:
+                              entity_id_valid: '{{ entity_id is defined and entity_id is string and entity_id.split(".") | count == 2 }}'
+                              entity_domain: '{{ entity_id.split(".")[0] if entity_id_valid }}'
+                              current_option_raw: '{{ states(entity_id) }}'
+                              current_option: >-
+                                {{
+                                  current_option_raw | trim
+                                  if
+                                    current_option_raw is defined and
+                                    current_option_raw is string and
+                                    current_option_raw | length > 0 and
+                                    current_option_raw not in ["unknown", "unavailable"]
+                                  else ""
+                                }}
+                              picker_title_raw: '{{ entity.name if entity is defined and entity.name is defined else None }}'
+                              picker_title: >-
+                                {{
+                                  picker_title_raw
+                                  if
+                                    picker_title_raw is defined and
+                                    picker_title_raw is string and
+                                    picker_title_raw | length > 0
+                                  else entity_id
+                                }}
+
+                          ##### Construction-only: push options + context + mode + title #####
+                          - if: '{{ nspanel_event is defined and nspanel_event.type == "page_changed" }}'
+                            then:
+                              - variables:
+                                  options_raw_attr: '{{ state_attr(entity_id, "options") }}'
+                                  options_raw: >
+                                    {{
+                                      options_raw_attr
+                                      if
+                                        options_raw_attr is defined and
+                                        options_raw_attr is iterable and
+                                        options_raw_attr is not string
+                                      else []
+                                    }}
+                              - variables:
+                                  options_truncated: >
+                                    {%- if options_raw | length <= 8 -%}
+                                      {{ options_raw }}
+                                    {%- elif current_option | length == 0 or current_option in options_raw[:8] -%}
+                                      {{ options_raw[:8] }}
+                                    {%- else -%}
+                                      {{ [current_option] + (options_raw[:7] | reject("equalto", current_option) | list) }}
+                                    {%- endif -%}
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
+                                data:
+                                  page: mem
+                                  id: popup_select_context
+                                  txt_list:
+                                    - 'select_option'
+                                continue_on_error: true
+                              - *delay_default
+                              - action: 'esphome.{{ nspanel_name }}_component_val'
+                                data:
+                                  page: mem
+                                  id: popup_select_mode
+                                  val: 0
+                                continue_on_error: true
+                              - *delay_default
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
+                                data:
+                                  page: mem
+                                  id: popup_select_options
+                                  txt_list: '{{ options_truncated }}'
+                                continue_on_error: true
+                              - *delay_default
+
+                              ##### Replace placeholder title with entity friendly name #####
+                              - action: 'esphome.{{ nspanel_name }}_component_text_list'
+                                data:
+                                  page: popup_select
+                                  id: lbl_title
+                                  txt_list:
+                                    - '{{ picker_title }}'
+                                continue_on_error: true
+                              - *delay_default
+
+                          ##### Always (construction and updates): push current option #####
+                          - action: 'esphome.{{ nspanel_name }}_component_text_list'
+                            data:
+                              page: mem
+                              id: popup_select_current
+                              txt_list:
+                                - '{{ current_option }}'
+                            continue_on_error: true
+                          - *delay_default
+
               - alias: Button click
                 conditions:
                   - '{{ nspanel_event.type == "button_click" }}'
@@ -9877,7 +9979,7 @@ actions:
                                 conditions: >-
                                   {{
                                     nspanel_event.command == "long_click" or
-                                    entity_domain in ["alarm_control_panel", "climate", "media_player", "water_heater"]
+                                    entity_domain in ["alarm_control_panel", "climate", "input_select", "media_player", "select", "water_heater"]
                                   }}
                                 sequence:
                                   - choose:
@@ -9885,8 +9987,8 @@ actions:
                                         conditions:
                                           - '{{ last_click_button.hold_select == "Default" }}'
                                           - '{{ entity_domain in ["alarm_control_panel", "button", "climate", "cover",
-                                                                  "fan", "input_boolean", "input_button", "light",
-                                                                  "media_player", "switch", "water_heater"] }}'
+                                                                  "fan", "input_boolean", "input_button", "input_select",
+                                                                  "light", "media_player", "select", "switch", "water_heater"] }}'
                                         sequence:
                                           - *variable_entity
                                           - variables:
@@ -10029,17 +10131,20 @@ actions:
                               - alias: Long click
                                 conditions:
                                   - '{{ nspanel_event.command == "long_click" or
-                                        entity_domain in ["alarm_control_panel", "climate", "media_player", "water_heater"] }}'
+                                        entity_domain in ["alarm_control_panel", "climate", "input_select", "media_player",
+                                                          "select", "water_heater"] }}'
                                   - '{{ entity_domain in ["alarm_control_panel", "button", "climate", "cover", "fan",
-                                                          "input_boolean", "input_button", "light", "media_player", "switch",
-                                                          "water_heater"] }}'
+                                                          "input_boolean", "input_button", "input_select", "light",
+                                                          "media_player", "select", "switch", "water_heater"] }}'
                                 sequence:
                                   - variables:
                                       back_page: '{{ nspanel_event.page }}'
                                   - *entity_details_show
                               - alias: Short click
                                 conditions:
-                                  - '{{ nspanel_event.command == "short_click" and entity_domain not in ["alarm_control_panel", "climate", "media_player", "water_heater"] }}'
+                                  - '{{ nspanel_event.command == "short_click" and
+                                        entity_domain not in ["alarm_control_panel", "climate", "input_select",
+                                                              "media_player", "select", "water_heater"] }}'
                                   - '{{ entity_domain not in ["unknown", "person", "binary_sensor", "sensor"] }}'
                                 sequence:
                                   - *short_press-service_call
@@ -10525,7 +10630,7 @@ actions:
                   - '{{ trigger.entity_id.split(".")[0] in ["button", "input_button"] }}'
                   - '{{ trigger.entity_id == detailed_entity_state }}'
                 sequence: *refresh_page_button
-              - alias: Button pages
+              - alias: Buttons pages
                 conditions:
                   - '{{ pages.current in pages.buttonpages }}'
                 sequence:
@@ -10571,6 +10676,12 @@ actions:
                   - '{{ trigger.entity_id is match "media_player." }}'
                   - '{{ trigger.entity_id == detailed_entity_state }}'
                 sequence: *refresh_page_media_player
+              - alias: Select page
+                conditions:
+                  - '{{ pages.current == pages.select or pages.current == pages.popup_select }}'
+                  - '{{ trigger.entity_id is match "(input_)?select\\." }}'
+                  - '{{ trigger.entity_id == detailed_entity_state }}'
+                sequence: *refresh_page_select
               - alias: Switch page
                 conditions:
                   - '{{ pages.current == pages.switch }}'
