@@ -70,57 +70,50 @@ struct SystemFlags {
  *
  * Uses bitfields to pack 8 boolean states into 1 byte (uint8_t).
  * These flags track specific blueprint initialization steps.
- * Bits 0-4 are active flags used in percentage calculation.
- * Bits 5-7 are reserved and not used in calculations.
+ * Bits 0-2 are active flags used in percentage calculation.
+ * Bits 3-7 are reserved and not used in calculations.
  */
 struct BlueprintStatusFlags {
   uint8_t page_home : 1;            ///< Home page initialization completed
-  uint8_t page_qrcode : 1;          ///< QR code configuration completed
-  uint8_t relay_settings : 1;       ///< Relay settings configuration completed
   uint8_t version : 1;              ///< Blueprint version received
   uint8_t hw_buttons_settings : 1;  ///< Hardware buttons settings completed
-  uint8_t reserved : 3;             ///< Reserved (not used in percentage calculation)
+  uint8_t reserved : 5;             ///< Reserved (not used in percentage calculation)
 
   // Default constructor - all flags start as false (zero-initialized)
-  BlueprintStatusFlags()
-      : page_home(0), page_qrcode(0), relay_settings(0), version(0), hw_buttons_settings(0), reserved(0) {}
+  BlueprintStatusFlags() : page_home(0), version(0), hw_buttons_settings(0), reserved(0) {}
 
   /**
-   * `@brief` Check if all active flags (bits 0-4) are set
-   * `@return` true if all active flags (bits 0-4) are set, false otherwise
+   * `@brief` Check if all active flags are set
+   * `@return` true if all active flags are set, false otherwise
    */
   bool all_active_flags_set() const {
-    // All 5 active flags must be set
-    return page_home && page_qrcode && relay_settings && version && hw_buttons_settings;
+    // All active flags must be set
+    return page_home && version && hw_buttons_settings;
   }
 
   /**
-   * `@brief` Count active flags (bits 0-4) set
+   * `@brief` Count active flags set
    * `@return` Number of flags set
    */
-  uint8_t count_active_flags_set() const {
-    return page_home + page_qrcode + relay_settings + version + hw_buttons_settings;
-  }
+  uint8_t count_active_flags_set() const { return page_home + version + hw_buttons_settings; }
 
   /**
    * `@brief` Calculate percentage of active flags that are set
-   * `@return` Percentage (0.0-100.0) of active flags set (bits 0-4)
+   * `@return` Percentage (0.0-100.0) of active flags set
    */
   float get_completion_percentage() const {
-    static constexpr uint8_t TOTAL_ACTIVE_FLAGS = 5;
+    static constexpr uint8_t TOTAL_ACTIVE_FLAGS = 3;
     return (static_cast<float>(count_active_flags_set()) / TOTAL_ACTIVE_FLAGS) * 100.0f;
   }
 
   /**
    * @brief Reset all blueprint status flags to their initial state (false)
    *
-   * Clears all active flags (bits 0-4) and reserved bits, returning the
+   * Clears all active flags and reserved bits, returning the
    * struct to its default-constructed state.
    */
   void reset() {
     page_home = false;
-    page_qrcode = false;
-    relay_settings = false;
     version = false;
     hw_buttons_settings = false;
     reserved = 0;
@@ -145,7 +138,7 @@ inline bool is_device_ready_for_tasks() {
 
 /**
  * @brief Check if all non-reserved blueprint status flags are set
- * @return true if all active flags (bits 1-5) are set, false otherwise
+ * @return true if all active flags are set, false otherwise
  */
 inline bool is_blueprint_fully_ready() {
   bool fully_ready = blueprint_status_flags.all_active_flags_set();

@@ -17,11 +17,21 @@ display:
         - lambda: |-
             if (page_id != get_page_id("light")) return;  // Page light
             if (touch_event) return;                      // Ignore touch and process only release
-            if (component_id == 27) {                     // power button
+            if (component_id == 21) {                     // power button
+              ESP_LOGD("${TAG_PAGE_LIGHT}", "Power button tapped, informing HA");
               fire_ha_event("action_call", {
                 {"action", "light.toggle"},
                 {"entity", detailed_entity->state.c_str()}
               });
+              return;
+            }
+            if (component_id == 32) {                     // effect_button
+              ESP_LOGD("${TAG_PAGE_LIGHT}", "Effect button tapped, opening popup select");
+              popup_select_open->execute(
+                get_page_id("light"),
+                std::string("${LOCALIZATION[LANG].light.select_effect}")
+              );
+              return;
             }
 
 esphome:
@@ -110,6 +120,34 @@ script:
   - id: page_light
     mode: single
     then:  # There's nothing here so far
+
+  - id: !extend picker_selected
+    then:
+      - lambda: |-
+          if (context != "light_effect") return;
+
+          ESP_LOGD("${TAG_PAGE_LIGHT}", "light_effect picker_selected: entity=%s value=%s",
+                                        entity.c_str(), value.c_str());
+
+          if (mask == 0) {
+            // No effect selected — could interpret as "turn off effect" via light.turn_on with "None"
+            // if the light supports it, or skip. v1: skip.
+            return;
+          }
+
+          fire_ha_event("action_call", {
+            {"action", "light.turn_on"},
+            {"entity", entity.c_str()},
+            {"key", "effect"},
+            {"value", value.c_str()}
+          });
+
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("light")) {
+            display_entity_keep = true;
+          }
 
   - id: !extend stop_page_constructors
     then:

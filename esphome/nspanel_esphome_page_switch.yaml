@@ -75,6 +75,13 @@ script:
           disp1->set_component_value("color_pending", ${page_switch_color_pending});
           disp1->set_component_value("color_thumb", ${page_switch_color_thumb});
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("switch")) {
+            display_entity_keep = true;
+          }
+
   - id: !extend stop_page_constructors
     then:
       - lambda: page_switch->stop();

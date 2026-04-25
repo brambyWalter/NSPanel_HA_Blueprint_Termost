@@ -99,6 +99,8 @@ substitutions:
       meridiem:
         am: vm.
         pm: nm.
+      light:
+        select_effect: Kies effek
     ar:     # Arabic
       bytes_per_char: 2
       weekdays:
@@ -175,6 +177,8 @@ substitutions:
       meridiem:
         am: صباحاً
         pm: مساءً
+      light:
+        select_effect: اختر التأثير
     bg:     # Bulgarian
       bytes_per_char: 1
       weekdays:
@@ -251,6 +255,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Избор на ефект
     bn:     # Bengali
       bytes_per_char: 3
       weekdays:
@@ -327,6 +333,8 @@ substitutions:
       meridiem:
         am: পূর্বাহ্ন
         pm: অপরাহ্ন
+      light:
+        select_effect: ইফেক্ট নির্বাচন করুন
     bs:     # Bosnian
       bytes_per_char: 1
       weekdays:
@@ -403,6 +411,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Odaberi efekat
     ca:     # Catalan
       bytes_per_char: 1
       weekdays:
@@ -479,6 +489,8 @@ substitutions:
       meridiem:
         am: a.m.
         pm: p.m.
+      light:
+        select_effect: Selecciona l'efecte
     cs:     # Czech
       bytes_per_char: 1
       weekdays:
@@ -555,6 +567,8 @@ substitutions:
       meridiem:
         am: dop.
         pm: odp.
+      light:
+        select_effect: Vybrat efekt
     cy:     # Welsh
       bytes_per_char: 1
       weekdays:
@@ -631,6 +645,8 @@ substitutions:
       meridiem:
         am: am
         pm: pm
+      light:
+        select_effect: Dewis effaith
     da:     # Danish
       bytes_per_char: 1
       weekdays:
@@ -707,6 +723,8 @@ substitutions:
       meridiem:
         am: FM
         pm: EM
+      light:
+        select_effect: Vælg effekt
     de:     # German
       bytes_per_char: 1
       weekdays:
@@ -783,6 +801,8 @@ substitutions:
       meridiem:
         am: vorm.
         pm: nachm.
+      light:
+        select_effect: Effekt auswählen
     el:     # Greek
       bytes_per_char: 2
       weekdays:
@@ -859,6 +879,8 @@ substitutions:
       meridiem:
         am: πμ
         pm: μμ
+      light:
+        select_effect: Επιλογή εφέ
     en:     # English
       bytes_per_char: 1
       weekdays:
@@ -935,6 +957,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Select effect
     es:     # Spanish
       bytes_per_char: 1
       weekdays:
@@ -1011,6 +1035,8 @@ substitutions:
       meridiem:
         am: a.m.
         pm: p.m.
+      light:
+        select_effect: Seleccionar efecto
     et:     # Estonian
       bytes_per_char: 1
       weekdays:
@@ -1087,6 +1113,8 @@ substitutions:
       meridiem:
         am: e.l.
         pm: p.l.
+      light:
+        select_effect: Vali efekt
     eu:     # Basque
       bytes_per_char: 1
       weekdays:
@@ -1163,6 +1191,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Hautatu efektua
     fa:     # Farsi (Persian)
       bytes_per_char: 2
       weekdays:
@@ -1239,6 +1269,8 @@ substitutions:
       meridiem:
         am: ق.ظ
         pm: ب.ظ
+      light:
+        select_effect: انتخاب افکت
     fi:     # Finnish
       bytes_per_char: 1
       weekdays:
@@ -1315,6 +1347,8 @@ substitutions:
       meridiem:
         am: aamupäivä
         pm: iltapäivä
+      light:
+        select_effect: Valitse tehoste
     fr:     # French
       bytes_per_char: 1
       weekdays:
@@ -1391,6 +1425,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Sélectionner l'effet
     gl:     # Galician
       bytes_per_char: 1
       weekdays:
@@ -1467,6 +1503,8 @@ substitutions:
       meridiem:
         am: a.m.
         pm: p.m.
+      light:
+        select_effect: Seleccionar efecto
     he:     # Hebrew
       bytes_per_char: 2
       weekdays:
@@ -1543,6 +1581,8 @@ substitutions:
       meridiem:
         am: צ"הנפל
         pm: צ"החא
+      light:
+        select_effect: בחר אפקט
     hi:     # Hindi
       bytes_per_char: 3
       weekdays:
@@ -1619,6 +1659,8 @@ substitutions:
       meridiem:
         am: पूर्वाह्न
         pm: अपराह्न
+      light:
+        select_effect: प्रभाव चुनें
     hr:     # Croatian
       bytes_per_char: 1
       weekdays:
@@ -1695,6 +1737,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Odaberi efekt
     hu:     # Hungarian
       bytes_per_char: 1
       weekdays:
@@ -1771,6 +1815,8 @@ substitutions:
       meridiem:
         am: DE
         pm: DU
+      light:
+        select_effect: Effekt kiválasztása
     id:     # Indonesian
       bytes_per_char: 1
       weekdays:
@@ -1847,6 +1893,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Pilih efek
     is:     # Icelandic
       bytes_per_char: 1
       weekdays:
@@ -1923,6 +1971,8 @@ substitutions:
       meridiem:
         am: f.h.
         pm: e.h.
+      light:
+        select_effect: Velja brellu
     it:     # Italian
       bytes_per_char: 1
       weekdays:
@@ -1999,6 +2049,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Seleziona effetto
     ja:     # Japanese
       bytes_per_char: 3
       weekdays:
@@ -2075,6 +2127,8 @@ substitutions:
       meridiem:
         am: 午前
         pm: 午後
+      light:
+        select_effect: エフェクトを選択
     jv:     # Javanese
       bytes_per_char: 1
       weekdays:
@@ -2151,6 +2205,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Pilih efek
     ko:     # Korean
       bytes_per_char: 3
       weekdays:
@@ -2227,6 +2283,8 @@ substitutions:
       meridiem:
         am: 오전
         pm: 오후
+      light:
+        select_effect: 효과 선택
     lt:     # Lithuanian
       bytes_per_char: 1
       weekdays:
@@ -2303,6 +2361,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Pasirinkti efektą
     lv:     # Latvian
       bytes_per_char: 1
       weekdays:
@@ -2379,6 +2439,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Izvēlēties efektu
     mk:     # Macedonian
       bytes_per_char: 2
       weekdays:
@@ -2455,6 +2517,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Избери ефект
     ms:     # Malay
       bytes_per_char: 1
       weekdays:
@@ -2531,6 +2595,8 @@ substitutions:
       meridiem:
         am: PG
         pm: PTG
+      light:
+        select_effect: Pilih kesan
     nb:     # Norwegian Bokmål
       bytes_per_char: 1
       weekdays:
@@ -2607,6 +2673,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Velg effekt
     nl:     # Dutch
       bytes_per_char: 1
       weekdays:
@@ -2683,6 +2751,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Effect selecteren
     pa:     # Punjabi (Gurmukhi)
       bytes_per_char: 3
       weekdays:
@@ -2759,6 +2829,8 @@ substitutions:
       meridiem:
         am: ਸਵੇਰੇ
         pm: ਸ਼ਾਮ
+      light:
+        select_effect: ਪ੍ਰਭਾਵ ਚੁਣੋ
     pl:     # Polish
       bytes_per_char: 1
       weekdays:
@@ -2835,6 +2907,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Wybierz efekt
     pt:     # Portuguese
       bytes_per_char: 1
       weekdays:
@@ -2911,6 +2985,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Selecionar efeito
     ro:     # Romanian
       bytes_per_char: 1
       weekdays:
@@ -2987,6 +3063,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Selectează efectul
     ru:     # Russian
       bytes_per_char: 2
       weekdays:
@@ -3063,6 +3141,8 @@ substitutions:
       meridiem:
         am: ДП
         pm: ПП
+      light:
+        select_effect: Выбрать эффект
     sk:     # Slovak
       bytes_per_char: 1
       weekdays:
@@ -3139,6 +3219,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Vybrať efekt
     sl:     # Slovenian
       bytes_per_char: 1
       weekdays:
@@ -3215,6 +3297,8 @@ substitutions:
       meridiem:
         am: dop.
         pm: pop.
+      light:
+        select_effect: Izberi učinek
     sq:     # Albanian
       bytes_per_char: 1
       weekdays:
@@ -3291,6 +3375,8 @@ substitutions:
       meridiem:
         am: PD
         pm: MD
+      light:
+        select_effect: Zgjidh efektin
     sr:     # Serbian
       bytes_per_char: 2
       weekdays:
@@ -3367,6 +3453,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Изабери ефекат
     sv:     # Swedish
       bytes_per_char: 1
       weekdays:
@@ -3443,6 +3531,8 @@ substitutions:
       meridiem:
         am: FM
         pm: EM
+      light:
+        select_effect: Välj effekt
     sw:     # Swahili
       bytes_per_char: 1
       weekdays:
@@ -3519,6 +3609,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: Chagua athari
     ta:     # Tamil
       bytes_per_char: 3
       weekdays:
@@ -3595,6 +3687,8 @@ substitutions:
       meridiem:
         am: முற்பகல்
         pm: பிற்பகல்
+      light:
+        select_effect: விளைவைத் தேர்ந்தெடு
     th:     # Thai
       bytes_per_char: 3
       weekdays:
@@ -3671,6 +3765,8 @@ substitutions:
       meridiem:
         am: AM
         pm: PM
+      light:
+        select_effect: เลือกเอฟเฟกต์
     tr:     # Turkish
       bytes_per_char: 1
       weekdays:
@@ -3747,6 +3843,8 @@ substitutions:
       meridiem:
         am: ÖÖ
         pm: ÖS
+      light:
+        select_effect: Efekt seç
     uk:     # Ukrainian
       bytes_per_char: 2
       weekdays:
@@ -3823,6 +3921,8 @@ substitutions:
       meridiem:
         am: ДП
         pm: ПП
+      light:
+        select_effect: Вибрати ефект
     ur:     # Urdu
       bytes_per_char: 2
       weekdays:
@@ -3899,6 +3999,8 @@ substitutions:
       meridiem:
         am: صبح
         pm: شام
+      light:
+        select_effect: ایفیکٹ منتخب کریں
     vi:     # Vietnamese
       bytes_per_char: 2
       weekdays:
@@ -3975,6 +4077,8 @@ substitutions:
       meridiem:
         am: SA
         pm: CH
+      light:
+        select_effect: Chọn hiệu ứng
     zh-cn:  # Simplified Chinese
       bytes_per_char: 3
       weekdays:
@@ -4051,6 +4155,8 @@ substitutions:
       meridiem:
         am: 上午
         pm: 下午
+      light:
+        select_effect: 选择效果
     zh-tw:  # Traditional Chinese
       bytes_per_char: 3
       weekdays:
@@ -4127,6 +4233,8 @@ substitutions:
       meridiem:
         am: 上午
         pm: 下午
+      light:
+        select_effect: 選擇效果
   LANG_BYTES_PER_CHAR: "${LOCALIZATION[LANG].bytes_per_char}"
   LANG_ALARM_HOME: "${LOCALIZATION[LANG].alarm.home}"
   LANG_ALARM_AWAY: "${LOCALIZATION[LANG].alarm.away}"

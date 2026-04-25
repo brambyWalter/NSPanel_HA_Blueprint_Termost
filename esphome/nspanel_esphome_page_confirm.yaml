@@ -36,8 +36,14 @@ script:
                                                               ).c_str()
                                     );
 
+  - id: !extend reset_globals
+    then:
+      - lambda: |-
+          if (new_page_id == get_page_id("confirm")) {
+            display_entity_keep = true;
+          }
+
   - id: !extend stop_page_constructors
     then:
       - lambda: page_confirm->stop();
-
 ...

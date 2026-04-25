@@ -45,17 +45,6 @@ Page theme_apply
                 // fan page
                 fan.fanslider.pic=72
                 fan.fanslider.pic1=73
-                // light page
-                light.light_b_press.pic=76
-                light.light_button.pic=76
-                light.temp_b_press.pic=77
-                light.temp_button.pic=77
-                light.color_b_pres.pic=78
-                light.color_button.pic=78
-                light.colorwheel_pic.val=70
-                light.tempslider_pic.val=71
-                light.lslider_pic.val=72
-                light.lslider_pic1.val=73
             }else
             {
                 // DARK theme
@@ -76,17 +65,6 @@ Page theme_apply
                 // fan page
                 fan.fanslider.pic=39
                 fan.fanslider.pic1=40
-                // light page
-                light.light_b_press.pic=23
-                light.light_button.pic=22
-                light.temp_b_press.pic=25
-                light.temp_button.pic=24
-                light.color_b_pres.pic=27
-                light.color_button.pic=26
-                light.colorwheel_pic.val=17
-                light.tempslider_pic.val=21
-                light.lslider_pic.val=28
-                light.lslider_pic1.val=29
             }
             // set home page
             home.b[0].pic=pic_background_main

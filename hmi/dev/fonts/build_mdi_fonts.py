@@ -67,6 +67,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -78,6 +79,27 @@ from pathlib import Path
 UNITS_PER_EM = 2048     # Matches original MaterialDesignIconsDesktop.ttf
 SVG_SIZE     = 24.0     # MDI viewBox is always 0 0 24 24
 SCALE        = UNITS_PER_EM / SVG_SIZE
+
+# -----------------------------------------------------------------------------
+# Vertical metrics mirrored from the official @mdi/font webfont (UPM=512),
+# scaled to our UPM=2048 (factor = 4).  These give MDI glyphs the same
+# ~12.5% descender space the font is designed for, preventing bottom
+# clipping of glyphs whose outlines extend below the SVG viewBox baseline
+# (the vast majority — 4772 of the ~7600 icons in 7.4.47 have yMin < 0
+# in the reference build).
+#
+# Reference values @ UPM=512   ->   Scaled values @ UPM=2048
+#   ascent          = 448                1792
+#   descent         = -64                -256
+#   usWinAscent     = 453                1812
+#   usWinDescent    = 66                 264
+#   sTypoLineGap    = 46                 184
+# -----------------------------------------------------------------------------
+ASCENT         = 1792   # sTypoAscender / hhea.ascent
+DESCENT        = -256   # sTypoDescender / hhea.descent  (negative)
+WIN_ASCENT     = 1812   # usWinAscent  (includes a small safety margin vs ASCENT)
+WIN_DESCENT    = 264    # usWinDescent (positive; includes safety margin vs |DESCENT|)
+TYPO_LINE_GAP  = 184    # sTypoLineGap
 
 # ZiLib codepoint remapping offset, as used in Generate-HASP-Fonts.ps1:
 #   zi_codepoint = ttf_codepoint - ZI_CP_OFFSET
@@ -211,25 +233,35 @@ def build_ttf(meta, svg_dir, output_path, version_str):
     fb.setupGlyphOrder([".notdef"] + [name for _, name, _ in icons])
     fb.setupCharacterMap({cp: name for cp, name, _ in icons})
 
+    # Placeholder hmtx entry for .notdef so FontBuilder is satisfied during
+    # the glyph-build pass below; the real per-glyph advances are filled in
+    # after rendering (see the second setupHorizontalMetrics call below).
     metrics = {".notdef": (UNITS_PER_EM, 0)}
-    metrics.update({name: (UNITS_PER_EM, 0) for _, name, _ in icons})
     fb.setupHorizontalMetrics(metrics)
-    fb.setupHorizontalHeader(ascent=UNITS_PER_EM, descent=0)
+    fb.setupHorizontalHeader(ascent=ASCENT, descent=DESCENT, lineGap=0)
     fb.setupNameTable({
         "familyName": "Material Design Icons",
         "styleName":  "Regular",
     })
+    # OS/2 metrics mirror the reference build.  sxHeight/sCapHeight are
+    # meaningless for an icon-only font but Windows/GDI still reads them,
+    # so we set them to ASCENT (same value the reference uses at its scale).
     fb.setupOS2(
-        sTypoAscender=UNITS_PER_EM, sTypoDescender=0,
-        sTypoLineGap=0, usWinAscent=UNITS_PER_EM, usWinDescent=0,
-        sxHeight=UNITS_PER_EM, sCapHeight=UNITS_PER_EM,
+        sTypoAscender=ASCENT, sTypoDescender=DESCENT,
+        sTypoLineGap=TYPO_LINE_GAP,
+        usWinAscent=WIN_ASCENT, usWinDescent=WIN_DESCENT,
+        sxHeight=ASCENT, sCapHeight=ASCENT,
         achVendID="MDI ",
     )
     fb.setupPost()
     fb.setupHead(unitsPerEm=UNITS_PER_EM)
 
-    # Y-flip transform: SVG origin is top-left, TTF origin is bottom-left
-    transform = (SCALE, 0, 0, -SCALE, 0, UNITS_PER_EM)
+    # Y-flip transform: SVG origin is top-left, TTF origin is bottom-left.
+    # Mapping SVG y=0 → TTF y=ASCENT and SVG y=24 → TTF y=DESCENT gives
+    # each glyph the full UPM of vertical room (ASCENT above baseline,
+    # |DESCENT| below) — matching how the reference build positions
+    # glyphs relative to the baseline.
+    transform = (SCALE, 0, 0, -SCALE, 0, ASCENT)
 
     glyphs = {".notdef": TTGlyphPen(None).glyph()}
     failed = []
@@ -238,15 +270,42 @@ def build_ttf(meta, svg_dir, output_path, version_str):
         if i % 500 == 0:
             print(f"    {i}/{len(icons)}...")
         try:
-            pen  = TTGlyphPen(None)
-            tpen = Cu2QuPen(
-                TransformPen(pen, transform),
+            # First pass: render with the base y-flip transform to measure
+            # the glyph's true horizontal bbox.
+            probe_pen  = TTGlyphPen(None)
+            probe_tpen = Cu2QuPen(
+                TransformPen(probe_pen, transform),
                 max_err=1.0,
                 reverse_direction=True,
             )
             with open(svg_path) as f:
                 svg_content = f.read()
             paths = re.findall(r'<path[^>]+d="([^"]+)"', svg_content)
+            if paths:
+                for d in paths:
+                    parse_path(_fix_svg_path_data(d), probe_tpen)
+            probe_glyph = probe_pen.glyph()
+            probe_glyph.recalcBounds(None)
+
+            # Shift the outline so xMin = 0.  ZiLib calls GDI+ MeasureString
+            # to determine the glyph cell width and draws the outline at
+            # location (0, y) inside a bitmap of that width — so the outline
+            # must start at x=0 for the glyph to fit cleanly in the cell.
+            # The matching advance width (= glyph width) is set in hmtx
+            # below, which is what GDI+ returns from MeasureString.
+            if probe_glyph.numberOfContours > 0:
+                x_offset = -probe_glyph.xMin
+            else:
+                x_offset = 0
+
+            # Second pass: render with the per-glyph offset applied.
+            pen            = TTGlyphPen(None)
+            shifted_xform  = (SCALE, 0, 0, -SCALE, x_offset, ASCENT)
+            tpen           = Cu2QuPen(
+                TransformPen(pen, shifted_xform),
+                max_err=1.0,
+                reverse_direction=True,
+            )
             if paths:
                 for d in paths:
                     parse_path(_fix_svg_path_data(d), tpen)
@@ -274,6 +333,26 @@ def build_ttf(meta, svg_dir, output_path, version_str):
             sys.exit(2)
 
     fb.setupGlyf(glyphs)
+
+    # Per-glyph advance width equals each glyph's actual bounding-box width
+    # (with xMin shifted to 0 above).  GDI+ MeasureString returns this
+    # advance as the string width, and ZiLib uses that to size the bitmap
+    # cell — so the cell ends up tight around the glyph, with no empty
+    # padding on the left or right.  The Nextion Editor's horizontal-center
+    # textbox alignment then centers this tight cell within the display
+    # component, giving visually centered icons on the panel.
+    metrics = {".notdef": (UNITS_PER_EM, 0)}
+    for _, name, _ in icons:
+        g = glyphs[name]
+        g.recalcBounds(None)
+        if g.numberOfContours > 0:
+            # xMin is always 0 here (we shifted it in the render loop),
+            # so the glyph width equals xMax.  Fall back to UPM for any
+            # degenerate glyph that ended up empty.
+            advance = max(1, g.xMax)
+        else:
+            advance = UNITS_PER_EM
+        metrics[name] = (advance, 0)
     fb.setupHorizontalMetrics(metrics)
     fb.font.save(str(output_path))
     print(f"  Saved: {output_path}")
@@ -356,8 +435,8 @@ def build_cheatsheet(name_to_ttf_cp, zi_map, ttf_filename, output_path, version_
     ZI codepoints (post-ZiLib remapping) are shown and noted on click.
 
     Click-to-copy behaviour (context-sensitive):
-      - Click the glyph  -> copies the Unicode character (paste into Nextion Editor)
-      - Click the name   -> copies "mdi:<n>"
+      - Click the glyph  -> copies the ZI Unicode character (paste into Nextion Editor)
+      - Click the name   -> copies "mdi:<name>"
       - Click the code   -> copies the ZI codepoint string (e.g. "U+E1C8")
     """
     icon_count = len(zi_map)
@@ -366,12 +445,13 @@ def build_cheatsheet(name_to_ttf_cp, zi_map, ttf_filename, output_path, version_
     for name in sorted(zi_map):
         ttf_cp = name_to_ttf_cp[name]
         zi_cp  = zi_map[name]
-        char   = chr(ttf_cp)  # render glyph using TTF codepoint
+        glyph  = chr(ttf_cp)  # Rendered glyph (TTF codepoint, required by @font-face)
+        paste  = chr(zi_cp)   # Copy payload (ZI codepoint, matches Nextion .zi indexing)
         zi_str = f"U+{zi_cp:04X}"
         full   = f"mdi:{name} — {zi_str}"  # context shown in every toast
         icon_html.append(
             f'  <div class="icon">\n'
-            f'    <span class="glyph" onclick="copy(this,\'{char}\',\'glyph\',\'{full}\')">{char}</span>\n'
+            f'    <span class="glyph" onclick="copy(this,\'{paste}\',\'glyph\',\'{full}\')">{glyph}</span>\n'
             f'    <span class="name"  onclick="copy(this,\'mdi:{name}\',\'name\',\'{full}\')">'
             f'mdi:{name}</span>\n'
             f'    <span class="cp"   onclick="copy(this,\'{zi_str}\',\'code\',\'{full}\')">'
@@ -486,6 +566,16 @@ def build_header(zi_map, version_str, output_path):
     Write all_icons.h — constexpr ZI codepoint constants following ESPHome /
     NSPanel Easy coding conventions: clang-format aligned, Doxygen ///<,
     esphome::nspanel_easy::Icons namespace.
+
+    The generator emits a readable first pass, then pipes the result through
+    clang-format so the file on disk is byte-identical to what CI would produce.
+    This keeps regeneration diffs focused on real content changes (new icons,
+    codepoint shifts) rather than formatting churn.
+
+    clang-format discovers .clang-format by walking up from --assume-filename.
+    The output is initially written outside the repo tree, so we point
+    --assume-filename at a virtual path inside the repo (derived from this
+    script's location: hmi/dev/fonts/build_mdi_fonts.py -> repo root).
     """
     const_names = {
         name: "MDI_" + name.upper().replace("-", "_")
@@ -493,11 +583,11 @@ def build_header(zi_map, version_str, output_path):
     }
     if not const_names:
         raise ValueError("No icon constants generated (zi_map is empty).")
-    max_len = max(len(c) for c in const_names.values())
+
     lines = [
         "// all_icons.h",
         f"// Auto-generated from MDI v{version_str} — do not edit manually.",
-        "// To regenerate: python3 .github/scripts/build_mdi_fonts.py",
+        "// To regenerate: python3 hmi/dev/fonts/build_mdi_fonts.py",
         "// Source: https://github.com/Templarian/MaterialDesign-SVG",
         "",
         "#pragma once",
@@ -524,11 +614,11 @@ def build_header(zi_map, version_str, output_path):
     ]
 
     for name, zi_cp in sorted(zi_map.items()):
-        const     = const_names[name]
-        pad       = " " * (max_len - len(const))
-        cp_str    = f"\\u{zi_cp:04X}"
-        value_str = f'  constexpr const char *{const} = "{cp_str}";'
-        lines.append(f'{value_str}{pad}  ///< mdi:{name}')
+        const  = const_names[name]
+        cp_str = f"\\u{zi_cp:04X}"
+        # Emit with minimum spacing; clang-format below assigns the final
+        # alignment column based on the repo's .clang-format settings.
+        lines.append(f'constexpr const char *{const} = "{cp_str}";  ///< mdi:{name}')
 
     lines += [
         "",
@@ -538,8 +628,30 @@ def build_header(zi_map, version_str, output_path):
         "",
     ]
 
+    content = "\n".join(lines)
+
+    # Normalize through clang-format so the file on disk matches exactly what
+    # CI would produce. Script path: hmi/dev/fonts/build_mdi_fonts.py,
+    # so the repo root is four parents up (file → fonts → dev → hmi → repo),
+    # and .clang-format lives there.
+    repo_root       = Path(__file__).resolve().parents[3]
+    style_hint_path = repo_root / "components" / "nspanel_easy" / "all_icons.h"
+    try:
+        result = subprocess.run(
+            ["clang-format", "--style=file",
+             f"--assume-filename={style_hint_path}"],
+            input=content, capture_output=True, text=True, check=True,
+        )
+        content = result.stdout
+    except FileNotFoundError:
+        print("  WARNING: clang-format not on PATH — file written unformatted.")
+        print("           CI will reformat on next run, causing a spurious diff.")
+    except subprocess.CalledProcessError as e:
+        print(f"  WARNING: clang-format failed ({e.returncode}): {e.stderr.strip()}")
+        print("           File written unformatted; CI will reformat on next run.")
+
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+        f.write(content)
     print(f"  Saved: {output_path}  ({len(zi_map)} constants)")
 
 

@@ -93,9 +93,6 @@ script:
           id(hardware_settings).relay2_local = (relay_settings >> 4) & 1;
           id(hardware_settings).relay2_fallback = (relay_settings >> 5) & 1;
 
-          // Update blueprint status
-          blueprint_status_flags.relay_settings = true;
-
   - id: !extend boot_early_routines
     then:
       - lambda: |-
