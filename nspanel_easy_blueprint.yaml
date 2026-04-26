@@ -4106,6 +4106,7 @@ variables:
     popup_select: "popup_select"
     qrcode: "qrcode"
     screensaver: "screensaver"
+    select: "select"
     settings: "settings"
     switch: "switch"
     utilities: "utilities"
@@ -10224,7 +10225,7 @@ actions:
                           - condition: '{{ entity_id_valid }}'
                           - if: >
                               {{
-                                entity_domain in ["alarm_control_panel", "climate", "media_player", "water_heater"] or
+                                entity_domain in ["alarm_control_panel", "climate", "input_select", "media_player", "select", "water_heater"] or
                                 (entity_domain == "cover" and supported_features | bitwise_and(4) > 0) or
                                 (entity_domain == "fan" and (supported_features | bitwise_and(1) > 0 or supported_features | bitwise_and(2) > 0)) or
                                 (entity_domain == "light" and (color_mode_brightness or color_mode_color or color_mode_temp))
