@@ -188,10 +188,13 @@ display:
       then:
         - lambda: |-
             if (tft_upload_first_time_synced_ms > 0) return;  // First time sync already registered
-            #if NSPANEL_EASY_ADDON_UPLOAD_TFT_AUTOMATICALLY
-            ESP_LOGI("${TAG_UPLOAD_TFT}", "Starting auto-upload count down");
-            #endif NSPANEL_EASY_ADDON_UPLOAD_TFT_AUTOMATICALLY
             tft_upload_first_time_synced_ms = millis();
+            #if NSPANEL_EASY_ADDON_UPLOAD_TFT_AUTOMATICALLY
+            const uint32_t elapsed = (uint32_t)(millis() - tft_upload_first_time_synced_ms);
+            const uint32_t target = ${upload_tft_wait_ms_after_setup};
+            if (elapsed < target)
+              ESP_LOGI("${TAG_UPLOAD_TFT}", "Starting auto-upload count down: %u sec", (target - elapsed) / 1000u);
+            #endif  // NSPANEL_EASY_ADDON_UPLOAD_TFT_AUTOMATICALLY
 
 globals:
   - id: first_time_synced_ms
