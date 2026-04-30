@@ -266,7 +266,8 @@ When `upload_tft_automatically` is set to `true` (the default), the device will:
 2. Receive the current TFT version from the display.
 3. Compare it with the expected version from the firmware.
 4. If a mismatch is detected, wait for the configured delay
-   (`upload_tft_wait_ms_after_setup`) after the first NTP time sync.
+4. If a mismatch is detected, wait for the configured delay
+   (`upload_tft_wait_ms_after_setup`) after display setup completes.
 5. Automatically start the TFT upload.
 
 > [!NOTE]
