@@ -103,7 +103,7 @@ This package exposes one diagnostic entity in Home Assistant:
 
 > [!TIP]
 > If you suspect a baud rate problem, check the `Baud rate` sensor first. A
-> value other than `${BAUD_RATE}` indicates the panel is running in fallback
+> value other than your configured `BAUD_RATE` indicates the panel is running in fallback
 > mode and a TFT upload is required to restore the configured rate.
 
 ## Diagnostic button
