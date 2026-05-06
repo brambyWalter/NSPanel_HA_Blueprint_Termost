@@ -537,7 +537,7 @@ script:
     then:
       - while:
           condition:
-            - lambda: return !disp1->is_setup();
+            - lambda: return !disp1->is_detected();
           then:
             - lambda: |-
                 ESP_LOGE("${TAG_HW_DISPLAY}", "Display is not set. Restarting.");
@@ -547,7 +547,7 @@ script:
             - delay: ${BAUD_RATE_TIMEOUT}
             - if:
                 condition:
-                  - lambda: return !disp1->is_setup();
+                  - lambda: return !disp1->is_detected();
                 then:
                   # Display still not setup after another ${BAUD_RATE_TIMEOUT} — rescan.
                   # baud_scan power-cycles the display itself, so the
@@ -560,7 +560,7 @@ script:
                       then:
                         - wait_until:
                             condition:
-                              - lambda: return disp1->is_setup();
+                              - lambda: return disp1->is_detected();
                             timeout: 19s
 
   - id: wait_for_version_tft

@@ -25,6 +25,9 @@ esphome:
   platformio_options:
     build_flags:
       - -D NSPANEL_EASY_BOOT
+  on_boot:
+    then:
+      - script.execute: boot
 
 script:
   - id: boot
