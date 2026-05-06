@@ -142,6 +142,7 @@ script:
             // Spin waiting for response, log all bytes received
             const uint32_t probe_until = millis() + ${BAUD_RATE_PROBE_MS};
             bool got_response = false;
+            uint8_t consecutive_ff = 0;
             uint32_t total_bytes = 0;
             char rx_log[96] = {0};
             size_t rx_log_idx = 0;
@@ -155,8 +156,16 @@ script:
                                         sizeof(rx_log) - rx_log_idx,
                                         "%02X ", b);
                 }
-                got_response = true;
+                if (b == 0xFF) {
+                  if (++consecutive_ff >= 3) {
+                    got_response = true;
+                    break;
+                  }
+                } else {
+                  consecutive_ff = 0;
+                }
               }
+              if (got_response) break;
               delay(1);
               App.feed_wdt();
             }
@@ -169,6 +178,11 @@ script:
             while (tf_uart->available()) {
               uint8_t discard;
               tf_uart->read_byte(&discard);
+            }
+
+            if (total_bytes > 0 && !got_response) {
+              ESP_LOGD("${TAG_HW_UART}", "Baud scan: rx %" PRIu32 " bytes at %" PRIu32
+                      " bps but no 0xFF terminator - likely framing garbage", total_bytes, rate);
             }
 
             if (got_response) {

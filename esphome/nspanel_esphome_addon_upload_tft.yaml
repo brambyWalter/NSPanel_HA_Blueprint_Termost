@@ -216,8 +216,14 @@ script:
           condition:
             - lambda: return not tft_upload_manual_request;
             - lambda: |-
-                if (tft_upload_first_time_synced_ms == 0)
-                  return true;  // Panel hasn't synced yet — keep waiting
+                if (tft_upload_first_time_synced_ms == 0) {
+                  if (disp1->is_detected()) {
+                    // No TFT loaded — use detection time as sync point and proceed
+                    tft_upload_first_time_synced_ms = millis();
+                    return false;
+                  }
+                  return true;  // Not yet detected — keep waiting
+                }
                 return (uint32_t)(millis() - tft_upload_first_time_synced_ms) < ${upload_tft_wait_ms_after_setup};
           then:
             - lambda: |-
